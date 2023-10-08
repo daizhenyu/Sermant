@@ -43,6 +43,7 @@
     </properties>
     <modules>
         <module>spring-intergration-test</module>
+        <module>tag-transmission-demo</module>
     </modules>
 
     <profiles>
