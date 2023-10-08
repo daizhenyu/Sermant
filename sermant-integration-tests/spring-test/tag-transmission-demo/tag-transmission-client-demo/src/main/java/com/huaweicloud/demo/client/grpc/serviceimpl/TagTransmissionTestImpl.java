@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,27 +14,32 @@
  *   limitations under the License.
  */
 
-package com.huawei.demo.server.dubbo.serviceimpl;
+package com.huaweicloud.demo.client.grpc.serviceimpl;
 
-import com.huaweicloud.demo.lib.dubbo.service.GreetingOuterService;
+import com.huaweicloud.demo.lib.grpc.service.EmptyRequest;
+import com.huaweicloud.demo.lib.grpc.service.TagTransmissionTestGrpc;
+import com.huaweicloud.demo.lib.grpc.service.TrafficTag;
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
-import org.apache.dubbo.config.annotation.DubboService;
+import io.grpc.stub.StreamObserver;
+
 import org.springframework.beans.factory.annotation.Value;
 
 /**
- * dubbo服务实现类
+ * grpc服务的实现类
  *
  * @author daizhenyu
- * @since 2023-09-08
+ * @since 2023-10-08
  **/
-@DubboService
-public class GreetingServiceApacheDubboImpl implements GreetingOuterService {
+public class TagTransmissionTestImpl extends TagTransmissionTestGrpc.TagTransmissionTestImplBase {
     @Value("${commonServerUrl}")
     private String commonServerUrl;
 
     @Override
-    public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+    public void testTag(EmptyRequest request, StreamObserver<TrafficTag> responseObserver) {
+        responseObserver.onNext(TrafficTag.newBuilder()
+                .setTag(HttpClientUtils.doHttpClientV4Get(commonServerUrl))
+                .build());
+        responseObserver.onCompleted();
     }
 }

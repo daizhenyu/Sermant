@@ -22,7 +22,6 @@
         <module>tag-transmission-client-demo</module>
         <module>httpserver-jetty-demo</module>
         <module>httpserver-common-demo</module>
-        <module>tag-transmission-common-lib</module>
         <module>tag-transmission-server-demo</module>
         <module>alibaba-dubbo-consumer-demo</module>
         <module>alibaba-dubbo-provider-demo</module>

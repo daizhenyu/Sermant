@@ -16,12 +16,25 @@
 
 package com.huaweicloud.demo.client.controller;
 
+import com.huaweicloud.demo.client.utils.GrpcUtils;
 import com.huaweicloud.demo.lib.dubbo.service.GreetingOuterService;
+import com.huaweicloud.demo.lib.grpc.service.EmptyRequest;
+import com.huaweicloud.demo.lib.grpc.service.TagTransmissionTestGrpc;
+import com.huaweicloud.demo.lib.grpc.service.TrafficTag;
 import com.huaweicloud.demo.lib.servicecomb.service.ProviderService;
 import com.huaweicloud.demo.lib.sofarpc.service.HelloService;
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
 import com.alipay.sofa.rpc.config.ConsumerConfig;
+import com.google.protobuf.Descriptors;
+import com.google.protobuf.DynamicMessage;
+
+import io.grpc.CallOptions;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.MethodDescriptor;
+import io.grpc.stub.ClientCalls;
+import io.grpc.stub.StreamObserver;
 
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.servicecomb.provider.pojo.RpcReference;
@@ -31,6 +44,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 使用http客户端调用不同进程的服务端
@@ -53,6 +69,9 @@ public class ClientWithOuterServerController {
 
     @Value("${outer.servicecomb.url}")
     private String outerServiceCombUrl;
+
+    @Value("${outer.grpc.server.port}")
+    private int outerGrpcServerPort;
 
     @DubboReference(loadbalance = "random")
     private GreetingOuterService greetingOuterService;
@@ -143,5 +162,67 @@ public class ClientWithOuterServerController {
     @RequestMapping(value = "servicecomb", method = RequestMethod.GET)
     public String testInnerServiceCombRpcByHttp() {
         return HttpClientUtils.doHttpClientV4Get(outerServiceCombUrl);
+    }
+
+    /**
+     * 验证不同进程的grpc透传流量标签，使用stub方式调用服务端
+     *
+     * @return 流量标签值
+     */
+    @RequestMapping(value = "grpcStub", method = RequestMethod.GET)
+    public String testOuterGrpcByStub() {
+        ManagedChannel originChannel = ManagedChannelBuilder.forAddress("localhost", outerGrpcServerPort)
+                .usePlaintext()
+                .build();
+        TagTransmissionTestGrpc.TagTransmissionTestBlockingStub stub = TagTransmissionTestGrpc
+                .newBlockingStub(originChannel);
+        TrafficTag trafficTag = stub.testTag(EmptyRequest.newBuilder().build());
+        originChannel.shutdown();
+        return trafficTag.getTag();
+    }
+
+    /**
+     * 验证同一进程的grpc透传流量标签，使用dynamic message方式调用服务端
+     *
+     * @return 流量标签值
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @RequestMapping(value = "grpcNoStub", method = RequestMethod.GET)
+    public String testInnerGrpcByDynamicMessage() throws ExecutionException, InterruptedException {
+        ManagedChannel channel =
+                ManagedChannelBuilder.forAddress("localhost", outerGrpcServerPort).usePlaintext().build();
+
+        Descriptors.MethodDescriptor originMethodDescriptor = GrpcUtils.generateProtobufMethodDescriptor();
+        MethodDescriptor<DynamicMessage, DynamicMessage> methodDescriptor = GrpcUtils.generateGrpcMethodDescriptor(
+                originMethodDescriptor);
+
+        // 创建动态消息
+        DynamicMessage request = DynamicMessage.newBuilder(originMethodDescriptor.getInputType()).build();
+
+        // 使用 CompletableFuture 处理异步响应
+        CallOptions callOptions = CallOptions.DEFAULT;
+        CompletableFuture<DynamicMessage> responseFuture = new CompletableFuture<>();
+        ClientCalls.asyncUnaryCall(channel.newCall(methodDescriptor, callOptions), request,
+                new StreamObserver<DynamicMessage>() {
+                    @Override
+                    public void onNext(DynamicMessage value) {
+                        responseFuture.complete(value);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        responseFuture.completeExceptionally(t);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                    }
+                });
+
+        // 等待异步响应完成
+        DynamicMessage response = responseFuture.get();
+        channel.shutdown();
+        return (String) response.getField(originMethodDescriptor.getOutputType().findFieldByName("tag"));
     }
 }

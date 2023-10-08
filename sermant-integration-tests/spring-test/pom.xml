@@ -43,7 +43,6 @@
     </properties>
     <modules>
         <module>spring-intergration-test</module>
-        <module>tag-transmission-demo</module>
     </modules>
 
     <profiles>
@@ -96,6 +95,12 @@
             <modules>
                 <module>spring-common</module>
                 <module>spring-common-demos</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tag-transmission-test</id>
+            <modules>
+                <module>tag-transmission-demo</module>
             </modules>
         </profile>
     </profiles>
