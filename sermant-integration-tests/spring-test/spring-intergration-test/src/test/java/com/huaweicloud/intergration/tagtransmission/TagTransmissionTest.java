@@ -152,15 +152,15 @@ public class TagTransmissionTest {
         Map<String, String> prefixTagMap = new HashMap<>();
         prefixTagMap.put("x-sermant-test", "tag-test-prefix");
         Map<String, String> returnPrefixTagMap = convertJson2Map(
-                RequestUtils.get("http://127.0.0.1:9042/outerServer/httpServer", prefixTagMap));
+                RequestUtils.get("http://127.0.0.1:9042/outerServer/httpserver", prefixTagMap));
         Assertions.assertEquals("tag-test-prefix", returnPrefixTagMap.get("x-sermant-test"),
                 "transmit prefix traffic tag failed");
 
         // 测试 流量标签后缀匹配
         Map<String, String> suffixTagMap = new HashMap<>();
-        prefixTagMap.put("tag-sermant", "tag-test-suffix");
+        suffixTagMap.put("tag-sermant", "tag-test-suffix");
         Map<String, String> returnSuffixTagMap = convertJson2Map(
-                RequestUtils.get("http://127.0.0.1:9042/outerServer/httpServer", suffixTagMap));
+                RequestUtils.get("http://127.0.0.1:9042/outerServer/httpserver", suffixTagMap));
         Assertions.assertEquals("tag-test-suffix", returnSuffixTagMap.get("tag-sermant"),
                 "transmit suffix traffic tag failed");
     }

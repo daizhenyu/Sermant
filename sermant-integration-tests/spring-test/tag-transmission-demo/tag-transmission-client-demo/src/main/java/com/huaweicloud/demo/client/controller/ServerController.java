@@ -41,7 +41,7 @@ public class ServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "httpServer", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "httpserver", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String innerHttpServer() {
         return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
     }
