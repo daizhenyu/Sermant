@@ -30,10 +30,10 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.springframework.stereotype.Controller;
+import org.apache.servicecomb.provider.rest.common.RestSchema;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -46,8 +46,7 @@ import java.util.Properties;
  * @author daizhenyu
  * @since 2023-09-28
  **/
-@Controller
-@ResponseBody
+@RestSchema(schemaId = "ProducerController")
 @RequestMapping(value = "produce")
 public class ProducerController {
     /**
@@ -59,7 +58,7 @@ public class ProducerController {
      * @throws MQClientException
      * @throws MQBrokerException
      */
-    @RequestMapping(value = "rocketmq", method = RequestMethod.GET)
+    @RequestMapping(value = "rocketmq", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testRocketMqProducer()
             throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
         produceRocketData();
@@ -71,7 +70,7 @@ public class ProducerController {
      *
      * @return string
      */
-    @RequestMapping(value = "kafka", method = RequestMethod.GET)
+    @RequestMapping(value = "kafka", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testKafkaProducer() {
         produceKafkaData();
         return "kafka-produce-message-success";
@@ -82,7 +81,7 @@ public class ProducerController {
      *
      * @return string
      */
-    @RequestMapping(value = "queryKafka", method = RequestMethod.GET)
+    @RequestMapping(value = "queryKafka", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String queryKafkaTag() {
         String trafficTag = KafkaWithConsumer.KAFKA_TAG_MAP.get("kafkaTag");
 
@@ -96,7 +95,7 @@ public class ProducerController {
      *
      * @return string
      */
-    @RequestMapping(value = "queryRocketmq", method = RequestMethod.GET)
+    @RequestMapping(value = "queryRocketmq", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String queryRocketmqTag() {
         String trafficTag = RocketMqConsumer.ROCKETMQ_TAG_MAP.get("rocketmqTag");
 

@@ -14,35 +14,37 @@
  *  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.server.controller;
+package com.huaweicloud.demo.jetty.controller;
 
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
-import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * servicecomb 供不同进程消费端调用的服务端
+ * http Server端，供http客户端调用
  *
  * @author daizhenyu
- * @since 2023-10-07
+ * @since 2023-09-07
  **/
-@RestSchema(schemaId = "OuterProviderController")
-@RequestMapping(value = "outerProvider")
-public class ServiceCombOuterProviderController {
+@Controller
+@ResponseBody
+@RequestMapping(value = "jetty")
+public class ServerController {
     @Value("${commonServerUrl}")
-    private String commonServerUrl;
+    private String apacheDubboUrl;
 
     /**
-     * 验证同一进程的servicecomb rpc透传流量标签的服务端方法
+     * 验证jetty服务端透传流量标签
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "sayHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+    @RequestMapping(value = "httpserver", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String testJetty() {
+        return HttpClientUtils.doHttpClientV4Get(apacheDubboUrl);
     }
 }

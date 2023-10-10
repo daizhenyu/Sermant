@@ -17,6 +17,7 @@
 package com.huaweicloud.demo.server.controller;
 
 import com.huaweicloud.demo.lib.common.MessageConstant;
+import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -28,10 +29,11 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.springframework.stereotype.Controller;
+import org.apache.servicecomb.provider.rest.common.RestSchema;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -39,15 +41,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 /**
- * 消息中间件生产者controller, 和消费者同一进程
+ * 消息中间件生产者controller, 和消费者不同进程
  *
  * @author daizhenyu
  * @since 2023-09-28
  **/
-@Controller
-@ResponseBody
+@RestSchema(schemaId = "OuterProducerController")
 @RequestMapping(value = "produce")
 public class ProducerController {
+    @Value("${query.rocketmq.tag.url}")
+    private String queryRocketTagUrl;
+
+    @Value("${query.kafka.tag.url}")
+    private String queryKafkaTagUrl;
+
     /**
      * roketmq生成一条消息
      *
@@ -57,7 +64,7 @@ public class ProducerController {
      * @throws MQClientException
      * @throws MQBrokerException
      */
-    @RequestMapping(value = "rocketmq", method = RequestMethod.GET)
+    @RequestMapping(value = "rocketmq", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testRocketMqProducer()
             throws InterruptedException, RemotingException, MQClientException, MQBrokerException {
         produceRocketData();
@@ -69,10 +76,30 @@ public class ProducerController {
      *
      * @return string
      */
-    @RequestMapping(value = "kafka", method = RequestMethod.GET)
+    @RequestMapping(value = "kafka", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testKafkaProducer() {
         produceKafkaData();
         return "kafka-produce-message-success";
+    }
+
+    /**
+     * 查询kafka消费者消费消息后返回的流量标签透传
+     *
+     * @return string
+     */
+    @RequestMapping(value = "queryKafka", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String queryKafkaTag() {
+        return HttpClientUtils.doHttpClientV4Get(queryKafkaTagUrl);
+    }
+
+    /**
+     * 查询rocketmq消费者消费消息后返回的流量标签透传
+     *
+     * @return string
+     */
+    @RequestMapping(value = "queryRocketmq", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String queryRocketmqTag() {
+        return HttpClientUtils.doHttpClientV4Get(queryRocketTagUrl);
     }
 
     private void produceRocketData()

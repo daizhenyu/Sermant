@@ -22,6 +22,7 @@ import com.huaweicloud.demo.lib.sofarpc.service.HelloService;
 import com.alipay.sofa.rpc.config.ProviderConfig;
 import com.alipay.sofa.rpc.config.ServerConfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,9 @@ import org.springframework.stereotype.Component;
 public class SofarpcServer implements CommandLineRunner {
     @Value("${sofarpc.server.port}")
     private int sofaRpcPort;
+
+    @Autowired
+    private HelloServiceSofaRpcImpl helloServiceSofaRpc;
 
     @Override
     public void run(String... args) {
@@ -52,7 +56,7 @@ public class SofarpcServer implements CommandLineRunner {
                     // 指定接口
                     .setInterfaceId(HelloService.class.getName())
                     // 指定实现
-                    .setRef(new HelloServiceSofaRpcImpl())
+                    .setRef(helloServiceSofaRpc)
                     // 指定服务端
                     .setServer(serverConfig);
 

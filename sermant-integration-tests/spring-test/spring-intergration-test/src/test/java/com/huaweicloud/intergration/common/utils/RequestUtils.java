@@ -17,6 +17,12 @@
 
 package com.huaweicloud.intergration.common.utils;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -39,6 +45,26 @@ public class RequestUtils {
     private static final ResponseExtractor DEFAULT = response -> response;
 
     private RequestUtils() {
+    }
+
+    public static String get(String url, Map<String, String> headers) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(url);
+
+        for (String key : headers.keySet()) {
+            httpGet.addHeader(key, headers.get(key));
+        }
+        String responseContext = null;
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            responseContext = EntityUtils.toString(response.getEntity());
+
+            // 关闭响应和 HttpClient
+            response.close();
+            httpClient.close();
+        } catch (Exception e) {
+        }
+        return responseContext;
     }
 
     /**

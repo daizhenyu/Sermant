@@ -20,6 +20,7 @@ import com.huaweicloud.demo.lib.sofarpc.service.HelloService;
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * sofarpc服务实现类
@@ -27,12 +28,13 @@ import org.springframework.beans.factory.annotation.Value;
  * @author daizhenyu
  * @since 2023-09-08
  **/
+@Component
 public class HelloServiceSofaRpcImpl implements HelloService {
     @Value("${commonServerUrl}")
-    private String commonServerUrl;
+    private String serviceCombUrl;
 
     @Override
     public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+        return HttpClientUtils.doHttpClientV4Get(serviceCombUrl);
     }
 }

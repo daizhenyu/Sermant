@@ -31,10 +31,10 @@ import org.springframework.beans.factory.annotation.Value;
 @DubboService
 public class GreetingServiceApacheDubboImpl implements GreetingInnerService {
     @Value("${commonServerUrl}")
-    private String commonServerUrl;
+    private String alibabaDubooUrl;
 
     @Override
     public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+        return HttpClientUtils.doHttpClientV4Get(alibabaDubooUrl);
     }
 }

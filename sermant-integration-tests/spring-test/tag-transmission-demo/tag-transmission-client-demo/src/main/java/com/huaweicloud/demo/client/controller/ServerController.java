@@ -18,13 +18,11 @@ package com.huaweicloud.demo.client.controller;
 
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
+import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * http Server端，供同一进程的http客户端调用
@@ -32,9 +30,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author daizhenyu
  * @since 2023-09-07
  **/
-@Controller
-@ResponseBody
-@RequestMapping(value = "inner")
+@RestSchema(schemaId = "ServerController")
+@RequestMapping(value = "innerServer")
 public class ServerController {
     @Value("${commonServerUrl}")
     private String commonServerUrl;
@@ -42,11 +39,10 @@ public class ServerController {
     /**
      * 内部的httpserver接口
      *
-     * @param request http请求
      * @return 流量标签值
      */
-    @RequestMapping(value = "httpserver", method = RequestMethod.GET)
-    public String innerHttpServer(HttpServletRequest request) {
+    @RequestMapping(value = "httpServer", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String innerHttpServer() {
         return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
     }
 }

@@ -24,6 +24,7 @@ import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 import io.grpc.stub.StreamObserver;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * grpc服务的实现类
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @author daizhenyu
  * @since 2023-10-08
  **/
+@Component
 public class TagTransmissionTestImpl extends TagTransmissionTestGrpc.TagTransmissionTestImplBase {
     @Value("${commonServerUrl}")
     private String commonServerUrl;

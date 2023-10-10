@@ -20,6 +20,7 @@ import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @since 2023-10-07
  **/
 @RestSchema(schemaId = "InnerProviderController")
-@RequestMapping(value = "innerprovider")
+@RequestMapping(value = "innerProvider")
 public class ServiceCombInnerProviderController {
     @Value("${commonServerUrl}")
     private String commonServerUrl;
@@ -40,7 +41,7 @@ public class ServiceCombInnerProviderController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "sayhello", method = RequestMethod.GET)
+    @RequestMapping(value = "sayHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String sayHello() {
         return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
     }

@@ -40,7 +40,8 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.servicecomb.provider.pojo.RpcReference;
 import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,15 +55,16 @@ import java.util.concurrent.ExecutionException;
  * @author daizhenyu
  * @since 2023-09-07
  **/
-@Controller
-@ResponseBody
 @RequestMapping(value = "outer")
-@RestSchema(schemaId = "OuterConsumerController")
+@RestSchema(schemaId = "ClientWithOuterServerController")
 public class ClientWithOuterServerController {
     private static final int SOFARPC_TIMEOUT = 10000;
 
     @Value("${outerServerUrl}")
     private String outerHttpServerUrl;
+
+    @Value("${jettyServerUrl}")
+    private String jettyServerUrl;
 
     @Value("${outer.sofarpc.url}")
     private String outerSofaRpcUrl;
@@ -73,6 +75,7 @@ public class ClientWithOuterServerController {
     @Value("${outer.grpc.server.port}")
     private int outerGrpcServerPort;
 
+    @Lazy
     @DubboReference(loadbalance = "random")
     private GreetingOuterService greetingOuterService;
 
@@ -84,7 +87,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "httpclientv3", method = RequestMethod.GET)
+    @RequestMapping(value = "httpClientV3", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testHttpClientV3() {
         return HttpClientUtils.doHttpClientV3Get(outerHttpServerUrl);
     }
@@ -94,7 +97,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "httpclientv4", method = RequestMethod.GET)
+    @RequestMapping(value = "httpClientV4", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testHttpClientV4() {
         return HttpClientUtils.doHttpClientV4Get(outerHttpServerUrl);
     }
@@ -104,7 +107,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "okhttp", method = RequestMethod.GET)
+    @RequestMapping(value = "okHttp", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testOkHttp() {
         return HttpClientUtils.doOkHttpGet(outerHttpServerUrl);
     }
@@ -114,7 +117,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "jdkhttp", method = RequestMethod.GET)
+    @RequestMapping(value = "jdkHttp", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testJdkHttp() {
         return HttpClientUtils.doHttpUrlConnectionGet(outerHttpServerUrl);
     }
@@ -124,7 +127,7 @@ public class ClientWithOuterServerController {
      *
      * @return string 流量标签值
      */
-    @RequestMapping(value = "dubbo", method = RequestMethod.GET)
+    @RequestMapping(value = "dubbo", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String testOuterDubbo() {
         return greetingOuterService.sayHello();
@@ -135,7 +138,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "sofarpc", method = RequestMethod.GET)
+    @RequestMapping(value = "sofaRpc", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testOuterSofaRpc() {
         ConsumerConfig<HelloService> consumerConfig = new ConsumerConfig<HelloService>()
                 .setInterfaceId(HelloService.class.getName())
@@ -149,7 +152,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "servicecomb", method = RequestMethod.GET)
+    @RequestMapping(value = "serviceComb", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testOuterServiceCombRpc() {
         return providerService.sayHello();
     }
@@ -159,7 +162,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "servicecomb", method = RequestMethod.GET)
+    @RequestMapping(value = "serviceCombByHttp", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testInnerServiceCombRpcByHttp() {
         return HttpClientUtils.doHttpClientV4Get(outerServiceCombUrl);
     }
@@ -169,7 +172,7 @@ public class ClientWithOuterServerController {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "grpcStub", method = RequestMethod.GET)
+    @RequestMapping(value = "grpcStub", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testOuterGrpcByStub() {
         ManagedChannel originChannel = ManagedChannelBuilder.forAddress("localhost", outerGrpcServerPort)
                 .usePlaintext()
@@ -188,7 +191,7 @@ public class ClientWithOuterServerController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "grpcNoStub", method = RequestMethod.GET)
+    @RequestMapping(value = "grpcNoStub", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testInnerGrpcByDynamicMessage() throws ExecutionException, InterruptedException {
         ManagedChannel channel =
                 ManagedChannelBuilder.forAddress("localhost", outerGrpcServerPort).usePlaintext().build();

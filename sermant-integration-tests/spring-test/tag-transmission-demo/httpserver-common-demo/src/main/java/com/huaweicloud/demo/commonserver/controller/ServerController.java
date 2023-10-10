@@ -14,35 +14,34 @@
  *  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.server.controller;
+package com.huaweicloud.demo.commonserver.controller;
 
-import com.huaweicloud.demo.lib.utils.HttpClientUtils;
+import com.huaweicloud.demo.commonserver.utils.StringUtils;
 
-import org.apache.servicecomb.provider.rest.common.RestSchema;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * servicecomb 供不同进程消费端调用的服务端
+ * 公共的httpserver，用于验证各组件服务端可以将流量标签透传至下游服务
  *
  * @author daizhenyu
- * @since 2023-10-07
+ * @since 2023-09-07
  **/
-@RestSchema(schemaId = "OuterProviderController")
-@RequestMapping(value = "outerProvider")
-public class ServiceCombOuterProviderController {
-    @Value("${commonServerUrl}")
-    private String commonServerUrl;
-
+@RestController
+@RequestMapping("common")
+public class ServerController {
     /**
-     * 验证同一进程的servicecomb rpc透传流量标签的服务端方法
+     * 公用的http server端，返回http的header，用于验证是否成功透传标签
      *
+     * @param request http请求request
      * @return 流量标签值
      */
-    @RequestMapping(value = "sayHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+    @RequestMapping(value = "httpserver", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String testHttpServer(HttpServletRequest request) {
+        return StringUtils.convertHeader2String(request);
     }
 }

@@ -18,10 +18,11 @@ package com.huaweicloud.demo.client.controller;
 
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
+import org.apache.servicecomb.provider.rest.common.RestSchema;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * @author daizhenyu
  * @since 2023-09-11
  **/
-@RestController
+@RestSchema(schemaId = "ThreadController")
 @RequestMapping(value = "thread")
 public class ThreadController {
     /**
@@ -66,7 +67,7 @@ public class ThreadController {
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE_TIME,
             TimeUnit.SECONDS, new ArrayBlockingQueue<>(QUEUE_CAPACITY));
 
-    private ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(CORE_POOL_SIZE);
+    private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(CORE_POOL_SIZE);
 
     @Value("${commonServerUrl}")
     private String commonServerUrl;
@@ -78,7 +79,7 @@ public class ThreadController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "newthread", method = RequestMethod.GET)
+    @RequestMapping(value = "newThread", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String newThreadTest() throws ExecutionException, InterruptedException {
         FutureTask<String> futureTask = new FutureTask<>(() -> HttpClientUtils.doHttpClientV4Get(commonServerUrl));
         Thread thread = new Thread(futureTask);
@@ -92,7 +93,7 @@ public class ThreadController {
      * @return 透传标签值
      * @throws InterruptedException
      */
-    @RequestMapping(value = "executor", method = RequestMethod.GET)
+    @RequestMapping(value = "executor", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String executorTest() throws InterruptedException {
         String trafficTag = null;
         executor.execute(() -> THREAD_TAG_MAP.put(THREAD_TAG, HttpClientUtils.doHttpClientV4Get(commonServerUrl)));
@@ -111,7 +112,7 @@ public class ThreadController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "submit", method = RequestMethod.GET)
+    @RequestMapping(value = "submit", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String submitTest() throws ExecutionException, InterruptedException {
         FutureTask<String> futureTask = new FutureTask<>(() -> HttpClientUtils.doHttpClientV4Get(commonServerUrl));
         executor.submit(futureTask);
@@ -125,7 +126,7 @@ public class ThreadController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "schedule", method = RequestMethod.GET)
+    @RequestMapping(value = "schedule", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String scheduleTest() throws ExecutionException, InterruptedException {
         FutureTask<String> futureTask = new FutureTask<>(() -> HttpClientUtils.doHttpClientV4Get(commonServerUrl));
         scheduledExecutor.schedule(futureTask, INITIAL_DELAY, TimeUnit.SECONDS);
@@ -139,7 +140,7 @@ public class ThreadController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "scheduleAtFixedRate", method = RequestMethod.GET)
+    @RequestMapping(value = "scheduleAtFixedRate", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String scheduleAtFixedRateTest() throws ExecutionException, InterruptedException {
         FutureTask<String> futureTask = new FutureTask<>(() -> HttpClientUtils.doHttpClientV4Get(commonServerUrl));
         scheduledExecutor.scheduleAtFixedRate(futureTask, INITIAL_DELAY, DELAY, TimeUnit.SECONDS);
@@ -153,7 +154,7 @@ public class ThreadController {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    @RequestMapping(value = "scheduleWithFixedDelay", method = RequestMethod.GET)
+    @RequestMapping(value = "scheduleWithFixedDelay", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String scheduleWithFixedDelayTest() throws ExecutionException, InterruptedException {
         FutureTask<String> futureTask = new FutureTask<>(() -> HttpClientUtils.doHttpClientV4Get(commonServerUrl));
         scheduledExecutor.scheduleWithFixedDelay(futureTask, INITIAL_DELAY, DELAY, TimeUnit.SECONDS);
@@ -165,7 +166,7 @@ public class ThreadController {
      *
      * @throws InterruptedException
      */
-    @RequestMapping(value = "shutdown", method = RequestMethod.GET)
+    @RequestMapping(value = "shutdown", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public void shutdownThreadPool() throws InterruptedException {
         // 延迟五秒关闭线程池，以防后续线程任务执行
         Thread.sleep(SLEEP);

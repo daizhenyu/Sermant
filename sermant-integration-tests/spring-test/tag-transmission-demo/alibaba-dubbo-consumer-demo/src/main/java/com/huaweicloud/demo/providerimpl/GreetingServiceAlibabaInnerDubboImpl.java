@@ -32,10 +32,10 @@ import org.springframework.beans.factory.annotation.Value;
 @Service
 public class GreetingServiceAlibabaInnerDubboImpl implements AlibabaGreetingInnerService {
     @Value("${commonServerUrl}")
-    private String commonServerUrl;
+    private String sofaRpcUrl;
 
     @Override
     public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
+        return HttpClientUtils.doHttpClientV4Get(sofaRpcUrl);
     }
 }

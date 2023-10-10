@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
+ *  Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,25 +14,20 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.demo;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package com.huaweicloud.demo.commonserver.common;
 
 /**
- * springboot 启动类
+ * 常量类
  *
  * @author daizhenyu
  * @since 2023-09-07
  **/
-@SpringBootApplication
-public class HttpJettyApplication {
+public class Constant {
     /**
-     * 启动类
-     *
-     * @param args 进程启动入参
+     * 流量标签的key值
      */
-    public static void main(String[] args) {
-        SpringApplication.run(HttpJettyApplication.class, args);
+    public static final String[] TRAFFIC_TAG_KEY = {"id", "dynamic", "x-sermant-test", "tag-sermant"};
+
+    private Constant() {
     }
 }

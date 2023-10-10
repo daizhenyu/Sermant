@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-package com.huaweicloud.demo.client.controller;
+package com.huaweicloud.demo.server.controller;
 
-import com.huaweicloud.demo.utils.StringUtils;
+import com.huaweicloud.demo.lib.utils.HttpClientUtils;
 
+import org.apache.servicecomb.provider.rest.common.RestSchema;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * 公共的httpserver，用于验证各组件服务端可以将流量标签透传至下游服务
+ * http Server端，供不同进程的http客户端调用
  *
  * @author daizhenyu
  * @since 2023-09-07
  **/
-@RestController
-@RequestMapping("common")
+@RestSchema(schemaId = "OuterServerController")
+@RequestMapping(value = "outerServer")
 public class ServerController {
+    @Value("${commonServerUrl}")
+    private String commonServerUrl;
+
     /**
-     * 公用的http server端，返回http的header，用于验证是否成功透传标签
+     * 内部的httpserver接口
      *
-     * @param request http请求request
      * @return 流量标签值
      */
-    @RequestMapping(value = "httpserver", method = RequestMethod.GET)
-    public String testHttpServer(HttpServletRequest request) {
-        return StringUtils.convertHeader2String(request);
+    @RequestMapping(value = "httpserver", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String innerHttpServer() {
+        return HttpClientUtils.doHttpClientV4Get(commonServerUrl);
     }
 }

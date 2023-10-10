@@ -23,7 +23,7 @@ servicecomb:
   service:
     application: demo-test
     name: demo-consumer
-    version: 1.0.0
+    version: 1.2.0
     registry:
       # Default using local service center
       address: http://localhost:30100
@@ -40,4 +40,4 @@ servicecomb:
     addPrefix: false
 
   rest:
-    address: 0.0.0.0:9092  # should be same with server.port to use web container
+    address: 0.0.0.0:9041  # should be same with server.port to use web container

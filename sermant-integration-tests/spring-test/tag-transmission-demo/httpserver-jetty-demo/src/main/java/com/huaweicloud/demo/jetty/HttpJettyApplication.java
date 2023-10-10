@@ -14,27 +14,25 @@
  *  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.server.sofarpc.serviceimpl;
+package com.huaweicloud.demo.jetty;
 
-import com.huaweicloud.demo.lib.sofarpc.service.HelloService;
-import com.huaweicloud.demo.lib.utils.HttpClientUtils;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * sofarpc服务实现类
+ * springboot 启动类
  *
  * @author daizhenyu
- * @since 2023-09-08
+ * @since 2023-09-07
  **/
-@Component
-public class HelloServiceSofaRpcImpl implements HelloService {
-    @Value("${commonServerUrl}")
-    private String serviceCombUrl;
-
-    @Override
-    public String sayHello() {
-        return HttpClientUtils.doHttpClientV4Get(serviceCombUrl);
+@SpringBootApplication
+public class HttpJettyApplication {
+    /**
+     * 启动类
+     *
+     * @param args 进程启动入参
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(HttpJettyApplication.class, args);
     }
 }

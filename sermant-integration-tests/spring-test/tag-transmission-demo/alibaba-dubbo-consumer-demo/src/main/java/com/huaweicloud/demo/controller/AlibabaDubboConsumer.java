@@ -22,6 +22,7 @@ import com.huaweicloud.demo.lib.dubbo.service.AlibabaGreetingOuterService;
 import com.alibaba.dubbo.config.annotation.Reference;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @Lazy
 @RestController
-@RequestMapping("alibabadubbo")
+@RequestMapping("alibabaDubbo")
 public class AlibabaDubboConsumer {
     @Reference(loadbalance = "random")
     private AlibabaGreetingInnerService greetingInnerService;
@@ -48,7 +49,7 @@ public class AlibabaDubboConsumer {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "innerHello", method = RequestMethod.GET)
+    @RequestMapping(value = "innerHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String greeting() {
         return greetingInnerService.sayHello();
@@ -59,7 +60,7 @@ public class AlibabaDubboConsumer {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "outerHello", method = RequestMethod.GET)
+    @RequestMapping(value = "outerHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String outerGreeting() {
         return greetingOuterService.sayHello();

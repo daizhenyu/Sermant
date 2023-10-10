@@ -27,6 +27,7 @@
         <rocketmq-client.version>5.1.0</rocketmq-client.version>
         <kafka-client.version>2.7.0</kafka-client.version>
         <servicecomb.version>2.8.3</servicecomb.version>
+        <failureaccess.version>1.0.1</failureaccess.version>
     </properties>
 
     <dependencies>
@@ -119,6 +120,11 @@
             <groupId>org.apache.servicecomb</groupId>
             <artifactId>servicestage-environment</artifactId>
             <version>${servicecomb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>failureaccess</artifactId>
+            <version>${failureaccess.version}</version>
         </dependency>
     </dependencies>
 

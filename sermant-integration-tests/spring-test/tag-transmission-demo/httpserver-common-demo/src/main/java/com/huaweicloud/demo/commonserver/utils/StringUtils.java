@@ -14,9 +14,9 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.utils;
+package com.huaweicloud.demo.commonserver.utils;
 
-import com.huaweicloud.demo.common.Constant;
+import com.huaweicloud.demo.commonserver.common.Constant;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
  **/
 public class StringUtils {
     private static final int BOUND_LENGTH = 2;
+
+    private static final String DOUBLE_QUOTATION_MARKS = "\"";
 
     private StringUtils() {
     }
@@ -49,9 +51,13 @@ public class StringUtils {
             if (request.getHeader(key) == null) {
                 continue;
             }
+            builder.append(DOUBLE_QUOTATION_MARKS);
             builder.append(key);
+            builder.append(DOUBLE_QUOTATION_MARKS);
             builder.append(":");
+            builder.append(DOUBLE_QUOTATION_MARKS);
             builder.append(request.getHeader(key));
+            builder.append(DOUBLE_QUOTATION_MARKS);
             builder.append(",");
         }
         if (builder.length() >= BOUND_LENGTH) {

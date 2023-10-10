@@ -21,6 +21,7 @@ import com.huaweicloud.demo.client.grpc.serviceimpl.TagTransmissionTestImpl;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -36,19 +37,33 @@ import java.io.IOException;
 @Component
 public class GrpcServer implements CommandLineRunner {
     @Value("${inner.grpc.server.port}")
-    int port;
+    private int port;
 
-    Server server;
+    @Autowired
+    private TagTransmissionTestImpl tagTransmissionTest;
+
+    private Server server;
 
     @Override
-    public void run(String... args) throws Exception {
-        start();
-        blockUntilShutdown();
+    public void run(String... args) {
+        Thread grpcThread = new Thread(() -> {
+            try {
+                start();
+            } catch (IOException e) {
+                // ignore
+            }
+            try {
+                blockUntilShutdown();
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        });
+        grpcThread.start();
     }
 
     private void start() throws IOException {
         server = ServerBuilder.forPort(port)
-                .addService(new TagTransmissionTestImpl())
+                .addService(tagTransmissionTest)
                 .build()
                 .start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {

@@ -14,17 +14,18 @@
  *  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.server.sofarpcserver;
-
-import com.huaweicloud.demo.server.sofarpc.serviceimpl.HelloServiceSofaRpcImpl;
+package com.huaweicloud.demo.server.sofarpc.server;
 
 import com.huaweicloud.demo.lib.sofarpc.service.HelloService;
+import com.huaweicloud.demo.server.sofarpc.serviceimpl.HelloServiceSofaRpcImpl;
 
 import com.alipay.sofa.rpc.config.ProviderConfig;
 import com.alipay.sofa.rpc.config.ServerConfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 /**
  * sofarpc 服务端启动
@@ -32,9 +33,13 @@ import org.springframework.boot.CommandLineRunner;
  * @author daizhenyu
  * @since 2023-09-28
  **/
+@Component
 public class SofarpcServer implements CommandLineRunner {
     @Value("${sofarpc.server.port}")
     private int sofaRpcPort;
+
+    @Autowired
+    private HelloServiceSofaRpcImpl helloServiceSofaRpc;
 
     @Override
     public void run(String... args) {
@@ -45,7 +50,7 @@ public class SofarpcServer implements CommandLineRunner {
                     .setDaemon(false);
             ProviderConfig<HelloService> providerConfig = new ProviderConfig<HelloService>()
                     .setInterfaceId(HelloService.class.getName())
-                    .setRef(new HelloServiceSofaRpcImpl())
+                    .setRef(helloServiceSofaRpc)
                     .setServer(serverConfig);
             providerConfig.export();
         });
