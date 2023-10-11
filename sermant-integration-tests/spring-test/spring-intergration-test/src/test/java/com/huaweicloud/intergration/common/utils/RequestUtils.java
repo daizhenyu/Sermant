@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 /**
@@ -47,7 +48,14 @@ public class RequestUtils {
     private RequestUtils() {
     }
 
-    public static String get(String url, Map<String, String> headers) {
+    /**
+     * httpclient get方法
+     *
+     * @param url 请求地址
+     * @param headers 需要添加的header
+     * @return Optional<String> 包含response的optional
+     */
+    public static Optional<String> get(String url, Map<String, String> headers) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
 
@@ -64,7 +72,7 @@ public class RequestUtils {
             httpClient.close();
         } catch (Exception e) {
         }
-        return responseContext;
+        return Optional.ofNullable(responseContext);
     }
 
     /**

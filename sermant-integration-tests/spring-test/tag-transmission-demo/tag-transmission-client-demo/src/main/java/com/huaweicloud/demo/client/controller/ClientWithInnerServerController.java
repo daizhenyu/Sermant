@@ -63,10 +63,10 @@ public class ClientWithInnerServerController {
     @Value("${innerServerUrl}")
     private String innerHttpServerUrl;
 
-    @Value("${inner.sofarpc.url}")
+    @Value("${innerSofaRpcUrl}")
     private String innerSofaRpcUrl;
 
-    @Value("${inner.servicecomb.url}")
+    @Value("${innerServicecombUrl}")
     private String innerServiceCombUrl;
 
     @Value("${inner.grpc.server.port}")

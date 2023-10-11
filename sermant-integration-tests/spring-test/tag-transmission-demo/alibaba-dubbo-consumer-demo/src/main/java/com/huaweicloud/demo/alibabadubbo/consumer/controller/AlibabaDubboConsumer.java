@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.controller;
+package com.huaweicloud.demo.alibabadubbo.consumer.controller;
 
 import com.huaweicloud.demo.lib.dubbo.service.AlibabaGreetingInnerService;
 import com.huaweicloud.demo.lib.dubbo.service.AlibabaGreetingOuterService;
@@ -49,9 +49,9 @@ public class AlibabaDubboConsumer {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "innerHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "inner", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String greeting() {
+    public String innerAlibabaDubbo() {
         return greetingInnerService.sayHello();
     }
 
@@ -60,9 +60,9 @@ public class AlibabaDubboConsumer {
      *
      * @return 流量标签值
      */
-    @RequestMapping(value = "outerHello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "outer", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String outerGreeting() {
+    public String outerAlibabaDubbo() {
         return greetingOuterService.sayHello();
     }
 }

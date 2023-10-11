@@ -21,17 +21,17 @@ import com.huaweicloud.demo.commonserver.common.Constant;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * String 工具类
+ * 转换流量标签的工具类
  *
  * @author daizhenyu
  * @since 2023-09-11
  **/
-public class StringUtils {
+public class TagConversionUtils {
     private static final int BOUND_LENGTH = 2;
 
     private static final String DOUBLE_QUOTATION_MARKS = "\"";
 
-    private StringUtils() {
+    private TagConversionUtils() {
     }
 
     /**

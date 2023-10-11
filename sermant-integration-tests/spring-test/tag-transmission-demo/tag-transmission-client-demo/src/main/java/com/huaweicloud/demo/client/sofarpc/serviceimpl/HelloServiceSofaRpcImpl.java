@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class HelloServiceSofaRpcImpl implements HelloService {
-    @Value("${commonServerUrl}")
+    @Value("${innerServicecombUrl}")
     private String serviceCombUrl;
 
     @Override

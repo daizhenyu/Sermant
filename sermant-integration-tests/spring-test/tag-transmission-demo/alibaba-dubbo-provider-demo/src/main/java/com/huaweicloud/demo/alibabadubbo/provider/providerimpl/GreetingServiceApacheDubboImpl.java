@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.providerimpl;
+package com.huaweicloud.demo.alibabadubbo.provider.providerimpl;
 
 import com.huaweicloud.demo.lib.dubbo.service.AlibabaGreetingOuterService;
 import com.huaweicloud.demo.lib.utils.HttpClientUtils;
@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
  **/
 @Service
 public class GreetingServiceApacheDubboImpl implements AlibabaGreetingOuterService {
-    @Value("${commonServerUrl}")
+    @Value("${sofaRpcUrl}")
     private String sofaRpcUrl;
 
     @Override

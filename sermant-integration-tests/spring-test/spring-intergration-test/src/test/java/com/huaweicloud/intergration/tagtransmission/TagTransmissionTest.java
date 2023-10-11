@@ -20,14 +20,21 @@ import com.huaweicloud.intergration.common.utils.RequestUtils;
 
 import com.alibaba.fastjson.JSON;
 
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.data.Stat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 流量标签透传插件测试
@@ -147,7 +154,7 @@ public class TagTransmissionTest {
     }
 
     @Test
-    public void configTest() {
+    public void configTest() throws Exception {
         // 测试 流量标签前缀匹配
         Map<String, String> prefixTagMap = new HashMap<>();
         prefixTagMap.put("x-sermant-test", "tag-test-prefix");
@@ -163,11 +170,50 @@ public class TagTransmissionTest {
                 RequestUtils.get("http://127.0.0.1:9042/outerServer/httpserver", suffixTagMap));
         Assertions.assertEquals("tag-test-suffix", returnSuffixTagMap.get("tag-sermant"),
                 "transmit suffix traffic tag failed");
+
+        // 动态配置
+        CuratorFramework curator = CuratorFrameworkFactory.newClient("127.0.0.1:2181",
+                new ExponentialBackoffRetry(1000, 3));
+        curator.start();
+        String nodePath = "/sermant/tag-transmission-plugin/tag-config";
+        String lineSeparator = System.getProperty("line.separator");
+        String oldNodeValue = "enabled: true" + lineSeparator +
+                "matchRule:" + lineSeparator +
+                "  exact: [\"id\", \"name\"]" + lineSeparator +
+                "  prefix: [\"x-sermant-\"]" + lineSeparator +
+                "  suffix: [\"-sermant\"]";
+        String newNodeValue = "enabled: true" + lineSeparator +
+                "matchRule:" + lineSeparator +
+                "  exact: [\"dynamic\", \"name\"]";
+
+        Stat stat = curator.checkExists().forPath(nodePath);
+        if (stat == null) {
+            curator.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(nodePath,
+                    newNodeValue.getBytes(StandardCharsets.UTF_8));
+        } else {
+            curator.setData().forPath(nodePath, newNodeValue.getBytes(StandardCharsets.UTF_8));
+        }
+
+        // sleep三秒等待动态配置生效
+        Thread.sleep(3000);
+
+        Map<String, String> dynamicTagMap = new HashMap<>();
+        dynamicTagMap.put("dynamic", "tag-test-dynamic");
+        Map<String, String> returnDynamicTagMap = convertJson2Map(
+                RequestUtils.get("http://127.0.0.1:9042/outerServer/httpserver", dynamicTagMap));
+
+        // 切换为原来的流量标签配置
+        curator.setData().forPath(nodePath, oldNodeValue.getBytes(StandardCharsets.UTF_8));
+        curator.close();
+        Assertions.assertEquals("tag-test-dynamic", returnDynamicTagMap.get("dynamic"),
+                "dynamic config failed");
     }
 
-    private Map<String, String> convertJson2Map(String json) {
-        Map<String, String> tagMap = null;
-        tagMap = JSON.parseObject(json, Map.class);
+    private Map<String, String> convertJson2Map(Optional<String> jsonOptional) {
+        Map<String, String> tagMap = new HashMap<>();
+        if (jsonOptional.isPresent()) {
+            tagMap = JSON.parseObject(jsonOptional.get(), Map.class);
+        }
         return tagMap;
     }
 }

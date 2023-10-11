@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
  **/
 @DubboService
 public class GreetingServiceApacheDubboImpl implements GreetingInnerService {
-    @Value("${commonServerUrl}")
+    @Value("${alibabaDubooUrl}")
     private String alibabaDubooUrl;
 
     @Override

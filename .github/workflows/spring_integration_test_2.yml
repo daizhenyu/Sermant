@@ -13,6 +13,7 @@ on:
       - 'sermant-plugins/sermant-router/**'
       - 'sermant-plugins/sermant-service-registry/**'
       - 'sermant-plugins/sermant-springboot-registry/**'
+      - 'sermant-plugins/sermant-tag-transmission/**'
       - '.github/workflows/spring_integration*.yml'
       - '.github/actions/**'
 concurrency:
@@ -57,6 +58,28 @@ jobs:
         run: |
           export ROOT_PATH=$(pwd)
           bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh nacos
+      - name: cache rocketmq
+          uses: actions/cache@v3
+          with:
+            path: rocketmq-all-4.8.0-source-release.zip
+            key: ${{ runner.os }}-rocketmq-all-4.8.0-source-release
+            restore-keys: |
+              ${{ runner.os }}-rocketmq-all-4.8.0-source-release
+      - name: download rocketmq
+        run: |
+          export ROOT_PATH=$(pwd)
+          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh rocketmq
+      - name: cache kafka
+          uses: actions/cache@v3
+          with:
+            path: kafka_2.13-2.7.0.tgz
+            key: ${{ runner.os }}-kafka_2.13-2.7.0
+            restore-keys: |
+              ${{ runner.os }}-kafka_2.13-2.7.0
+      - name: download kafka
+        run: |
+          export ROOT_PATH=$(pwd)
+          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh kafka
   build-agent-and-cache:
     name: build agent and cache
     runs-on: ubuntu-latest

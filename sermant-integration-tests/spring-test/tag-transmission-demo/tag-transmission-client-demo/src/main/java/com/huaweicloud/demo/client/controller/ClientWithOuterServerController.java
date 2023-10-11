@@ -66,10 +66,10 @@ public class ClientWithOuterServerController {
     @Value("${jettyServerUrl}")
     private String jettyServerUrl;
 
-    @Value("${outer.sofarpc.url}")
+    @Value("${outerSofaRpcUrl}")
     private String outerSofaRpcUrl;
 
-    @Value("${outer.servicecomb.url}")
+    @Value("${outerServicecombUrl}")
     private String outerServiceCombUrl;
 
     @Value("${outer.grpc.server.port}")

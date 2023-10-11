@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.huaweicloud.demo.commonserver;
+package com.huaweicloud.demo.alibabadubbo.consumer;
+
+import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,14 +27,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author daizhenyu
  * @since 2023-09-07
  **/
+@EnableDubbo
 @SpringBootApplication
-public class HttpCommonServerApplication {
+public class AlibabaDubboApplication {
     /**
-     * springboot应用启动类
+     * 启动类
      *
-     * @param args
+     * @param args 进程启动入参
      */
     public static void main(String[] args) {
-        SpringApplication.run(HttpCommonServerApplication.class, args);
+        SpringApplication.run(AlibabaDubboApplication.class, args);
     }
 }
