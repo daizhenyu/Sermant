@@ -63,9 +63,6 @@ public class ClientWithOuterServerController {
     @Value("${outerServerUrl}")
     private String outerHttpServerUrl;
 
-    @Value("${jettyServerUrl}")
-    private String jettyServerUrl;
-
     @Value("${outerSofaRpcUrl}")
     private String outerSofaRpcUrl;
 
@@ -81,6 +78,8 @@ public class ClientWithOuterServerController {
 
     @RpcReference(schemaId = "OuterProviderController", microserviceName = "demo-server")
     private ProviderService providerService;
+
+    private ConsumerConfig<HelloService> outerConsumerConfig;
 
     /**
      * 验证httpclient3.x透传流量标签
@@ -140,11 +139,17 @@ public class ClientWithOuterServerController {
      */
     @RequestMapping(value = "sofaRpc", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testOuterSofaRpc() {
-        ConsumerConfig<HelloService> consumerConfig = new ConsumerConfig<HelloService>()
-                .setInterfaceId(HelloService.class.getName())
-                .setDirectUrl(outerSofaRpcUrl)
-                .setConnectTimeout(SOFARPC_TIMEOUT);
-        return consumerConfig.refer().sayHello();
+        if (outerConsumerConfig == null) {
+            synchronized (this) {
+                if (outerConsumerConfig == null) {
+                    outerConsumerConfig = new ConsumerConfig<HelloService>()
+                            .setInterfaceId(HelloService.class.getName())
+                            .setDirectUrl(outerSofaRpcUrl)
+                            .setConnectTimeout(SOFARPC_TIMEOUT);
+                }
+            }
+        }
+        return outerConsumerConfig.refer().sayHello();
     }
 
     /**

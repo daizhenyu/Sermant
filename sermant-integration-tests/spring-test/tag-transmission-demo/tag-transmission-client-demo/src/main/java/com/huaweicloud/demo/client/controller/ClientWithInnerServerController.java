@@ -79,6 +79,8 @@ public class ClientWithInnerServerController {
     @RpcReference(schemaId = "InnerProviderController", microserviceName = "demo-consumer")
     private ProviderService providerService;
 
+    private ConsumerConfig<HelloService> innerConsumerConfig;
+
     /**
      * 验证httpclient3.x透传流量标签
      *
@@ -137,11 +139,17 @@ public class ClientWithInnerServerController {
      */
     @RequestMapping(value = "sofaRpc", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public String testInnerSofaRpc() {
-        ConsumerConfig<HelloService> consumerConfig = new ConsumerConfig<HelloService>()
-                .setInterfaceId(HelloService.class.getName())
-                .setDirectUrl(innerSofaRpcUrl)
-                .setConnectTimeout(SOFARPC_TIMEOUT);
-        return consumerConfig.refer().sayHello();
+        if (innerConsumerConfig == null) {
+            synchronized (this) {
+                if (innerConsumerConfig == null) {
+                    innerConsumerConfig = new ConsumerConfig<HelloService>()
+                            .setInterfaceId(HelloService.class.getName())
+                            .setDirectUrl(innerSofaRpcUrl)
+                            .setConnectTimeout(SOFARPC_TIMEOUT);
+                }
+            }
+        }
+        return innerConsumerConfig.refer().sayHello();
     }
 
     /**

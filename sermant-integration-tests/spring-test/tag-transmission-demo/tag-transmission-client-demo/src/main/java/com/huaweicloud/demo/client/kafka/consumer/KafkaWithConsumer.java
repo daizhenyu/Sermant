@@ -63,6 +63,7 @@ public class KafkaWithConsumer implements CommandLineRunner {
             while (true) {
                 ConsumerRecords<String, String> records = consumer.poll(MessageConstant.KAFKA_CONSUMER_TIMEOUT);
                 for (ConsumerRecord<String, String> record : records) {
+                    record.value();
                     KAFKA_TAG_MAP.put("kafkaTag", HttpClientUtils.doHttpClientV4Get(commonServerUrl));
                 }
             }
