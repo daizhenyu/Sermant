@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
+ *   Copyright (C) 2023-2023 Huawei Technologies Co., Ltd. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.demo.commonserver.common;
+package com.huaweicloud.demo.commonserver.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * 常量类
+ * 获取流量标签的key
  *
  * @author daizhenyu
- * @since 2023-09-07
+ * @since 2023-10-12
  **/
-public class Constant {
-    /**
-     * 流量标签的key值
-     */
-    public static final String[] TRAFFIC_TAG_KEY = {"id", "dynamic", "x-sermant-test", "tag-sermant"};
+@Configuration
+public class TagKeyConfig {
+    @Value("${traffic.tag.key}")
+    private String[] trafficTagKey;
 
-    private Constant() {
+    public String[] getTrafficTagKey() {
+        return trafficTagKey;
     }
 }

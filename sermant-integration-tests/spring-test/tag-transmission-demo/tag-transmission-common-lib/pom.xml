@@ -15,11 +15,6 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <httpclient3x.version>3.1</httpclient3x.version>
-        <httpclient4x.version>4.5.13</httpclient4x.version>
-        <okhttpv2.version>2.7.5</okhttpv2.version>
-        <grpc.version>1.52.1</grpc.version>
-        <protobuf.version>3.21.7</protobuf.version>
         <os.maven.version>1.6.2</os.maven.version>
         <protobuf.maven.version>0.6.1</protobuf.maven.version>
     </properties>

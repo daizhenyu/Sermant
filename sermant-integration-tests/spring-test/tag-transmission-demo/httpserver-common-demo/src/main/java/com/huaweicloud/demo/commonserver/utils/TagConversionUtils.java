@@ -16,8 +16,6 @@
 
 package com.huaweicloud.demo.commonserver.utils;
 
-import com.huaweicloud.demo.commonserver.common.Constant;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -40,14 +38,14 @@ public class TagConversionUtils {
      * @param request
      * @return string
      */
-    public static String convertHeader2String(HttpServletRequest request) {
-        return buildString(request);
+    public static String convertHeader2String(HttpServletRequest request, String[] tagKeys) {
+        return buildString(request, tagKeys);
     }
 
-    private static String buildString(HttpServletRequest request) {
+    private static String buildString(HttpServletRequest request, String[] tagKeys) {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
-        for (String key : Constant.TRAFFIC_TAG_KEY) {
+        for (String key : tagKeys) {
             if (request.getHeader(key) == null) {
                 continue;
             }

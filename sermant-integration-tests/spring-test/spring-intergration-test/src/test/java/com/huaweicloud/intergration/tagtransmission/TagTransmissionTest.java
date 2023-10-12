@@ -28,6 +28,7 @@ import org.apache.zookeeper.data.Stat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -42,11 +43,12 @@ import java.util.Optional;
  * @author daizhenyu
  * @since 2023-10-10
  **/
+@EnabledIfSystemProperty(named = "sermant.integration.test.type", matches = "TAG_TRANSMISSION")
 public class TagTransmissionTest {
     private static final Map<String, String> EXACT_TAG_MAP = new HashMap<>();
 
     @BeforeAll
-    public void before() {
+    public static void before() {
         EXACT_TAG_MAP.put("id", "001");
     }
 

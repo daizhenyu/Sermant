@@ -17,15 +17,8 @@
         <tag-transmission.version>1.0.0</tag-transmission.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <httpclient3x.version>3.1</httpclient3x.version>
-        <httpclient4x.version>4.5.13</httpclient4x.version>
-        <okhttpv2.version>2.7.5</okhttpv2.version>
-        <apache.dubbo.version>2.7.15</apache.dubbo.version>
         <curator.version>5.0.0</curator.version>
-        <sofarpc.version>5.10.0</sofarpc.version>
         <common.log.version>1.2</common.log.version>
-        <rocketmq-client.version>5.1.0</rocketmq-client.version>
-        <kafka-client.version>2.7.0</kafka-client.version>
         <failureaccess.version>1.0.1</failureaccess.version>
         <yaml.snakeyaml.version>1.33</yaml.snakeyaml.version>
         <hibernate.version>6.2.5.Final</hibernate.version>

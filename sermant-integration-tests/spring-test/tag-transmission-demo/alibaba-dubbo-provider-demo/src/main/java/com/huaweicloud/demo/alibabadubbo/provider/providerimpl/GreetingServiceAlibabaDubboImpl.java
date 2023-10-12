@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @since 2023-09-08
  **/
 @Service
-public class GreetingServiceApacheDubboImpl implements AlibabaGreetingOuterService {
+public class GreetingServiceAlibabaDubboImpl implements AlibabaGreetingOuterService {
     @Value("${sofaRpcUrl}")
     private String sofaRpcUrl;
 
