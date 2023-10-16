@@ -17,8 +17,10 @@
 
     <properties>
         <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
+        <tag-transmission.version>1.0.0</tag-transmission.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <curator.version>5.0.0</curator.version>
         <servicecomb.version>2.8.3</servicecomb.version>
         <httpclient3x.version>3.1</httpclient3x.version>
         <httpclient4x.version>4.5.13</httpclient4x.version>
@@ -35,11 +37,86 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+                <artifactId>rpc-api-demo</artifactId>
+                <version>${tag-transmission.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+                <artifactId>tag-transmission-util-demo</artifactId>
+                <version>${tag-transmission.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+                <artifactId>grpc-api-demo</artifactId>
+                <version>${tag-transmission.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+                <artifactId>midware-common-demo</artifactId>
+                <version>${tag-transmission.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.servicecomb</groupId>
                 <artifactId>java-chassis-dependencies</artifactId>
                 <version>${servicecomb.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-x-discovery</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${alibaba.dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${apache.dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alipay.sofa</groupId>
+                <artifactId>sofa-rpc-all</artifactId>
+                <version>${sofarpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${httpclient3x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient4x.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttpv2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -77,13 +154,120 @@
     </build>
 
     <modules>
-        <module>alibaba-dubbo-api-demo</module>
-<!--        <module>tag-transmission-common-lib</module>-->
-<!--        <module>tag-transmission-client-demo</module>-->
-<!--        <module>httpserver-jetty-demo</module>-->
-<!--        <module>httpserver-common-demo</module>-->
-<!--        <module>tag-transmission-server-demo</module>-->
-        <module>alibaba-dubbo-consumer-demo</module>
-        <module>alibaba-dubbo-provider-demo</module>
+        <module>httpserver-common-demo</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>alibaba-dubbo-test</id>
+            <modules>
+                <module>alibaba-dubbo-provider-demo</module>
+                <module>alibaba-dubbo-consumer-demo</module>
+                <module>rpc-api-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>apache-dubbo-test</id>
+            <modules>
+                <module>apache-dubbo-provider-demo</module>
+                <module>apache-dubbo-consumer-demo</module>
+                <module>rpc-api-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>sofarpc-test</id>
+            <modules>
+                <module>sofarpc-consumer-demo</module>
+                <module>sofarpc-provider-demo</module>
+                <module>rpc-api-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>servicecomb-test</id>
+            <modules>
+                <module>servicecomb-consumer-demo</module>
+                <module>servicecomb-provider-demo</module>
+                <module>rpc-api-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>grpc-test</id>
+            <modules>
+                <module>grpc-client-demo</module>
+                <module>grpc-server-demo</module>
+                <module>grpc-api-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>rocketmq-test</id>
+            <modules>
+                <module>rocketmq-consumer-demo</module>
+                <module>rocketmq-producer-demo</module>
+                <module>midware-common-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>kafka-test</id>
+            <modules>
+                <module>kafka-consumer-demo</module>
+                <module>kafka-producer-demo</module>
+                <module>midware-common-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>crossthread-test</id>
+            <modules>
+                <module>crossthread-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>httpclientv3-test</id>
+            <modules>
+                <module>httpclientv3-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>httpclientv4-test</id>
+            <modules>
+                <module>httpclientv4-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>okhttp-test</id>
+            <modules>
+                <module>okhttp-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>jdkhttp-jetty-test</id>
+            <modules>
+                <module>jdkhttp-demo</module>
+                <module>jetty-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>jdkhttp-tomcat-test</id>
+            <modules>
+                <module>jdkhttp-demo</module>
+                <module>tomcat-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>config-test</id>
+            <modules>
+                <module>tomcat-demo</module>
+                <module>tag-transmission-util-demo</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

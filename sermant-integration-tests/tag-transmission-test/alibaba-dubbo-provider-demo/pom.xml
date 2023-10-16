@@ -15,8 +15,6 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <curator.version>5.0.0</curator.version>
-        <alibaba.dubbo.version>2.6.12</alibaba.dubbo.version>
         <tag-transmission.version>1.0.0</tag-transmission.version>
     </properties>
 
@@ -25,12 +23,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>${httpclient4x.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
@@ -42,9 +34,22 @@
             <version>${curator.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
+            <version>${curator.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>${alibaba.dubbo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+            <artifactId>rpc-api-demo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huaweicloud.sermant.tagtransmission</groupId>
+            <artifactId>tag-transmission-util-demo</artifactId>
         </dependency>
     </dependencies>
 
