@@ -199,5 +199,6 @@ runs:
           echo "enableSpringLane=true" >> $GITHUB_ENV
           echo "enableDubboLane=true" >> $GITHUB_ENV
           echo "enableRemoval=true" >> $GITHUB_ENV
+          echo "enableTagTransmission=true" >> $GITHUB_ENV
         fi
 

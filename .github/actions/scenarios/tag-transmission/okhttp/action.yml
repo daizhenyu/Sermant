@@ -10,7 +10,7 @@ runs:
     - name: package demos
       shell: bash
       run: |
-        mvn package -Dokhttpv2.version=${{ matrix.okHttpVersion }} -DskipTests -Pokhttp-test --file
+        mvn package -Dokhttpv2.version=${{ matrix.okHttpVersion }} -DskipTests -Pokhttp-test --file \
         sermant-integration-tests/tag-transmission-test/pom.xml
     - name: start common httpserver
       shell: bash
@@ -30,8 +30,9 @@ runs:
         bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9055/okHttp/testOkHttp 120
     - name: test okhttp
       shell: bash
-      run: mvn test -Dtag.transmission.integration.test.type=OKHTTP --file \
-      sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test pom.xml
+      run: |
+        mvn test -Dtag.transmission.integration.test.type=OKHTTP --file \
+        sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test/pom.xml
     - name: exit
       if: always()
       uses: ./.github/actions/common/exit

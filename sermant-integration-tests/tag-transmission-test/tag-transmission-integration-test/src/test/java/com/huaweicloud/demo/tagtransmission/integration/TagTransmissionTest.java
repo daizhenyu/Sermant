@@ -249,7 +249,7 @@ public class TagTransmissionTest {
     private void checkTagTransmission(String url, Map<String, String> tagMap, String message) {
         Map<String, String> returnTagMap = convertJson2Map(RequestUtils.get(url,
                 EXACT_TAG_MAP));
-        Assertions.assertEquals("001", returnTagMap.get("id"), message + "transmit traffic tag failed");
+        Assertions.assertEquals("001", returnTagMap.get("id"), message + " transmit traffic tag failed");
     }
 
     private Map<String, String> convertJson2Map(Optional<String> jsonOptional) {

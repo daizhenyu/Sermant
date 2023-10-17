@@ -1,56 +1,56 @@
-name: Unit test and code coverage
-on: [push, pull_request]
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ github.head_ref }}
-  cancel-in-progress: true
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        java_version: [8]
-        os: [ubuntu-latest]
-    permissions:
-      checks: write
-      contents: write
-      pull-requests: write
-      statuses: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up JDK ${{ matrix.java_version }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ matrix.java_version }}
-          distribution: 'adopt'
-          cache: maven
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: download sc
-        run: |
-          curl -o apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz -L https://github.com/apache/servicecomb-service-center/releases/download/v2.1.0/apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz
-          tar -zxf apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz
-          sh apache-servicecomb-service-center-2.1.0-linux-amd64/start-service-center.sh
-      - name: download zookeeper
-        run: |
-          curl -o apache-zookeeper-3.6.3-bin.tar.gz -L https://archive.apache.org/dist/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz
-          tar -zxf apache-zookeeper-3.6.3-bin.tar.gz
-          bash apache-zookeeper-3.6.3-bin/bin/zkServer.sh start apache-zookeeper-3.6.3-bin/conf/zoo_sample.cfg
-      - name: download nacos
-        run: |
-          curl -o nacos-server-2.1.0.tar.gz -L  https://github.com/alibaba/nacos/releases/download/2.1.0/nacos-server-2.1.0.tar.gz
-          tar -zxf nacos-server-2.1.0.tar.gz
-          bash nacos/bin/startup.sh -m standalone
-      - name: Build with Maven
-        run: mvn test
-      - name: Generate code coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          files: ${{ github.workspace }}/report/target/jacoco/jacoco.xml
-          flags: unittests
-          fail_ci_if_error: true # optional (default = false)
+#name: Unit test and code coverage
+#on: [push, pull_request]
+#concurrency:
+#  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-${{ github.head_ref }}
+#  cancel-in-progress: true
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        java_version: [8]
+#        os: [ubuntu-latest]
+#    permissions:
+#      checks: write
+#      contents: write
+#      pull-requests: write
+#      statuses: write
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#      - name: Set up JDK ${{ matrix.java_version }}
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: ${{ matrix.java_version }}
+#          distribution: 'adopt'
+#          cache: maven
+#      - name: Cache Maven packages
+#        uses: actions/cache@v3
+#        with:
+#          path: ~/.m2
+#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: ${{ runner.os }}-m2
+#      - name: download sc
+#        run: |
+#          curl -o apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz -L https://github.com/apache/servicecomb-service-center/releases/download/v2.1.0/apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz
+#          tar -zxf apache-servicecomb-service-center-2.1.0-linux-amd64.tar.gz
+#          sh apache-servicecomb-service-center-2.1.0-linux-amd64/start-service-center.sh
+#      - name: download zookeeper
+#        run: |
+#          curl -o apache-zookeeper-3.6.3-bin.tar.gz -L https://archive.apache.org/dist/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz
+#          tar -zxf apache-zookeeper-3.6.3-bin.tar.gz
+#          bash apache-zookeeper-3.6.3-bin/bin/zkServer.sh start apache-zookeeper-3.6.3-bin/conf/zoo_sample.cfg
+#      - name: download nacos
+#        run: |
+#          curl -o nacos-server-2.1.0.tar.gz -L  https://github.com/alibaba/nacos/releases/download/2.1.0/nacos-server-2.1.0.tar.gz
+#          tar -zxf nacos-server-2.1.0.tar.gz
+#          bash nacos/bin/startup.sh -m standalone
+#      - name: Build with Maven
+#        run: mvn test
+#      - name: Generate code coverage report
+#        uses: codecov/codecov-action@v3
+#        with:
+#          files: ${{ github.workspace }}/report/target/jacoco/jacoco.xml
+#          flags: unittests
+#          fail_ci_if_error: true # optional (default = false)

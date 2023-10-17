@@ -10,7 +10,7 @@ runs:
     - name: package demos
       shell: bash
       run: |
-        mvn package -Dhttpclient3x.version=${{ matrix.httpclientVersion }} -DskipTests -Phttpclientv3-test --file
+        mvn package -Dhttpclient3x.version=${{ matrix.httpclientVersion }} -DskipTests -Phttpclientv3-test --file \
         sermant-integration-tests/tag-transmission-test/pom.xml
     - name: start common httpserver
       shell: bash
@@ -30,8 +30,9 @@ runs:
         bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9048/httpClientV3/testHttpClientV3 120
     - name: test httpclientv3
       shell: bash
-      run: mvn test -Dtag.transmission.integration.test.type=HTTPCLIENTV3 --file \
-      sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test pom.xml
+      run: |
+        mvn test -Dtag.transmission.integration.test.type=HTTPCLIENTV3 --file \
+        sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test/pom.xml
     - name: exit
       if: always()
       uses: ./.github/actions/common/exit
