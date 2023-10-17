@@ -48,7 +48,7 @@ runs:
       uses: actions/upload-artifact@v3
       if: ${{ failure() || cancelled() }}
       with:
-        name: (${{ github.job }})-tag-transmission-httpclientv3-(${{ matrix.httpClientVersion }}-logs
+        name: (${{ github.job }})-tag-transmission-grpc-(${{ matrix.grpcVersion }}-logs
         path: |
           ./*.log
           ./logs/**
