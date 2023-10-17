@@ -25,6 +25,7 @@ runs:
     - name: start apachedubbo consumer demo
       shell: bash
       run: |
+        sleep 5s
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/apache-dubbo-consumer \
         sermant-integration-tests/tag-transmission-test/apache-dubbo-consumer-demo/target/apache-dubbo-consumer-demo.jar > ${{ env.logDir}}/apache-dubbo-consumer.log 2>&1 &
