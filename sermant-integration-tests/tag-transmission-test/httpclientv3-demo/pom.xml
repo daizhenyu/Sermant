@@ -24,6 +24,7 @@
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
+            <version>${httpclient3x.version}</version>
         </dependency>
     </dependencies>
 

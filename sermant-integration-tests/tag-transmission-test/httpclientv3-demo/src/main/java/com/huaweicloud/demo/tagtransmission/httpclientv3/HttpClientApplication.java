@@ -17,6 +17,7 @@
 package com.huaweicloud.demo.tagtransmission.httpclientv3;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * springboot 启动类
@@ -24,6 +25,7 @@ import org.springframework.boot.SpringApplication;
  * @author daizhenyu
  * @since 2023-10-13
  **/
+@SpringBootApplication
 public class HttpClientApplication {
     /**
      * 启动类

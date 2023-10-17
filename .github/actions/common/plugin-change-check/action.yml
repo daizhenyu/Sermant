@@ -84,13 +84,13 @@ runs:
       run: |
         echo "sermantMqConsumerDenyChanged=${{ steps.changed-sermant-mq-consumer-deny.outputs.changed }}" >> $GITHUB_ENV
     - uses: marceloprado/has-changed-path@v1.0.1
-      id: changed-sermant-removal
+      id: changed-sermant-tag-transmission
       with:
-        paths: sermant-plugins/sermant-service-removal
-    - name: env sermant-sermant-service-removal
+        paths: sermant-plugins/sermant-tag-transmission
+    - name: env sermant-sermant-tag-transmission
       shell: bash
       run: |
-        echo "sermantServiceRemovalChanged=${{ steps.changed-sermant-removal.outputs.changed }}" >> $GITHUB_ENV
+        echo "sermantTagTransmissionChanged=${{ steps.changed-sermant-tag-transmission.outputs.changed }}" >> $GITHUB_ENV
     - uses: marceloprado/has-changed-path@v1.0.1
       id: changed-workflow-or-test
       with:
@@ -177,6 +177,12 @@ runs:
         if [ ${{ env.sermantAgentCoreChanged }} == 'true' -o ${{ env.sermantServiceRemovalChanged }} == 'true' -o \
             ${{ env.sermantSpringbootRegistryChanged }} == 'true' -o ${{ env.sermantServiceRegistryChanged }} == 'true' ];then
           echo "enableRemoval=true" >> $GITHUB_ENV
+        fi
+
+        # *****************tagtransmission.yml*****************
+        # ==========tag transmission is needed to test?==========
+        if [ ${{ env.sermantAgentCoreChanged }} == 'true' -o ${{ env.sermantTagTransmissionChanged }} == 'true';then
+          echo "enableTagTransmission=true" >> $GITHUB_ENV
         fi
 
         # all workflow will trigger while workflow changed

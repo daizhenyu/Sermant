@@ -144,7 +144,7 @@ public class GrpcClientController {
         // 构建服务存根
         Descriptors.FileDescriptor serviceFileDescriptor = GrpcTagTransmissionServiceProto.getDescriptor().getFile();
         Descriptors.ServiceDescriptor serviceDescriptor = serviceFileDescriptor
-                .findServiceByName("TagTransmissionTest");
+                .findServiceByName("TagTransmissionService");
         return serviceDescriptor.getMethods().get(0);
     }
 }
