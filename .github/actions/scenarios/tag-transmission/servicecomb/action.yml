@@ -1,0 +1,56 @@
+name: "Tag Transmission Plugin ServiceComb Test"
+description: "Auto test for tag transmission by ServiceComb"
+runs:
+  using: composite
+  steps:
+    - name: entry
+      uses: ./.github/actions/common/entry
+      with:
+        log-dir: ./logs/tag-transmission/servicecomb
+    - name: package demos
+      shell: bash
+      run: |
+        mvn package -Dservicecomb.version=${{ matrix.serviceCombVersion }} -DskipTests -Pservicecomb-test --file \
+        sermant-integration-tests/tag-transmission-test/pom.xml
+    - name: start common httpserver
+      shell: bash
+      run: |
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+    - name: start servicecomb consumer demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/servicecomb-consumer \
+        sermant-integration-tests/tag-transmission-test/servicecomb-consumer-demo/target/servicecomb-consumer-demo.jar > ${{ env.logDir}}/servicecomb-consumer.log 2>&1 &
+    - name: start servicecomb provider demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/servicecomb-provider \
+        sermant-integration-tests/tag-transmission-test/servicecomb-provider-demo/target/servicecomb-provider-demo.jar > ${{ env.logDir }}/servicecomb-provider.log 2>&1 &
+    - name: waiting for services start
+      shell: bash
+      run: |
+        ps -ef | grep java
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9040/common/httpServer 120
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9058/serviceCombConsumer/testServiceCombRpc 120
+    - name: test servicecomb
+      shell: bash
+      run: |
+        mvn test -Dtag.transmission.integration.test.type=SERVICECOMB --file \
+        sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test/pom.xml
+    - name: exit
+      if: always()
+      uses: ./.github/actions/common/exit
+      with:
+        processor-keyword: httpserver-common|servicecomb
+    - name: if failure then upload error log
+      uses: actions/upload-artifact@v3
+      if: ${{ failure() || cancelled() }}
+      with:
+        name: (${{ github.job }})-tag-transmission-httpclientv3-(${{ matrix.httpClientVersion }}-logs
+        path: |
+          ./*.log
+          ./logs/**
+        if-no-files-found: warn
+        retention-days: 2

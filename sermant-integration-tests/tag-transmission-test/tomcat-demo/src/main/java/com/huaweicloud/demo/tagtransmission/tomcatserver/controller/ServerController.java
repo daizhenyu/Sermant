@@ -45,4 +45,14 @@ public class ServerController {
     public String testTomcat() {
         return HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl);
     }
+
+    /**
+     * 用于验证流量透传标签配置项是否生效
+     *
+     * @return 流量标签值
+     */
+    @RequestMapping(value = "testConfig", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    public String testConfig() {
+        return HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl);
+    }
 }

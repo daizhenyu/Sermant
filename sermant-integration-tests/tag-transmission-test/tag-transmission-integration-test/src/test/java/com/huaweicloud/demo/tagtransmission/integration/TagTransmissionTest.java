@@ -201,12 +201,12 @@ public class TagTransmissionTest {
         // 测试 流量标签前缀匹配
         Map<String, String> prefixTagMap = new HashMap<>();
         prefixTagMap.put("x-sermant-test", "tag-test-prefix");
-        checkTagTransmission("http://127.0.0.1:9052/tomcat/testTomcat", prefixTagMap, "prefix");
+        checkTagTransmission("http://127.0.0.1:9052/tomcat/testConfig", prefixTagMap, "prefix");
 
         // 测试 流量标签后缀匹配
         Map<String, String> suffixTagMap = new HashMap<>();
         suffixTagMap.put("tag-sermant", "tag-test-suffix");
-        checkTagTransmission("http://127.0.0.1:9052/tomcat/testTomcat", suffixTagMap, "suffix");
+        checkTagTransmission("http://127.0.0.1:9052/tomcat/testConfig", suffixTagMap, "suffix");
 
         // 动态配置
         CuratorFramework curator = CuratorFrameworkFactory.newClient("127.0.0.1:2181",
@@ -237,7 +237,7 @@ public class TagTransmissionTest {
         Map<String, String> dynamicTagMap = new HashMap<>();
         dynamicTagMap.put("dynamic", "tag-test-dynamic");
         Map<String, String> returnDynamicTagMap = convertJson2Map(
-                RequestUtils.get("http://127.0.0.1:9052/tomcat/testTomcat", dynamicTagMap));
+                RequestUtils.get("http://127.0.0.1:9052/tomcat/testConfig", dynamicTagMap));
 
         // 切换为原来的流量标签配置
         curator.setData().forPath(nodePath, oldNodeValue.getBytes(StandardCharsets.UTF_8));
