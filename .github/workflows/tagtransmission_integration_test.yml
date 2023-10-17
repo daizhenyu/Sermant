@@ -281,32 +281,32 @@ jobs:
       - name: tag transmission test for alibabaDubboVersion=${{ matrix.alibabaDubboVersion }}
         if: env.enableTagTransmission == 'true'
         uses: ./.github/actions/scenarios/tag-transmission/alibaba-dubbo
-  test-for-tag-transmission-apachedubbo:
-    name: Test for tag transmission apachedubbo
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    strategy:
-      matrix:
-        include:
-          - apacheDubboVersion: "2.7.5"
-          - apacheDubboVersion: "2.7.15"
-          - apacheDubboVersion: "2.7.23"
-          - apacheDubboVersion: "3.0.15"
-          - apacheDubboVersion: "3.1.11"
-          - apacheDubboVersion: "3.2.7"
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
+#  test-for-tag-transmission-apachedubbo:
+#    name: Test for tag transmission apachedubbo
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - apacheDubboVersion: "2.7.5"
+#          - apacheDubboVersion: "2.7.15"
+#          - apacheDubboVersion: "2.7.23"
+#          - apacheDubboVersion: "3.0.15"
+#          - apacheDubboVersion: "3.1.11"
+#          - apacheDubboVersion: "3.2.7"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
 #  test-for-tag-transmission-crossthread:
 #    name: Test for tag transmission crossthread
 #    runs-on: ubuntu-latest
@@ -386,3 +386,55 @@ jobs:
 #      - name: tag transmission test for rocketMqVersion=${{ matrix.rocketMqVersion }}
 #        if: env.enableTagTransmission == 'true'
 #        uses: ./.github/actions/scenarios/tag-transmission/rocketmq
+  test-for-tag-transmission-jdkhttp-jetty:
+    name: Test for tag transmission jdkhttp and jetty
+    runs-on: ubuntu-latest
+    needs: [build-agent-and-cache, download-midwares-and-cache]
+    strategy:
+      matrix:
+        include:
+          - apacheDubboVersion: "2.7.5"
+          - apacheDubboVersion: "2.7.15"
+          - apacheDubboVersion: "2.7.23"
+          - apacheDubboVersion: "3.0.15"
+          - apacheDubboVersion: "3.1.11"
+          - apacheDubboVersion: "3.2.7"
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+      - name: set java version to environment
+        run: |
+          echo "javaVersion=8" >> $GITHUB_ENV
+      - name: common operations
+        uses: ./.github/actions/common/tag-transmission
+      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+        if: env.enableTagTransmission == 'true'
+        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
+  test-for-tag-transmission-jdkhttp-tomcat:
+    name: Test for tag transmission apachedubbo
+    runs-on: ubuntu-latest
+    needs: [build-agent-and-cache, download-midwares-and-cache]
+    strategy:
+      matrix:
+        include:
+          - apacheDubboVersion: "2.7.5"
+          - apacheDubboVersion: "2.7.15"
+          - apacheDubboVersion: "2.7.23"
+          - apacheDubboVersion: "3.0.15"
+          - apacheDubboVersion: "3.1.11"
+          - apacheDubboVersion: "3.2.7"
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+      - name: set java version to environment
+        run: |
+          echo "javaVersion=8" >> $GITHUB_ENV
+      - name: common operations
+        uses: ./.github/actions/common/tag-transmission
+      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+        if: env.enableTagTransmission == 'true'
+        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
