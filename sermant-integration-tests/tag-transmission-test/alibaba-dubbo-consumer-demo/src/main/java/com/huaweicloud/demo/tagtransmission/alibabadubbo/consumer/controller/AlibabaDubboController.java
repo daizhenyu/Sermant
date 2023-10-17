@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("alibabaDubbo")
 public class AlibabaDubboController {
-    @Lazy
     @Reference(loadbalance = "random")
     private AlibabaTagTransmissionService tagTransmissionService;
 

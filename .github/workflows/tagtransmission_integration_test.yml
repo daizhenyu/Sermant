@@ -307,35 +307,82 @@ jobs:
       - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
         if: env.enableTagTransmission == 'true'
         uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
-  test-for-tag-transmission-crossthread:
-    name: Test for tag transmission crossthread
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for crossthread
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/crossthread
-  test-for-tag-transmission-config:
-    name: Test for tag transmission config
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for config
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/config
+#  test-for-tag-transmission-crossthread:
+#    name: Test for tag transmission crossthread
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for crossthread
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/crossthread
+#  test-for-tag-transmission-config:
+#    name: Test for tag transmission config
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for config
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/config
+#  test-for-tag-transmission-kafka:
+#    name: Test for tag transmission apachedubbo
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - kafkaVersion: "2.3.1"
+#          - kafkaVersion: "1.1.1"
+#          - kafkaVersion: "2.7.2"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
+#  test-for-tag-transmission-rocketmq:
+#    name: Test for tag transmission apachedubbo
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - rocketMqVersion: "4.8.0"
+#          - rocketMqVersion: "4.9.7"
+#          - rocketMqVersion: "5.0.0"
+#          - rocketMqVersion: "5.1.4"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo

@@ -18,7 +18,7 @@ package com.huaweicloud.demo.tagtransmission.apachedubbo.consumer.controller;
 
 import com.huaweicloud.demo.tagtransmission.rpc.api.apachedubbo.ApacheTagTransmissionService;
 
-import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("apacheDubbo")
 public class ApacheDubboController {
     @Lazy
-    @DubboReference(loadbalance = "random")
+    @Reference(loadbalance = "random")
     private ApacheTagTransmissionService tagTransmissionService;
 
     /**

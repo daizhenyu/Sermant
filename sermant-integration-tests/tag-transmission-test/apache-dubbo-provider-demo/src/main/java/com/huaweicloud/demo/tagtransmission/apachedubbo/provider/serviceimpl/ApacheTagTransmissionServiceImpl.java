@@ -19,7 +19,7 @@ package com.huaweicloud.demo.tagtransmission.apachedubbo.provider.serviceimpl;
 import com.huaweicloud.demo.tagtransmission.rpc.api.apachedubbo.ApacheTagTransmissionService;
 import com.huaweicloud.demo.tagtransmission.util.HttpClientUtils;
 
-import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @author daizhenyu
  * @since 2023-09-08
  **/
-@DubboService
+@Service
 public class ApacheTagTransmissionServiceImpl implements ApacheTagTransmissionService {
     @Value("${common.server.url}")
     private String commonServerUrl;
