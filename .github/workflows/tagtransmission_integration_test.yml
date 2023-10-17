@@ -340,7 +340,7 @@ jobs:
 #        if: env.enableTagTransmission == 'true'
 #        uses: ./.github/actions/scenarios/tag-transmission/config
 #  test-for-tag-transmission-kafka:
-#    name: Test for tag transmission apachedubbo
+#    name: Test for tag transmission kafka
 #    runs-on: ubuntu-latest
 #    needs: [build-agent-and-cache, download-midwares-and-cache]
 #    strategy:
@@ -359,11 +359,11 @@ jobs:
 #          echo "javaVersion=8" >> $GITHUB_ENV
 #      - name: common operations
 #        uses: ./.github/actions/common/tag-transmission
-#      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+#      - name: tag transmission test for kafkaVersion=${{ matrix.kafkaVersion }}
 #        if: env.enableTagTransmission == 'true'
-#        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
+#        uses: ./.github/actions/scenarios/tag-transmission/kafka
 #  test-for-tag-transmission-rocketmq:
-#    name: Test for tag transmission apachedubbo
+#    name: Test for tag transmission rocketmq
 #    runs-on: ubuntu-latest
 #    needs: [build-agent-and-cache, download-midwares-and-cache]
 #    strategy:
@@ -383,6 +383,6 @@ jobs:
 #          echo "javaVersion=8" >> $GITHUB_ENV
 #      - name: common operations
 #        uses: ./.github/actions/common/tag-transmission
-#      - name: tag transmission test for apacheDubboVersion=${{ matrix.apacheDubboVersion}}
+#      - name: tag transmission test for rocketMqVersion=${{ matrix.rocketMqVersion }}
 #        if: env.enableTagTransmission == 'true'
-#        uses: ./.github/actions/scenarios/tag-transmission/apache-dubbo
+#        uses: ./.github/actions/scenarios/tag-transmission/rocketmq

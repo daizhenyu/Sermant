@@ -1,0 +1,56 @@
+name: "Tag Transmission Plugin kafka Test"
+description: "Auto test for tag transmission by kafka"
+runs:
+  using: composite
+  steps:
+    - name: entry
+      uses: ./.github/actions/common/entry
+      with:
+        log-dir: ./logs/tag-transmission/kafka
+    - name: package demos
+      shell: bash
+      run: |
+        mvn package -Dkafka-client.version=${{ matrix.kafkaVersion }} -DskipTests -Pkafka-test --file \
+        sermant-integration-tests/tag-transmission-test/pom.xml
+    - name: start common httpserver
+      shell: bash
+      run: |
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+    - name: start kafka producer demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/kafka-producer \
+        sermant-integration-tests/tag-transmission-test/kafka-producer-demo/target/kafka-producer-demo.jar > ${{ env.logDir }}/kafka-producer.log 2>&1 &
+    - name: start kafka consumer demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/kafka-consumer \
+        sermant-integration-tests/tag-transmission-test/kafka-consumer-demo/target/kafka-consumer-demo.jar > ${{ env.logDir}}/kafka-consumer.log 2>&1 &
+    - name: waiting for services start
+      shell: bash
+      run: |
+        ps -ef | grep java
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9040/common/httpServer 120
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9053/kafkaConsumer/queryKafkaTag 120
+    - name: test kafka
+      shell: bash
+      run: |
+        mvn test -Dtag.transmission.integration.test.type=KAFKA --file \
+        sermant-integration-tests/tag-transmission-test/tag-transmission-integration-test/pom.xml
+    - name: exit
+      if: always()
+      uses: ./.github/actions/common/exit
+      with:
+        processor-keyword: httpserver-common|kafka
+    - name: if failure then upload error log
+      uses: actions/upload-artifact@v3
+      if: ${{ failure() || cancelled() }}
+      with:
+        name: (${{ github.job }})-tag-transmission-kafka-(${{ matrix.kafkaVersion }}-logs
+        path: |
+          ./*.log
+          ./logs/**
+        if-no-files-found: warn
+        retention-days: 2
