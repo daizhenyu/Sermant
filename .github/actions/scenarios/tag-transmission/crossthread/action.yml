@@ -21,7 +21,7 @@ runs:
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/crossthread \
-        sermant-integration-tests/tag-transmission-test/crossthread-demo/target/crossthread-consumer-demo.jar > ${{ env.logDir}}/crossthread.log 2>&1 &
+        sermant-integration-tests/tag-transmission-test/crossthread-demo/target/crossthread-demo.jar > ${{ env.logDir}}/crossthread.log 2>&1 &
     - name: waiting for services start
       shell: bash
       run: |

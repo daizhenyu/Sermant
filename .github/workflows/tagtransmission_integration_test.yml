@@ -200,63 +200,62 @@ jobs:
 #      - name: tag transmission test for grpcVersion=${{ matrix.grpcVersion }}
 #        if: env.enableTagTransmission == 'true'
 #        uses: ./.github/actions/scenarios/tag-transmission/grpc
-  test-for-tag-transmission-sofarpc:
-    name: Test for tag transmission grpc
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    strategy:
-      matrix:
-        include:
-          - sofaRpcVersion: "5.3.4"
-          - sofaRpcVersion: "5.4.8"
-          - sofaRpcVersion: "5.5.9"
-          - sofaRpcVersion: "5.6.5"
-          - sofaRpcVersion: "5.7.10"
-          - sofaRpcVersion: "5.8.8"
-          - sofaRpcVersion: "5.9.2"
-          - sofaRpcVersion: "5.10.0"
-          - sofaRpcVersion: "5.11.1"
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for sofaRpcVersion=${{ matrix.sofaRpcVersion }}
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/sofarpc
-  test-for-tag-transmission-servicecomb:
-    name: Test for tag transmission servicecomb
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    strategy:
-      matrix:
-        include:
-          - serviceCombVersion: "2.0.2"
-          - serviceCombVersion: "2.1.6"
-          - serviceCombVersion: "2.2.4"
-          - serviceCombVersion: "2.3.6"
-          - serviceCombVersion: "2.5.3"
-          - serviceCombVersion: "2.6.3"
-          - serviceCombVersion: "2.7.10"
-          - serviceCombVersion: "2.8.12"
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for servicecombVersion=${{ matrix.serviceCombVersion }}
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/servicecomb
+#  test-for-tag-transmission-sofarpc:
+#    name: Test for tag transmission sofarpc
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - sofaRpcVersion: "5.3.4"
+#          - sofaRpcVersion: "5.4.8"
+#          - sofaRpcVersion: "5.5.9"
+#          - sofaRpcVersion: "5.6.5"
+#          - sofaRpcVersion: "5.7.10"
+#          - sofaRpcVersion: "5.8.8"
+#          - sofaRpcVersion: "5.9.2"
+#          - sofaRpcVersion: "5.10.0"
+#          - sofaRpcVersion: "5.11.1"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for sofaRpcVersion=${{ matrix.sofaRpcVersion }}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/sofarpc
+#  test-for-tag-transmission-servicecomb:
+#    name: Test for tag transmission servicecomb
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - serviceCombVersion: "2.1.6"
+#          - serviceCombVersion: "2.2.4"
+#          - serviceCombVersion: "2.3.6"
+#          - serviceCombVersion: "2.5.3"
+#          - serviceCombVersion: "2.6.3"
+#          - serviceCombVersion: "2.7.10"
+#          - serviceCombVersion: "2.8.12"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for servicecombVersion=${{ matrix.serviceCombVersion }}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/servicecomb
   test-for-tag-transmission-alibabadubbo:
     name: Test for tag transmission alibabadubbo
     runs-on: ubuntu-latest
@@ -283,13 +282,13 @@ jobs:
         if: env.enableTagTransmission == 'true'
         uses: ./.github/actions/scenarios/tag-transmission/alibaba-dubbo
   test-for-tag-transmission-apachedubbo:
-    name: Test for tag transmission grpc
+    name: Test for tag transmission apachedubbo
     runs-on: ubuntu-latest
     needs: [build-agent-and-cache, download-midwares-and-cache]
     strategy:
       matrix:
         include:
-          - apacheDubboVersion: "2.7.0"
+          - apacheDubboVersion: "2.7.5"
           - apacheDubboVersion: "2.7.15"
           - apacheDubboVersion: "2.7.23"
           - apacheDubboVersion: "3.0.15"

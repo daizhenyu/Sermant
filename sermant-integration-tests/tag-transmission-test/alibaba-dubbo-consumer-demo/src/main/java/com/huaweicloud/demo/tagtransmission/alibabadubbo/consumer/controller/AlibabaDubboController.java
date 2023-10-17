@@ -50,5 +50,4 @@ public class AlibabaDubboController {
     public String testAlibabaDubbo() {
         return tagTransmissionService.transmitTag();
     }
-
 }

@@ -16,18 +16,18 @@ runs:
       shell: bash
       run: |
         nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
-    - name: start alibabadubbo consumer demo
-      shell: bash
-      run: |
-        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
-        -Dsermant_log_dir=${{ env.logDir }}/alibaba-dubbo-consumer \
-        sermant-integration-tests/tag-transmission-test/alibaba-dubbo-consumer-demo/target/alibaba-dubbo-consumer-demo.jar > ${{ env.logDir}}/alibaba-dubbo-consumer.log 2>&1 &
     - name: start alibabadubbo provider demo
       shell: bash
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/alibaba-dubbo-provider \
         sermant-integration-tests/tag-transmission-test/alibaba-dubbo-provider-demo/target/alibaba-dubbo-provider-demo.jar > ${{ env.logDir }}/alibaba-dubbo-provider.log 2>&1 &
+    - name: start alibabadubbo consumer demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/alibaba-dubbo-consumer \
+        sermant-integration-tests/tag-transmission-test/alibaba-dubbo-consumer-demo/target/alibaba-dubbo-consumer-demo.jar > ${{ env.logDir}}/alibaba-dubbo-consumer.log 2>&1 &
     - name: waiting for services start
       shell: bash
       run: |
