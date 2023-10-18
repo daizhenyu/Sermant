@@ -15,13 +15,13 @@ runs:
     - name: start common httpserver
       shell: bash
       run: |
-        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir }}/httpserver-common-demo.log 2>&1 &
     - name: start sofarpc consumer demo
       shell: bash
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/sofarpc-consumer \
-        sermant-integration-tests/tag-transmission-test/sofarpc-consumer-demo/target/sofarpc-consumer-demo.jar > ${{ env.logDir}}/sofarpc-consumer.log 2>&1 &
+        sermant-integration-tests/tag-transmission-test/sofarpc-consumer-demo/target/sofarpc-consumer-demo.jar > ${{ env.logDir }}/sofarpc-consumer.log 2>&1 &
     - name: start sofarpc provider demo
       shell: bash
       run: |
@@ -48,7 +48,7 @@ runs:
       uses: actions/upload-artifact@v3
       if: ${{ failure() || cancelled() }}
       with:
-        name: (${{ github.job }})-tag-transmission-sofarpc-(${{ matrix.httpClientVersion }}-logs
+        name: (${{ github.job }})-tag-transmission-sofarpc-(${{ matrix.sofaRpcVersion }}-logs
         path: |
           ./*.log
           ./logs/**

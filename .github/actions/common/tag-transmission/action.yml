@@ -43,18 +43,6 @@ runs:
       run: |
         tar -zxf nacos-server-1.4.2.tar.gz
         bash nacos/bin/startup.sh -m standalone
-#    - name: download kafka
-#      uses: actions/cache@v3
-#      with:
-#        path: kafka_2.13-2.7.0.tgz
-#        key: ${{ runner.os }}-kafka_2.13-2.7.0
-#        restore-keys: |
-#          ${{ runner.os }}-kafka_2.13-2.7.0
-#    - name: start kafka
-#      shell: bash
-#      run: |
-#        tar -zxf kafka_2.13-2.7.0.tgz
-#        nohup bash kafka_2.13-2.7.0/bin/kafka-server-start.sh kafka_2.13-2.7.0/config/server.properties &
     - name: cache dependencies
       uses: actions/cache@v3
       with:

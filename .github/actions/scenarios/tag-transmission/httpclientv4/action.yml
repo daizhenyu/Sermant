@@ -15,7 +15,7 @@ runs:
     - name: start common httpserver
       shell: bash
       run: |
-        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir }}/httpserver-common-demo.log 2>&1 &
     - name: start httpclientv4 demo
       shell: bash
       run: |

@@ -15,13 +15,13 @@ runs:
     - name: start common httpserver
       shell: bash
       run: |
-        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir }}/httpserver-common-demo.log 2>&1 &
     - name: start config demo
       shell: bash
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/crossthread \
-        sermant-integration-tests/tag-transmission-test/tomcat-demo/target/tomcat-demo.jar > ${{ env.logDir}}/tomcat.log 2>&1 &
+        sermant-integration-tests/tag-transmission-test/tomcat-demo/target/tomcat-demo.jar > ${{ env.logDir }}/tomcat.log 2>&1 &
     - name: waiting for services start
       shell: bash
       run: |

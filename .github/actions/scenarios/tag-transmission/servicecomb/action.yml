@@ -15,13 +15,13 @@ runs:
     - name: start common httpserver
       shell: bash
       run: |
-        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir}}/httpserver-common-demo.log 2>&1 &
+        nohup java -jar sermant-integration-tests/tag-transmission-test/httpserver-common-demo/target/httpserver-common-demo.jar > ${{ env.logDir }}/httpserver-common-demo.log 2>&1 &
     - name: start servicecomb consumer demo
       shell: bash
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/servicecomb-consumer \
-        sermant-integration-tests/tag-transmission-test/servicecomb-consumer-demo/target/servicecomb-consumer-demo.jar > ${{ env.logDir}}/servicecomb-consumer.log 2>&1 &
+        sermant-integration-tests/tag-transmission-test/servicecomb-consumer-demo/target/servicecomb-consumer-demo.jar > ${{ env.logDir }}/servicecomb-consumer.log 2>&1 &
     - name: start servicecomb provider demo
       shell: bash
       run: |
