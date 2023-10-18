@@ -3,12 +3,12 @@ description: "Auto test for tag transmission by rocketmq"
 runs:
   using: composite
   steps:
-#    - name: Set up JDK ${{ env.javaVersion }}
-#      uses: actions/setup-java@v3
-#      with:
-#        java-version: ${{ env.javaVersion }}
-#        distribution: 'adopt'
-#        cache: maven
+    - name: Set up JDK ${{ env.javaVersion }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.javaVersion }}
+        distribution: 'adopt'
+        cache: maven
 #    - name: download zookeeper
 #      uses: actions/cache@v3
 #      with:
@@ -44,13 +44,13 @@ runs:
 #        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 #        restore-keys: |
 #          ${{ runner.os }}-maven-
-#    - name: download agent
-#      uses: actions/cache@v3
-#      with:
-#        path: sermant-agent-*/
-#        key: ${{ runner.os }}-agent-${{ github.run_id }}
-#    - name: plugin change check
-#      uses: ./.github/actions/common/plugin-change-check
+    - name: download agent
+      uses: actions/cache@v3
+      with:
+        path: sermant-agent-*/
+        key: ${{ runner.os }}-agent-${{ github.run_id }}
+    - name: plugin change check
+      uses: ./.github/actions/common/plugin-change-check
     - name: entry
       uses: ./.github/actions/common/entry
       with:
