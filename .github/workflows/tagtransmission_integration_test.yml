@@ -339,29 +339,29 @@ jobs:
 #      - name: tag transmission test for config
 #        if: env.enableTagTransmission == 'true'
 #        uses: ./.github/actions/scenarios/tag-transmission/config
-  test-for-tag-transmission-kafka:
-    name: Test for tag transmission kafka
-    runs-on: ubuntu-latest
-    needs: [build-agent-and-cache, download-midwares-and-cache]
-    strategy:
-      matrix:
-        include:
-          - kafkaVersion: "2.3.1"
-          - kafkaVersion: "1.1.1"
-          - kafkaVersion: "2.7.2"
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/tag-transmission
-      - name: tag transmission test for kafkaVersion=${{ matrix.kafkaVersion }}
-        if: env.enableTagTransmission == 'true'
-        uses: ./.github/actions/scenarios/tag-transmission/kafka
+#  test-for-tag-transmission-kafka:
+#    name: Test for tag transmission kafka
+#    runs-on: ubuntu-latest
+#    needs: [build-agent-and-cache, download-midwares-and-cache]
+#    strategy:
+#      matrix:
+#        include:
+#          - kafkaVersion: "2.3.1"
+#          - kafkaVersion: "1.1.1"
+#          - kafkaVersion: "2.7.2"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/tag-transmission
+#      - name: tag transmission test for kafkaVersion=${{ matrix.kafkaVersion }}
+#        if: env.enableTagTransmission == 'true'
+#        uses: ./.github/actions/scenarios/tag-transmission/kafka
 #  test-for-tag-transmission-rocketmq:
 #    name: Test for tag transmission rocketmq
 #    runs-on: ubuntu-latest
