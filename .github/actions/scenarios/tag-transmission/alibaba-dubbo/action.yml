@@ -7,6 +7,14 @@ runs:
       uses: ./.github/actions/common/entry
       with:
         log-dir: ./logs/tag-transmission/alibaba-dubbo
+    - name: alibaba.dubbo.version != 2.6.0
+      if: matrix.alibabaDubboVersion != 2.6.0
+      shell: bash
+      run: |
+        sed -i '/<dependency>/{:a;N;/<\/dependency>/!ba};/<groupId>com.101tec<\/groupId>\s*<artifactId>zkclient<\/artifactId>/d' \
+        sermant-integration-tests/tag-transmission-test/alibaba-dubbo-consumer-demo/pom.xml
+        sed -i '/<dependency>/{:a;N;/<\/dependency>/!ba};/<groupId>com.101tec<\/groupId>\s*<artifactId>zkclient<\/artifactId>/d' \
+        sermant-integration-tests/tag-transmission-test/alibaba-dubbo-provider-demo/pom.xml
     - name: package demos
       shell: bash
       run: |
