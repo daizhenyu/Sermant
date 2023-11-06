@@ -24,7 +24,6 @@ runs:
       shell: bash
       run: |
         unzip rocketmq-all-4.8.0-bin-release.zip
-#        sed -i 's/-Xms4g -Xmx4g -Xmn2g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-bin-release/bin/runserver.sh
         nohup bash rocketmq-all-4.8.0-bin-release/bin/mqnamesrv &
     - name: start rocketmq broker
       shell: bash
