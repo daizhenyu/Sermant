@@ -69,6 +69,7 @@ public class HttpClientUtils {
                 connection.disconnect();
             }
         }
+        System.out.println(responseContext);
         return responseContext;
     }
 }
