@@ -62,7 +62,7 @@ public class RocketMqConsumer implements CommandLineRunner {
     private void consumeData() throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MessageConstant.ROCKETMQ_CONSUME_GROUP);
         consumer.setNamesrvAddr(rocketMqAddress);
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         consumer.subscribe(MessageConstant.TOPIC, MessageConstant.TAG_SCOPE);
         consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
