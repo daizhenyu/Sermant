@@ -372,6 +372,8 @@ jobs:
       - name: set java version to environment
         run: |
           echo "javaVersion=8" >> $GITHUB_ENV
+      - name: common operations
+        uses: ./.github/actions/common/tag-transmission
       - name: tag transmission test for rocketMqVersion=${{ matrix.rocketMqVersion }}
         uses: ./.github/actions/scenarios/tag-transmission/rocketmq
 #  test-for-tag-transmission-jdkhttp-jetty:

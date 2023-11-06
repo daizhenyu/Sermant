@@ -7,12 +7,6 @@ runs:
       uses: ./.github/actions/common/entry
       with:
         log-dir: ./logs/tag-transmission/rocketmq
-    - name: Set up JDK ${{ env.javaVersion }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ env.javaVersion }}
-        distribution: 'adopt'
-        cache: maven
     - name: get rocketmq from cache
       uses: actions/cache@v3
       with:
@@ -32,11 +26,6 @@ runs:
       run: |
         sed -i 's/-Xms8g -Xmx8g -Xmn4g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-bin-release/bin/runbroker.sh
         nohup bash rocketmq-all-4.8.0-bin-release/bin/mqbroker -n localhost:9876 &
-    - name: download agent
-      uses: actions/cache@v3
-      with:
-        path: sermant-agent-*/
-        key: ${{ runner.os }}-agent-${{ github.run_id }}
     - name: package demos
       shell: bash
       run: |
