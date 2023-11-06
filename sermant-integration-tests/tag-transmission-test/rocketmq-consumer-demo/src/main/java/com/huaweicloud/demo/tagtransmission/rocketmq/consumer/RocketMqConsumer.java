@@ -55,6 +55,7 @@ public class RocketMqConsumer implements CommandLineRunner {
 
     @Override
     public void run(String[] args) throws MQClientException {
+        System.out.println("开始消费");
         consumeData();
     }
 
@@ -70,6 +71,8 @@ public class RocketMqConsumer implements CommandLineRunner {
                 if (messageExts != null) {
                     for (MessageExt ext : messageExts) {
                         ext.getBody();
+                        System.out.println(ext.getProperties().toString());
+                        System.out.println(ext.getProperties().get("id"));
                         ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
                         System.out.println(ROCKETMQ_TAG_MAP.get("rocketmqTag"));
                     }
