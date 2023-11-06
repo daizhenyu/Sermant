@@ -16,21 +16,21 @@ runs:
     - name: get rocketmq from cache
       uses: actions/cache@v3
       with:
-        path: rocketmq-all-4.8.0-source-release.zip
-        key: ${{ runner.os }}-rocketmq-all-4.8.0-source-release
+        path: rocketmq-all-4.8.0-bin-release.zip
+        key: ${{ runner.os }}-rocketmq-all-4.8.0-bin-release
         restore-keys: |
-          ${{ runner.os }}-rocketmq-all-4.8.0-source-release
+          ${{ runner.os }}-rocketmq-all-4.8.0-bin-release
     - name: start rocketmq server
       shell: bash
       run: |
-        unzip rocketmq-all-4.8.0-source-release.zip
-        sed -i 's/-Xms4g -Xmx4g -Xmn2g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-source-release/bin/runserver.sh
-        nohup bash rocketmq-all-4.8.0-source-release/bin/mqnamesrv.sh &
+        unzip rocketmq-all-4.8.0-bin-release.zip
+        sed -i 's/-Xms4g -Xmx4g -Xmn2g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-bin-release/bin/runserver.sh
+        nohup bash rocketmq-all-4.8.0-bin-release/bin/mqnamesrv.sh &
     - name: start rocketmq broker
       shell: bash
       run: |
-        sed -i 's/-Xms8g -Xmx8g -Xmn4g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-source-release/bin/runbroker.sh
-        nohup bash rocketmq-all-4.8.0-source-release/bin/mqbroker -n localhost:9876 &
+        sed -i 's/-Xms8g -Xmx8g -Xmn4g/-Xms1g -Xmx1g -Xmn1g/g' rocketmq-all-4.8.0-bin-release/bin/runbroker.sh
+        nohup bash rocketmq-all-4.8.0-bin-release/bin/mqbroker -n localhost:9876 &
     - name: download agent
       uses: actions/cache@v3
       with:
