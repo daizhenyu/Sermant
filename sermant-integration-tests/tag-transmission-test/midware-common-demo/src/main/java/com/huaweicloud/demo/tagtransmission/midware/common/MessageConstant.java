@@ -51,7 +51,12 @@ public class MessageConstant {
     /**
      * rocketmq消费者组
      */
-    public static final String ROCKETMQ_CONSUME_GROUP = "consume_group";
+    public static final String ROCKETMQ_CONSUMER_GROUP = "consumer_group";
+
+    /**
+     * rocketmq消费间隔
+     */
+    public static final long ROCKETMQ_CONSUME_TIME_INTERVAL = 10L;
 
     /**
      * rocketmq消息体
