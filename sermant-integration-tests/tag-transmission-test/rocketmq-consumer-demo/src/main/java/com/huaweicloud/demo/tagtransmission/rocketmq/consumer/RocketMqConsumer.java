@@ -19,12 +19,8 @@ package com.huaweicloud.demo.tagtransmission.rocketmq.consumer;
 import com.huaweicloud.demo.tagtransmission.midware.common.MessageConstant;
 import com.huaweicloud.demo.tagtransmission.util.HttpClientUtils;
 
-import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerOrderly;
+import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -59,23 +55,23 @@ public class RocketMqConsumer implements CommandLineRunner {
     }
 
     private void consumeData() throws MQClientException {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MessageConstant.ROCKETMQ_CONSUME_GROUP);
-        consumer.setNamesrvAddr(rocketMqAddress);
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.subscribe(MessageConstant.TOPIC, MessageConstant.TAG_SCOPE);
-        consumer.registerMessageListener(new MessageListenerOrderly() {
-            @Override
-            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> messageExts,
-                    ConsumeOrderlyContext context) {
+        DefaultLitePullConsumer pullConsumer = new DefaultLitePullConsumer(MessageConstant.ROCKETMQ_CONSUME_GROUP);
+        pullConsumer.setNamesrvAddr(rocketMqAddress);
+        pullConsumer.subscribe(MessageConstant.TOPIC);
+        pullConsumer.setPullBatchSize(1);
+        pullConsumer.start();
+        try {
+            while (true) {
+                List<MessageExt> messageExts = pullConsumer.poll();
                 if (messageExts != null) {
-                    for (MessageExt ext : messageExts) {
-                        ext.getBody();
+                    for (MessageExt messageExt : messageExts) {
+                        messageExt.getBody();
                         ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
                     }
                 }
-                return ConsumeOrderlyStatus.SUCCESS;
             }
-        });
-        consumer.start();
+        } finally {
+            pullConsumer.shutdown();
+        }
     }
 }
