@@ -10,10 +10,10 @@ runs:
     - name: get rocketmq from cache
       uses: actions/cache@v3
       with:
-        path: rocketmq-all-4.8.0-bin-release.zip
-        key: ${{ runner.os }}-rocketmq-all-4.8.0-bin-release
+        path: rocketmq-all-5.1.4-bin-release.zip
+        key: ${{ runner.os }}-rocketmq-all-5.1.4-bin-release
         restore-keys: |
-          ${{ runner.os }}-rocketmq-all-4.8.0-bin-release
+          ${{ runner.os }}-rocketmq-all-5.1.4-bin-release
     - name: start rocketmq server
       shell: bash
       run: |
