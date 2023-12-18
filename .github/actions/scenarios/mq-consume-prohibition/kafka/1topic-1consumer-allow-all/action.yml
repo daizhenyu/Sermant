@@ -1,0 +1,42 @@
+name: "one topic one consumer allow all consume test"
+description: "one topic one consumer allow all consume test"
+runs:
+  using: "composite"
+  steps:
+    - name: entry
+      uses: ./.github/actions/common/entry
+      with:
+        log-dir: ./logs/mq-consume-prohibition-test/1topic-1consumer-allow-all
+    - name: start application
+      shell: bash
+      env:
+#        添加禁消费相关初始配置
+        dynamic.config.serverAddress: 127.0.0.1:30110
+        dynamic.config.dynamicConfigType: KIE
+      run: |
+        nohup java -jar sermant-agent-${{ env.sermantVersion }}/agent/prohibition-kafka-producer-demo.jar -Dserver.port=8076 > ${{ env.logDir }}/1topic-1consumer-allow-all-producer.log 2>&1 &
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar -jar \
+        sermant-agent-${{ env.sermantVersion }}/agent/prohibition-kafka-consumer-demo.jar -Dserver.port=8077 > ${{ env.logDir }}/1topic-1consumer-allow-all-consumer.log 2>&1 &
+    - name: waiting for application start
+      shell: bash
+      run: |
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:8076/kafkaConsumer/testConsumer 120
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:8076/kafkaProducer/testProducer 120
+    - name: test module start
+      shell: bash
+      run: mvn test -Dmq.consumer.prohibition.test.type=TEST_KAFKA_1T1C_AllowAll --file sermant-integration-tests/mq-consume-prohibition-test/prohibition-integration-test/pom.xml
+    - name: exit
+      if: always()
+      uses: ./.github/actions/common/exit
+      with:
+        processor-keyword: prohibition
+    - name: if failure then upload error log
+      uses: actions/upload-artifact@v3
+      if: ${{ failure() || cancelled() }}
+      with:
+        name: 1topic-1consumer-allow-all-logs
+        path: |
+          ./*.log
+          ./logs/**
+        if-no-files-found: warn
+        retention-days: 2
