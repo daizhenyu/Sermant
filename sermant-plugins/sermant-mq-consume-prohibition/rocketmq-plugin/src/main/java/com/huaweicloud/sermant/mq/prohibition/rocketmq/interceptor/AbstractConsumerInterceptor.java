@@ -67,21 +67,15 @@ public abstract class AbstractConsumerInterceptor extends AbstractInterceptor {
         Object consumerObject = context.getObject();
         if (consumerObject != null && consumerObject instanceof DefaultMQPushConsumer) {
             Optional<DefaultMqPushConsumerWrapper> pushConsumerWrapperOptional =
-                    RocketMqPushConsumerController.getPushConsumerCache()
-                            .stream()
-                            .filter(obj -> obj.getPushConsumer().equals(consumerObject))
-                            .findFirst();
+                    RocketMqPushConsumerController.getPushConsumerWrapper(consumerObject);
             if (pushConsumerWrapperOptional.isPresent()) {
                 return doAfter(context, pushConsumerWrapperOptional.get());
             }
         }
 
         if (consumerObject != null && consumerObject instanceof DefaultLitePullConsumer) {
-            Optional<DefaultLitePullConsumerWrapper> pullConsumerWrapperOptional =
-                    RocketmqPullConsumerController.getPullConsumerCache()
-                            .stream()
-                            .filter(obj -> obj.getPullConsumer().equals(consumerObject))
-                            .findFirst();
+            Optional<DefaultLitePullConsumerWrapper> pullConsumerWrapperOptional = RocketmqPullConsumerController
+                    .getPullConsumerWrapper(consumerObject);
             if (pullConsumerWrapperOptional.isPresent()) {
                 return doAfter(context, pullConsumerWrapperOptional.get());
             }

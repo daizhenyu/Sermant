@@ -17,6 +17,7 @@
 package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
+import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.InvokeUtils;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.PullConsumerLocalInfoUtils;
 import com.huaweicloud.sermant.rocketmq.constant.SubscriptionType;
@@ -24,17 +25,23 @@ import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
 import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
 
+import org.apache.rocketmq.common.message.MessageQueue;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * RocketMq pullConsumer订阅拦截器
+ * RocketMq pullConsumer指定队列拦截器
  *
  * @author daizhenyu
  * @since 2023-12-15
  **/
-public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInterceptor {
     /**
      * 无参构造方法
      */
-    public RocketMqPullConsumerSubscribeInterceptor() {
+    public RocketMqPullConsumerAssignInterceptor() {
     }
 
     /**
@@ -42,12 +49,15 @@ public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerIn
      *
      * @param handler 处理器
      */
-    public RocketMqPullConsumerSubscribeInterceptor(RocketMqConsumerHandler handler) {
+    public RocketMqPullConsumerAssignInterceptor(RocketMqConsumerHandler handler) {
         super(handler);
     }
 
     @Override
     protected ExecuteContext doBefore(ExecuteContext context) {
+        if (InvokeUtils.isInvokeBySermant()) {
+            return context;
+        }
         if (handler != null) {
             handler.doBefore(context);
         }
@@ -56,12 +66,26 @@ public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerIn
 
     @Override
     protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
+        if (InvokeUtils.isInvokeBySermant()) {
+            return context;
+        }
+        Object consumerObject = context.getObject();
+        Object[] argumentObject = context.getArguments();
+        if (consumerObject == null || argumentObject == null || argumentObject.length == 0) {
+            return context;
+        }
+        Object messageQueueObject = argumentObject[0];
+        if (messageQueueObject == null || !(messageQueueObject instanceof Collection)) {
+            return context;
+        }
+        Collection<MessageQueue> messageQueue = (Collection<MessageQueue>) messageQueueObject;
+
         DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
         if (wrapper == null) {
-            PullConsumerLocalInfoUtils.setSubscriptionType(SubscriptionType.SUBSCRIBE);
+            setAssignLocalInfo(messageQueue);
         } else {
             pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
-            pullConsumerWrapper.setSubscriptionType(SubscriptionType.SUBSCRIBE);
+            updateAssignWrapperInfo(pullConsumerWrapper, messageQueue);
         }
 
         if (handler != null) {
@@ -69,16 +93,39 @@ public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerIn
             return context;
         }
 
-        // 增加topic订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
+        // 指定消费的队列后，需根据禁消费的topic配置对消费者开启或禁止消费
         ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
         return context;
     }
 
     @Override
     protected ExecuteContext doOnThrow(ExecuteContext context) {
+        if (InvokeUtils.isInvokeBySermant()) {
+            return context;
+        }
         if (handler != null) {
             handler.doOnThrow(context);
         }
         return context;
+    }
+
+    private Set<String> getMessageQueueTopics(Collection<MessageQueue> messageQueues) {
+        HashSet<String> topics = new HashSet<>();
+        for (MessageQueue messageQueue : messageQueues) {
+            topics.add(messageQueue.getTopic());
+        }
+        return topics;
+    }
+
+    private void updateAssignWrapperInfo(DefaultLitePullConsumerWrapper pullConsumerWrapper,
+            Collection<MessageQueue> messageQueue) {
+        pullConsumerWrapper.setMessageQueues(messageQueue);
+        pullConsumerWrapper.setSubscribedTopics(getMessageQueueTopics(messageQueue));
+        PullConsumerLocalInfoUtils.removeMessageQueue();
+    }
+
+    private void setAssignLocalInfo(Collection<MessageQueue> messageQueue) {
+        PullConsumerLocalInfoUtils.setSubscriptionType(SubscriptionType.ASSIGN);
+        PullConsumerLocalInfoUtils.setMessageQueue(messageQueue);
     }
 }

@@ -127,11 +127,11 @@ public class MqConfigListener implements DynamicConfigListener {
         KafkaConsumerController.getConsumerCache()
                 .forEach(obj -> KafkaConsumerController.disableConsumption(obj,
                         ProhibitionConfigManager.getKafkaProhibitionTopics()));
-        RocketMqPushConsumerController.getPushConsumerCache()
-                .forEach(obj -> RocketMqPushConsumerController.disablePushConsumption(obj,
+        RocketMqPushConsumerController.getPushConsumerCache().entrySet()
+                .forEach(obj -> RocketMqPushConsumerController.disablePushConsumption(obj.getValue(),
                         ProhibitionConfigManager.getRocketMqProhibitionTopics()));
-        RocketmqPullConsumerController.getPullConsumerCache()
-                .forEach(obj -> RocketmqPullConsumerController.disablePullConsumption(obj,
+        RocketmqPullConsumerController.getPullConsumerCache().entrySet()
+                .forEach(obj -> RocketmqPullConsumerController.disablePullConsumption(obj.getValue(),
                         ProhibitionConfigManager.getRocketMqProhibitionTopics()));
     }
 

@@ -20,6 +20,7 @@ import org.apache.rocketmq.client.impl.factory.MQClientInstance;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 消费者包装抽象类
@@ -36,7 +37,7 @@ public abstract class AbstractConsumerWrapper {
     /**
      * 消费者是否已经禁止消费
      */
-    protected boolean pause = false;
+    protected AtomicBoolean pause = new AtomicBoolean();
 
     /**
      * nameserver地址
@@ -103,11 +104,16 @@ public abstract class AbstractConsumerWrapper {
     protected abstract void initClientInfo();
 
     public boolean isPause() {
-        return pause;
+        return pause.get();
     }
 
+    /**
+     * 设置是否已经禁止消费
+     *
+     * @param pause 是否禁止消费
+     */
     public void setPause(boolean pause) {
-        this.pause = pause;
+        this.pause.set(pause);
     }
 
     public MQClientInstance getClientFactory() {

@@ -24,6 +24,7 @@ import com.huaweicloud.sermant.utils.RocketmqWrapperUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.impl.consumer.DefaultMQPushConsumerImpl;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -58,7 +59,7 @@ public class RocketMqPushConsumerController {
 
     private static void suspendPushConsumer(DefaultMqPushConsumerWrapper wrapper) {
         if (wrapper.isPause()) {
-            LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
+            LOGGER.log(Level.INFO, "Consumer has prohibited consumption, consumer instance name : {0}, "
                             + "consumer group : {1}, topic : {2}",
                     new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(), wrapper.getSubscribedTopics()});
             return;
@@ -67,6 +68,7 @@ public class RocketMqPushConsumerController {
         DefaultMQPushConsumerImpl pushConsumerImpl = wrapper.getPushConsumerImpl();
         String consumerGroup = wrapper.getConsumerGroup();
 
+        // 退出消费者前主动提交消费的offset，退出消费者组后立刻触发一次重平衡，重新分配队列
         pushConsumerImpl.persistConsumerOffset();
         wrapper.getClientFactory().unregisterConsumer(consumerGroup);
         pushConsumerImpl.doRebalance();
@@ -79,7 +81,7 @@ public class RocketMqPushConsumerController {
 
     private static void resumePushConsumer(DefaultMqPushConsumerWrapper wrapper) {
         if (!wrapper.isPause()) {
-            LOGGER.log(Level.INFO, "Success to open consumption, consumer "
+            LOGGER.log(Level.INFO, "Consumer has opened consumption, consumer "
                             + "instance name : {0}, consumer group : {1}, topic : {2}",
                     new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(), wrapper.getSubscribedTopics()});
             return;
@@ -105,7 +107,7 @@ public class RocketMqPushConsumerController {
         Optional<DefaultMqPushConsumerWrapper> pushConsumerWrapperOptional = RocketmqWrapperUtils
                 .wrapPushConsumer(pushConsumer);
         if (pushConsumerWrapperOptional.isPresent()) {
-            RocketMqConsumerCache.PUSH_CONSUMERS_CACHE.add(pushConsumerWrapperOptional.get());
+            RocketMqConsumerCache.PUSH_CONSUMERS_CACHE.put(pushConsumer.hashCode(), pushConsumerWrapperOptional.get());
             LOGGER.log(Level.INFO, "Success to cache consumer, "
                             + "consumer instance name : {0}, consumer group : {1}, topic : {2}",
                     new Object[]{pushConsumer.getInstanceName(), pushConsumer.getConsumerGroup(),
@@ -122,15 +124,30 @@ public class RocketMqPushConsumerController {
      * @param pushConsumer pushConsumer实例
      */
     public static void removePushConsumer(DefaultMQPushConsumer pushConsumer) {
-        for (DefaultMqPushConsumerWrapper wrapper : RocketMqConsumerCache.PUSH_CONSUMERS_CACHE) {
-            if (wrapper.getPushConsumer().equals(pushConsumer)) {
-                RocketMqConsumerCache.PUSH_CONSUMERS_CACHE.remove(wrapper);
-                LOGGER.log(Level.INFO, "Success to remove consumer, consumer instance name : {0}, consumer group "
-                                + ": {1}, topic : {2}",
-                        new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(),
-                                wrapper.getSubscribedTopics()});
-            }
+        int hashCode = pushConsumer.hashCode();
+        DefaultMqPushConsumerWrapper wrapper = RocketMqConsumerCache.PUSH_CONSUMERS_CACHE.get(hashCode);
+        if (wrapper != null) {
+            RocketMqConsumerCache.PUSH_CONSUMERS_CACHE.remove(hashCode);
+            LOGGER.log(Level.INFO, "Success to remove consumer, consumer instance name : {0}, consumer group "
+                            + ": {1}, topic : {2}",
+                    new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(),
+                            wrapper.getSubscribedTopics()});
         }
+    }
+
+    /**
+     * 获取PushConsumer的包装类实例
+     *
+     * @param pushConsumer 消费者实例
+     * @return PushConsumer包装类实例
+     */
+    public static Optional<DefaultMqPushConsumerWrapper> getPushConsumerWrapper(Object pushConsumer) {
+        DefaultMqPushConsumerWrapper pushConsumerWrapper = RocketMqConsumerCache.PUSH_CONSUMERS_CACHE
+                .get(pushConsumer.hashCode());
+        if (pushConsumerWrapper != null) {
+            return Optional.of(pushConsumerWrapper);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -138,7 +155,7 @@ public class RocketMqPushConsumerController {
      *
      * @return PushConsumer缓存
      */
-    public static Set<DefaultMqPushConsumerWrapper> getPushConsumerCache() {
+    public static Map<Integer, DefaultMqPushConsumerWrapper> getPushConsumerCache() {
         return RocketMqConsumerCache.PUSH_CONSUMERS_CACHE;
     }
 }

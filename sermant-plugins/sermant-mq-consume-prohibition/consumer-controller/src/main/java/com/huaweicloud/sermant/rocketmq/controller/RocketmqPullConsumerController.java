@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -92,11 +93,13 @@ public class RocketmqPullConsumerController {
 
     private static void suspendSubscriptiveConsumer(DefaultLitePullConsumerWrapper wrapper) {
         if (wrapper.isPause()) {
-            LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
+            LOGGER.log(Level.INFO, "Consumer has prohibited consumption, consumer instance name : {0}, "
                             + "consumer group : {1}, topic : {2}",
                     new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(), wrapper.getSubscribedTopics()});
             return;
         }
+
+        // 退出消费者前主动提交消费的offset，退出消费者组后立刻触发一次重平衡，重新分配队列
         wrapper.getPullConsumerImpl().persistConsumerOffset();
         wrapper.getClientFactory().unregisterConsumer(wrapper.getConsumerGroup());
         doRebalance(wrapper);
@@ -197,7 +200,7 @@ public class RocketmqPullConsumerController {
 
     private static void resumeSubscriptiveConsumer(DefaultLitePullConsumerWrapper wrapper) {
         if (!wrapper.isPause()) {
-            LOGGER.log(Level.INFO, "Success to open consumption, consumer "
+            LOGGER.log(Level.INFO, "Consumer has opened consumption, consumer "
                             + "instance name : {0}, consumer group : {1}, topic : {2}",
                     new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(), wrapper.getSubscribedTopics()});
             return;
@@ -230,7 +233,7 @@ public class RocketmqPullConsumerController {
         Optional<DefaultLitePullConsumerWrapper> pullConsumerWrapperOptional = RocketmqWrapperUtils
                 .wrapPullConsumer(pullConsumer);
         if (pullConsumerWrapperOptional.isPresent()) {
-            RocketMqConsumerCache.PULL_CONSUMERS_CACHE.add(pullConsumerWrapperOptional.get());
+            RocketMqConsumerCache.PULL_CONSUMERS_CACHE.put(pullConsumer.hashCode(), pullConsumerWrapperOptional.get());
             LOGGER.log(Level.INFO, "Success to cache consumer, "
                             + "consumer instance name : {0}, consumer group : {1}, topic : {2}",
                     new Object[]{pullConsumer.getInstanceName(), pullConsumer.getConsumerGroup(),
@@ -247,15 +250,32 @@ public class RocketmqPullConsumerController {
      * @param pullConsumer pullConsumer实例
      */
     public static void removePullConsumer(DefaultLitePullConsumer pullConsumer) {
-        for (DefaultLitePullConsumerWrapper wrapper : RocketMqConsumerCache.PULL_CONSUMERS_CACHE) {
-            if (wrapper.getPullConsumer().equals(pullConsumer)) {
-                RocketMqConsumerCache.PULL_CONSUMERS_CACHE.remove(wrapper);
-                LOGGER.log(Level.INFO, "Success to remove consumer, consumer instance name : {0}, consumer group "
-                                + ": {1}, topic : {2}",
-                        new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(),
-                                wrapper.getSubscribedTopics()});
-            }
+        int hashCode = pullConsumer.hashCode();
+        DefaultLitePullConsumerWrapper wrapper = RocketMqConsumerCache.PULL_CONSUMERS_CACHE
+                .get(hashCode);
+        if (wrapper != null) {
+            RocketMqConsumerCache.PULL_CONSUMERS_CACHE.remove(hashCode);
+            LOGGER.log(Level.INFO, "Success to remove consumer, consumer instance name : {0}, consumer group "
+                            + ": {1}, topic : {2}",
+                    new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(),
+                            wrapper.getSubscribedTopics()});
         }
+    }
+
+    /**
+     * 获取PullConsumer的包装类实例缓存
+     *
+     * @param pullConsumer pull消费者实例
+     * @return PullConsumer包装类实例
+     */
+    public static Optional<DefaultLitePullConsumerWrapper> getPullConsumerWrapper(
+            Object pullConsumer) {
+        DefaultLitePullConsumerWrapper pullConsumerWrapper = RocketMqConsumerCache.PULL_CONSUMERS_CACHE
+                .get(pullConsumer.hashCode());
+        if (pullConsumerWrapper != null) {
+            return Optional.of(pullConsumerWrapper);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -263,7 +283,7 @@ public class RocketmqPullConsumerController {
      *
      * @return PullConsumer缓存
      */
-    public static Set<DefaultLitePullConsumerWrapper> getPullConsumerCache() {
+    public static Map<Integer, DefaultLitePullConsumerWrapper> getPullConsumerCache() {
         return RocketMqConsumerCache.PULL_CONSUMERS_CACHE;
     }
 

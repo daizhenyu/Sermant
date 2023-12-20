@@ -20,19 +20,19 @@ import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
 import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
-import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
+import com.huaweicloud.sermant.rocketmq.wrapper.DefaultMqPushConsumerWrapper;
 
 /**
- * RocketMq pullConsumer订阅拦截器
+ * RocketMq pushConsumer订阅拦截器
  *
  * @author daizhenyu
  * @since 2023-12-15
  **/
-public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPushConsumerSubscribeInterceptor extends AbstractConsumerInterceptor {
     /**
      * 无参构造方法
      */
-    public RocketMqPullConsumerUnsubscribeInterceptor() {
+    public RocketMqPushConsumerSubscribeInterceptor() {
     }
 
     /**
@@ -40,7 +40,7 @@ public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumer
      *
      * @param handler 处理器
      */
-    public RocketMqPullConsumerUnsubscribeInterceptor(RocketMqConsumerHandler handler) {
+    public RocketMqPushConsumerSubscribeInterceptor(RocketMqConsumerHandler handler) {
         super(handler);
     }
 
@@ -54,18 +54,15 @@ public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumer
 
     @Override
     protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
-        DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
-        if (wrapper != null) {
-            pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
-        }
-
         if (handler != null) {
             handler.doAfter(context);
             return context;
         }
 
-        // 取消订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
+        if (wrapper != null) {
+            // 增加topic订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
+            ProhibitConsumptionUtils.disablePushConsumption((DefaultMqPushConsumerWrapper) wrapper);
+        }
         return context;
     }
 

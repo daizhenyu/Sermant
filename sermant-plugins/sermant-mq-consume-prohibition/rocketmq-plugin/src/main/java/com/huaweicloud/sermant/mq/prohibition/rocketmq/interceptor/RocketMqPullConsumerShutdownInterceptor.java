@@ -17,35 +17,38 @@
 package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
-import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
+import com.huaweicloud.sermant.core.plugin.agent.interceptor.AbstractInterceptor;
+import com.huaweicloud.sermant.rocketmq.controller.RocketmqPullConsumerController;
 import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
-import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
-import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
+
+import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 
 /**
- * RocketMq pullConsumer订阅拦截器
+ * RocketMq pullConsumer关闭拦截器
  *
  * @author daizhenyu
- * @since 2023-12-15
+ * @since 2023-12-04
  **/
-public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPullConsumerShutdownInterceptor extends AbstractInterceptor {
+    private RocketMqConsumerHandler handler;
+
     /**
      * 无参构造方法
      */
-    public RocketMqPullConsumerUnsubscribeInterceptor() {
+    public RocketMqPullConsumerShutdownInterceptor() {
     }
 
     /**
      * 有参构造方法
      *
-     * @param handler 处理器
+     * @param handler 拦截点处理器
      */
-    public RocketMqPullConsumerUnsubscribeInterceptor(RocketMqConsumerHandler handler) {
-        super(handler);
+    public RocketMqPullConsumerShutdownInterceptor(RocketMqConsumerHandler handler) {
+        this.handler = handler;
     }
 
     @Override
-    protected ExecuteContext doBefore(ExecuteContext context) {
+    public ExecuteContext before(ExecuteContext context) throws Exception {
         if (handler != null) {
             handler.doBefore(context);
         }
@@ -53,24 +56,21 @@ public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumer
     }
 
     @Override
-    protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
-        DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
-        if (wrapper != null) {
-            pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
+    public ExecuteContext after(ExecuteContext context) throws Exception {
+        Object consumerObject = context.getObject();
+        if (consumerObject != null && consumerObject instanceof DefaultLitePullConsumer) {
+            DefaultLitePullConsumer pullConsumer = (DefaultLitePullConsumer) consumerObject;
+            RocketmqPullConsumerController.removePullConsumer(pullConsumer);
         }
 
         if (handler != null) {
             handler.doAfter(context);
-            return context;
         }
-
-        // 取消订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
         return context;
     }
 
     @Override
-    protected ExecuteContext doOnThrow(ExecuteContext context) {
+    public ExecuteContext onThrow(ExecuteContext context) {
         if (handler != null) {
             handler.doOnThrow(context);
         }
