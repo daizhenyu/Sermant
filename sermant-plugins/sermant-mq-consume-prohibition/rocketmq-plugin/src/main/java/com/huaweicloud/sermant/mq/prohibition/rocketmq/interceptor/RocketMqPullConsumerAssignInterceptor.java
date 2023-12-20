@@ -18,11 +18,9 @@ package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.InvokeUtils;
-import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.PullConsumerLocalInfoUtils;
 import com.huaweicloud.sermant.rocketmq.constant.SubscriptionType;
 import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
-import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
 
 import org.apache.rocketmq.common.message.MessageQueue;
@@ -37,7 +35,7 @@ import java.util.Set;
  * @author daizhenyu
  * @since 2023-12-15
  **/
-public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPullConsumerAssignInterceptor extends AbstractPullConsumerInterceptor {
     /**
      * 无参构造方法
      */
@@ -65,7 +63,7 @@ public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInter
     }
 
     @Override
-    protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
+    protected ExecuteContext doAfter(ExecuteContext context, DefaultLitePullConsumerWrapper wrapper) {
         if (InvokeUtils.isInvokeBySermant()) {
             return context;
         }
@@ -80,12 +78,10 @@ public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInter
         }
         Collection<MessageQueue> messageQueue = (Collection<MessageQueue>) messageQueueObject;
 
-        DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
         if (wrapper == null) {
             setAssignLocalInfo(messageQueue);
         } else {
-            pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
-            updateAssignWrapperInfo(pullConsumerWrapper, messageQueue);
+            updateAssignWrapperInfo(wrapper, messageQueue);
         }
 
         if (handler != null) {
@@ -94,7 +90,7 @@ public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInter
         }
 
         // 指定消费的队列后，需根据禁消费的topic配置对消费者开启或禁止消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
+        disablePullConsumption(wrapper);
         return context;
     }
 
@@ -121,6 +117,7 @@ public class RocketMqPullConsumerAssignInterceptor extends AbstractConsumerInter
             Collection<MessageQueue> messageQueue) {
         pullConsumerWrapper.setMessageQueues(messageQueue);
         pullConsumerWrapper.setSubscribedTopics(getMessageQueueTopics(messageQueue));
+        pullConsumerWrapper.setSubscriptionType(SubscriptionType.ASSIGN);
         PullConsumerLocalInfoUtils.removeMessageQueue();
     }
 

@@ -28,73 +28,91 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import java.util.Optional;
 
 /**
- * RocketMq pushConsumer启动拦截器
+ * 抽象拦截器
  *
  * @author daizhenyu
  * @since 2023-12-04
  **/
-public class RocketMqPushConsumerStartInterceptor extends AbstractInterceptor {
-    private RocketMqConsumerHandler handler;
+public abstract class AbstractPushConsumerInterceptor extends AbstractInterceptor {
+    /**
+     * 外部扩展处理器
+     */
+    protected RocketMqConsumerHandler handler;
 
     /**
      * 无参构造方法
      */
-    public RocketMqPushConsumerStartInterceptor() {
+    public AbstractPushConsumerInterceptor() {
     }
 
     /**
      * 有参构造方法
      *
-     * @param handler 拦截点处理器
+     * @param handler 外部扩展处理器
      */
-    public RocketMqPushConsumerStartInterceptor(RocketMqConsumerHandler handler) {
+    public AbstractPushConsumerInterceptor(RocketMqConsumerHandler handler) {
         this.handler = handler;
     }
 
     @Override
-    public ExecuteContext before(ExecuteContext context) throws Exception {
-        if (handler != null) {
-            handler.doBefore(context);
-        }
-        return context;
+    public ExecuteContext before(ExecuteContext context) {
+        return doBefore(context);
     }
 
     @Override
-    public ExecuteContext after(ExecuteContext context) throws Exception {
+    public ExecuteContext after(ExecuteContext context) {
         Object consumerObject = context.getObject();
         if (consumerObject != null && consumerObject instanceof DefaultMQPushConsumer) {
-            DefaultMQPushConsumer pushConsumer = (DefaultMQPushConsumer) consumerObject;
-            RocketMqPushConsumerController.cachePushConsumer(pushConsumer);
+            Optional<DefaultMqPushConsumerWrapper> pushConsumerWrapperOptional =
+                    RocketMqPushConsumerController.getPushConsumerWrapper(consumerObject);
+            if (pushConsumerWrapperOptional.isPresent()) {
+                return doAfter(context, pushConsumerWrapperOptional.get());
+            }
         }
 
-        Optional<DefaultMqPushConsumerWrapper> pushConsumerWrapperOptional =
-                RocketMqPushConsumerController.getPushConsumerWrapper(consumerObject);
-        DefaultMqPushConsumerWrapper pushConsumerWrapper = null;
-        if (pushConsumerWrapperOptional.isPresent()) {
-            pushConsumerWrapper = pushConsumerWrapperOptional.get();
-            pushConsumerWrapper.setSubscribedTopics(pushConsumerWrapper.getPushConsumerImpl()
-                    .getSubscriptionInner().keySet());
-        }
-
-        if (handler != null) {
-            handler.doAfter(context);
-            return context;
-        }
-
-        // 消费者启动会根据缓存的禁消费配置对消费者执行禁消费
-        disablePushConsumption(pushConsumerWrapper);
-        return context;
+        // 消费者未启动前不会缓存，此时传入null即可
+        return doAfter(context, null);
     }
 
     @Override
-    public ExecuteContext onThrow(ExecuteContext context) {
-        return context;
+    public ExecuteContext onThrow(ExecuteContext context) throws Exception {
+        return doOnThrow(context);
     }
 
-    private void disablePushConsumption(DefaultMqPushConsumerWrapper pushConsumerWrapper) {
+    /**
+     * pushconsumer 执行禁消费操作
+     *
+     * @param pushConsumerWrapper pushconsumer包装类实例
+     */
+    protected void disablePushConsumption(DefaultMqPushConsumerWrapper pushConsumerWrapper) {
         if (pushConsumerWrapper != null) {
             RocketMqPushConsumerController.disablePushConsumption(pushConsumerWrapper,
                     ProhibitionConfigManager.getRocketMqProhibitionTopics());
         }
     }
+
+    /**
+     * 前置方法
+     *
+     * @param context 执行上下文
+     * @return ExecuteContext
+     */
+    protected abstract ExecuteContext doBefore(ExecuteContext context);
+
+    /**
+     * 后置方法
+     *
+     * @param context 执行上下文
+     * @param wrapper 消费者包装类
+     * @return ExecuteContext
+     */
+    protected abstract ExecuteContext doAfter(ExecuteContext context, DefaultMqPushConsumerWrapper wrapper);
+
+    /**
+     * 异常时方法
+     *
+     * @param context 执行上下文
+     * @return ExecuteContext
+     */
+    protected abstract ExecuteContext doOnThrow(ExecuteContext context);
 }

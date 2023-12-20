@@ -17,9 +17,7 @@
 package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
-import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
-import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
 
 /**
@@ -28,7 +26,7 @@ import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
  * @author daizhenyu
  * @since 2023-12-15
  **/
-public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractPullConsumerInterceptor {
     /**
      * 无参构造方法
      */
@@ -53,19 +51,14 @@ public class RocketMqPullConsumerUnsubscribeInterceptor extends AbstractConsumer
     }
 
     @Override
-    protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
-        DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
-        if (wrapper != null) {
-            pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
-        }
-
+    protected ExecuteContext doAfter(ExecuteContext context, DefaultLitePullConsumerWrapper wrapper) {
         if (handler != null) {
             handler.doAfter(context);
             return context;
         }
 
         // 取消订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
+        disablePullConsumption(wrapper);
         return context;
     }
 

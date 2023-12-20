@@ -17,11 +17,9 @@
 package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
-import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.PullConsumerLocalInfoUtils;
 import com.huaweicloud.sermant.rocketmq.constant.SubscriptionType;
 import com.huaweicloud.sermant.rocketmq.extension.RocketMqConsumerHandler;
-import com.huaweicloud.sermant.rocketmq.wrapper.AbstractConsumerWrapper;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
 
 /**
@@ -30,7 +28,7 @@ import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
  * @author daizhenyu
  * @since 2023-12-15
  **/
-public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerInterceptor {
+public class RocketMqPullConsumerSubscribeInterceptor extends AbstractPullConsumerInterceptor {
     /**
      * 无参构造方法
      */
@@ -55,13 +53,11 @@ public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerIn
     }
 
     @Override
-    protected ExecuteContext doAfter(ExecuteContext context, AbstractConsumerWrapper wrapper) {
-        DefaultLitePullConsumerWrapper pullConsumerWrapper = null;
+    protected ExecuteContext doAfter(ExecuteContext context, DefaultLitePullConsumerWrapper wrapper) {
         if (wrapper == null) {
             PullConsumerLocalInfoUtils.setSubscriptionType(SubscriptionType.SUBSCRIBE);
         } else {
-            pullConsumerWrapper = (DefaultLitePullConsumerWrapper) wrapper;
-            pullConsumerWrapper.setSubscriptionType(SubscriptionType.SUBSCRIBE);
+            wrapper.setSubscriptionType(SubscriptionType.SUBSCRIBE);
         }
 
         if (handler != null) {
@@ -70,7 +66,7 @@ public class RocketMqPullConsumerSubscribeInterceptor extends AbstractConsumerIn
         }
 
         // 增加topic订阅后，消费者订阅信息发生变化，需根据禁消费的topic配置对消费者开启或禁止消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
+        disablePullConsumption(wrapper);
         return context;
     }
 

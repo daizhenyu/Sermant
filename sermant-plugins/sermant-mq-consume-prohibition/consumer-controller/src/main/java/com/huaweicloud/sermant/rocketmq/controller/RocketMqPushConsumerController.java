@@ -76,7 +76,7 @@ public class RocketMqPushConsumerController {
 
         LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
                         + "consumer group : {1}, topic : {2}",
-                new Object[]{wrapper.getInstanceName(), wrapper.getConsumerGroup(), wrapper.getSubscribedTopics()});
+                new Object[]{wrapper.getInstanceName(), consumerGroup, wrapper.getSubscribedTopics()});
     }
 
     private static void resumePushConsumer(DefaultMqPushConsumerWrapper wrapper) {

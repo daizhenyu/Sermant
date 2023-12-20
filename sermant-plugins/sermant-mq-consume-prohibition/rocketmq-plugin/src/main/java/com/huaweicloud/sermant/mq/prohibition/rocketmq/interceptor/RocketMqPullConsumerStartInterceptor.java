@@ -16,9 +16,9 @@
 
 package com.huaweicloud.sermant.mq.prohibition.rocketmq.interceptor;
 
+import com.huaweicloud.sermant.config.ProhibitionConfigManager;
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.core.plugin.agent.interceptor.AbstractInterceptor;
-import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.ProhibitConsumptionUtils;
 import com.huaweicloud.sermant.mq.prohibition.rocketmq.utils.PullConsumerLocalInfoUtils;
 import com.huaweicloud.sermant.rocketmq.constant.SubscriptionType;
 import com.huaweicloud.sermant.rocketmq.controller.RocketmqPullConsumerController;
@@ -81,6 +81,9 @@ public class RocketMqPullConsumerStartInterceptor extends AbstractInterceptor {
         if (pullConsumerWrapperOptional.isPresent()) {
             pullConsumerWrapper = pullConsumerWrapperOptional.get();
             pullConsumerWrapper.setSubscriptionType(PullConsumerLocalInfoUtils.getSubscriptionType());
+            PullConsumerLocalInfoUtils.removeSubscriptionType();
+
+            // 订阅方式为assign时设置wrapper的消息队列和topic，非assign方式设置wrapper的topic
             if (pullConsumerWrapper.getSubscriptionType().equals(SubscriptionType.ASSIGN)) {
                 updateAssignWrapperInfo(pullConsumerWrapper);
             } else {
@@ -95,7 +98,7 @@ public class RocketMqPullConsumerStartInterceptor extends AbstractInterceptor {
         }
 
         // 消费者启动会根据缓存的禁消费配置对消费者执行禁消费
-        ProhibitConsumptionUtils.disablePullConsumption(pullConsumerWrapper);
+        disablePullConsumption(pullConsumerWrapper);
         return context;
     }
 
@@ -120,5 +123,12 @@ public class RocketMqPullConsumerStartInterceptor extends AbstractInterceptor {
         pullConsumerWrapper.setMessageQueues(messageQueue);
         pullConsumerWrapper.setSubscribedTopics(getMessageQueueTopics(messageQueue));
         PullConsumerLocalInfoUtils.removeMessageQueue();
+    }
+
+    private void disablePullConsumption(DefaultLitePullConsumerWrapper pullConsumerWrapper) {
+        if (pullConsumerWrapper != null) {
+            RocketmqPullConsumerController.disablePullConsumption(pullConsumerWrapper,
+                    ProhibitionConfigManager.getRocketMqProhibitionTopics());
+        }
     }
 }
