@@ -19,11 +19,14 @@ package com.huaweicloud.sermant.rocketmq.controller;
 import com.huaweicloud.sermant.core.common.LoggerFactory;
 import com.huaweicloud.sermant.rocketmq.cache.RocketMqConsumerCache;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultMqPushConsumerWrapper;
+import com.huaweicloud.sermant.utils.ExecutorUtils;
 import com.huaweicloud.sermant.utils.RocketmqWrapperUtils;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.impl.consumer.DefaultMQPushConsumerImpl;
+import org.apache.rocketmq.client.impl.factory.MQClientInstance;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -38,6 +41,10 @@ import java.util.logging.Logger;
  **/
 public class RocketMqPushConsumerController {
     private static final Logger LOGGER = LoggerFactory.getLogger();
+
+    private static final long DELAY_TIME = 1000L;
+
+    private static final int MAXIMUM_RETRY = 5;
 
     private RocketMqPushConsumerController() {
     }
@@ -72,11 +79,7 @@ public class RocketMqPushConsumerController {
         pushConsumerImpl.persistConsumerOffset();
         wrapper.getClientFactory().unregisterConsumer(consumerGroup);
         pushConsumerImpl.doRebalance();
-        wrapper.setProhibition(true);
-
-        LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
-                        + "consumer group : {1}, topic : {2}",
-                new Object[]{wrapper.getInstanceName(), consumerGroup, wrapper.getSubscribedTopics()});
+        ExecutorUtils.submit(() -> checkUnregisterConsumerGroup(wrapper));
     }
 
     private static void resumePushConsumer(DefaultMqPushConsumerWrapper wrapper) {
@@ -153,5 +156,50 @@ public class RocketMqPushConsumerController {
      */
     public static Map<Integer, DefaultMqPushConsumerWrapper> getPushConsumerCache() {
         return RocketMqConsumerCache.PUSH_CONSUMERS_CACHE;
+    }
+
+    private static void checkUnregisterConsumerGroup(DefaultMqPushConsumerWrapper wrapper) {
+        // 获取消费者的相关参数
+        String instanceName = wrapper.getInstanceName();
+        String consumerGroup = wrapper.getConsumerGroup();
+        Set<String> subscribedTopics = wrapper.getSubscribedTopics();
+        MQClientInstance clientFactory = wrapper.getClientFactory();
+        String clientId = clientFactory.getClientId();
+
+        // 每间隔一秒，判断消费者是否退出消费者组，最大重试次数为五次
+        int retryCount = 0;
+        boolean isConsumerGroupExited = false;
+        while ((retryCount < MAXIMUM_RETRY) && !isConsumerGroupExited) {
+            try {
+                Thread.sleep(DELAY_TIME);
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.SEVERE, "An InterruptedException occurs on the thread, "
+                        + "details: {0}", e.getMessage());
+            }
+            for (String topic : subscribedTopics) {
+                List<String> consumerIdList = clientFactory.findConsumerIdList(topic, consumerGroup);
+                if (consumerIdList != null && consumerIdList.contains(clientId)) {
+                    retryCount++;
+                    break;
+                }
+                if (!isConsumerGroupExited) {
+                    isConsumerGroupExited = true;
+                }
+            }
+        }
+        if (isConsumerGroupExited) {
+            LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
+                            + "consumer group : {1}, topic : {2}",
+                    new Object[]{instanceName, consumerGroup, subscribedTopics});
+            wrapper.setProhibition(true);
+        } else {
+            LOGGER.log(Level.SEVERE, "Consumer exiting the {0} consumer group timeout, "
+                            + "failed to prohibit consumption"
+                            + "consumer instance name : {0}, consumer group : {1}, topic : {2}. "
+                            + "Please deliver the configuration again.",
+                    new Object[]{instanceName, consumerGroup, subscribedTopics});
+            wrapper.setProhibition(false);
+            wrapper.getClientFactory().registerConsumer(consumerGroup, wrapper.getPushConsumerImpl());
+        }
     }
 }

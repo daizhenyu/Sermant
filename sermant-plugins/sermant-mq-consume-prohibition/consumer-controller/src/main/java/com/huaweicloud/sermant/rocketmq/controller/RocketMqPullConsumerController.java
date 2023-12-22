@@ -20,6 +20,7 @@ import com.huaweicloud.sermant.core.common.LoggerFactory;
 import com.huaweicloud.sermant.core.utils.ReflectUtils;
 import com.huaweicloud.sermant.rocketmq.cache.RocketMqConsumerCache;
 import com.huaweicloud.sermant.rocketmq.wrapper.DefaultLitePullConsumerWrapper;
+import com.huaweicloud.sermant.utils.ExecutorUtils;
 import com.huaweicloud.sermant.utils.RocketmqWrapperUtils;
 
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
@@ -38,10 +39,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,15 +54,7 @@ public class RocketMqPullConsumerController {
 
     private static final int MAXIMUM_RETRY = 5;
 
-    private static final int THREAD_SIZE = 1;
-
-    private static final long THREAD_KEEP_ALIVE_TIME = 60L;
-
-    private static final int THREAD_QUEUE_CAPACITY = 20;
-
     private static final Logger LOGGER = LoggerFactory.getLogger();
-
-    private static volatile ThreadPoolExecutor executor;
 
     private RocketMqPullConsumerController() {
     }
@@ -109,7 +99,6 @@ public class RocketMqPullConsumerController {
         wrapper.getPullConsumerImpl().persistConsumerOffset();
         wrapper.getClientFactory().unregisterConsumer(wrapper.getConsumerGroup());
         doRebalance(wrapper);
-        wrapper.setProhibition(true);
     }
 
     private static void suspendAssignedConsumer(DefaultLitePullConsumerWrapper wrapper) {
@@ -134,13 +123,11 @@ public class RocketMqPullConsumerController {
     }
 
     private static void doRebalance(DefaultLitePullConsumerWrapper wrapper) {
-        initExecutor();
-
         // 退出消费者组后立刻清理消费者目前消费的消息队列
         messageQueueChanged(wrapper);
 
         // 延时五秒后，确认是否退出消费者组，并在此清理消费者目前消费的消息队列，确保禁消费成功
-        executor.submit(() -> doDelayRebalance(wrapper));
+        ExecutorUtils.submit(() -> doDelayRebalance(wrapper));
     }
 
     private static void doDelayRebalance(DefaultLitePullConsumerWrapper wrapper) {
@@ -179,6 +166,7 @@ public class RocketMqPullConsumerController {
             LOGGER.log(Level.INFO, "Success to prohibit consumption, consumer instance name : {0}, "
                             + "consumer group : {1}, topic : {2}",
                     new Object[]{instanceName, consumerGroup, subscribedTopics});
+            wrapper.setProhibition(true);
         } else {
             LOGGER.log(Level.SEVERE, "Consumer exiting the {0} consumer group timeout may cause "
                             + "a failure to reallocate the message queue, "
@@ -305,17 +293,5 @@ public class RocketMqPullConsumerController {
      */
     public static Map<Integer, DefaultLitePullConsumerWrapper> getPullConsumerCache() {
         return RocketMqConsumerCache.PULL_CONSUMERS_CACHE;
-    }
-
-    private static void initExecutor() {
-        if (executor == null) {
-            synchronized (RocketMqPushConsumerController.class) {
-                if (executor == null) {
-                    executor = new ThreadPoolExecutor(THREAD_SIZE, THREAD_SIZE, THREAD_KEEP_ALIVE_TIME,
-                            TimeUnit.SECONDS, new ArrayBlockingQueue<>(THREAD_QUEUE_CAPACITY));
-                    executor.allowCoreThreadTimeOut(true);
-                }
-            }
-        }
     }
 }
