@@ -19,17 +19,15 @@ package com.huaweicloud.demo.tagtransmission.rocketmq.consumer;
 import com.huaweicloud.demo.tagtransmission.midware.common.MessageConstant;
 import com.huaweicloud.demo.tagtransmission.util.HttpClientUtils;
 
-import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerOrderly;
+import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
-import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.common.message.MessageQueue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,23 +57,21 @@ public class RocketMqConsumer implements CommandLineRunner {
     }
 
     private void consumeData() throws MQClientException {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MessageConstant.ROCKETMQ_CONSUME_GROUP);
+        DefaultLitePullConsumer consumer = new DefaultLitePullConsumer(MessageConstant.ROCKETMQ_CONSUME_GROUP);
         consumer.setNamesrvAddr(rocketMqAddress);
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.subscribe(MessageConstant.TOPIC, MessageConstant.TAG_SCOPE);
-        consumer.registerMessageListener(new MessageListenerOrderly() {
-            @Override
-            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> messageExts,
-                    ConsumeOrderlyContext context) {
-                if (messageExts != null) {
-                    for (MessageExt ext : messageExts) {
-                        ext.getBody();
-                        ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
-                    }
-                }
-                return ConsumeOrderlyStatus.SUCCESS;
-            }
-        });
         consumer.start();
+        consumer.setAutoCommit(false);
+        Collection<MessageQueue> messageQueues = consumer.fetchMessageQueues(MessageConstant.TOPIC);
+        consumer.assign(messageQueues);
+        while (true) {
+            List<MessageExt> messageExts = consumer.poll();
+            if (messageExts != null) {
+                for (MessageExt ext : messageExts) {
+                    ext.getBody();
+                    ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
+                    consumer.commit();
+                }
+            }
+        }
     }
 }
