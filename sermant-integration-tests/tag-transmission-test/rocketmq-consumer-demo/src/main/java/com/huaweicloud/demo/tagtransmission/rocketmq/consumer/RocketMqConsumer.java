@@ -69,7 +69,7 @@ public class RocketMqConsumer implements CommandLineRunner {
                 for (MessageExt ext : messageExts) {
                     ext.getBody();
                     ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
-                    consumer.commit();
+                    consumer.commitSync();
                 }
             }
         }
