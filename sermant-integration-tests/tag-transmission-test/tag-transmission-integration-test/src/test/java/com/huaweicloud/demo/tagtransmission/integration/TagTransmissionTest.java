@@ -180,7 +180,7 @@ public class TagTransmissionTest {
         RequestUtils.get("http://127.0.0.1:9057/rocketMqProducer/testRocketMqProducer", EXACT_TAG_MAP);
 
         // sleep50秒，等待消费者消费
-        Thread.sleep(50000);
+        Thread.sleep(70000);
         checkTagTransmission("http://127.0.0.1:9056/rocketMqConsumer/queryRocketMqTag", EXACT_TAG_MAP, "rocketmq");
     }
 
