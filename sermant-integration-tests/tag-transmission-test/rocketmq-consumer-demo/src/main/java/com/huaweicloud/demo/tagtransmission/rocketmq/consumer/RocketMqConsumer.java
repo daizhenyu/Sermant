@@ -61,6 +61,11 @@ public class RocketMqConsumer implements CommandLineRunner {
         consumer.setNamesrvAddr(rocketMqAddress);
         consumer.start();
         consumer.setAutoCommit(false);
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Collection<MessageQueue> messageQueues = consumer.fetchMessageQueues(MessageConstant.TOPIC);
         consumer.assign(messageQueues);
         while (true) {
