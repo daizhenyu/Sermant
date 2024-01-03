@@ -64,6 +64,7 @@ public class RocketMqConsumer implements CommandLineRunner {
             if (messageExts != null) {
                 for (MessageExt ext : messageExts) {
                     ext.getBody();
+                    System.out.println("消费成功");
                     ROCKETMQ_TAG_MAP.put("rocketmqTag", HttpClientUtils.doHttpUrlConnectionGet(commonServerUrl));
                 }
             }
