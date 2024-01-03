@@ -58,10 +58,10 @@ jobs:
       - name: cache rocketmq
         uses: actions/cache@v3
         with:
-          path: rocketmq-all-5.1.4-bin-release.zip
-          key: ${{ runner.os }}-rocketmq-all-5.1.4-bin-release
+          path: rocketmq-all-4.9.4-bin-release.zip
+          key: ${{ runner.os }}-rocketmq-all-4.9.4-bin-release
           restore-keys: |
-            ${{ runner.os }}-rocketmq-all-5.1.4-bin-release
+            ${{ runner.os }}-rocketmq-all-4.9.4-bin-release
       - name: download rocketmq
         run: |
           export ROOT_PATH=$(pwd)
