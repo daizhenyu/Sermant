@@ -20,6 +20,7 @@ import com.huaweicloud.sermant.core.plugin.agent.declarer.InterceptDeclarer;
 import com.huaweicloud.sermant.core.plugin.agent.matcher.ClassMatcher;
 import com.huaweicloud.sermant.core.plugin.agent.matcher.MethodMatcher;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
+import com.huaweicloud.sermant.mariadbv3.interceptors.ExecutePipelineInterceptor;
 import com.huaweicloud.sermant.mariadbv3.interceptors.SendQueryInterceptor;
 
 /**
@@ -34,6 +35,8 @@ public class MariadbV3EnhancementHelper {
     private static final String STANDARD_CLIENT_CLASS = "org.mariadb.jdbc.client.impl.StandardClient";
 
     private static final String SEND_QUERY_METHOD_NAME = "sendQuery";
+
+    private static final String EXECUTE_PIPELINE_METHOD_NAME = "executePipeline";
 
     private MariadbV3EnhancementHelper() {
     }
@@ -77,7 +80,32 @@ public class MariadbV3EnhancementHelper {
                 new SendQueryInterceptor(handler));
     }
 
+    /**
+     * 获取executePipeline方法无参拦截器
+     *
+     * @return InterceptDeclarer executePipeline方法无参拦截器
+     */
+    public static InterceptDeclarer getExecutePipelineInterceptDeclarer() {
+        return InterceptDeclarer.build(getExecutePipelineMethodMatcher(),
+                new ExecutePipelineInterceptor());
+    }
+
+    /**
+     * 获取executePipeline方法有参拦截器
+     *
+     * @param handler 数据库自定义处理器
+     * @return InterceptDeclarer executePipeline方法有参拦截器
+     */
+    public static InterceptDeclarer getExecutePipelineInterceptDeclarer(DatabaseHandler handler) {
+        return InterceptDeclarer.build(getExecutePipelineMethodMatcher(),
+                new ExecutePipelineInterceptor(handler));
+    }
+
     private static MethodMatcher getSendQueryMethodMatcher() {
         return MethodMatcher.nameEquals(SEND_QUERY_METHOD_NAME);
+    }
+
+    private static MethodMatcher getExecutePipelineMethodMatcher() {
+        return MethodMatcher.nameEquals(EXECUTE_PIPELINE_METHOD_NAME);
     }
 }
