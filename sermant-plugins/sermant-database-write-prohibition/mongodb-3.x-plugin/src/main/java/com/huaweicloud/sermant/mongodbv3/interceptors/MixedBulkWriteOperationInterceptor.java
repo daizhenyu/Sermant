@@ -14,30 +14,29 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.sermant.mongodb.interceptors;
+package com.huaweicloud.sermant.mongodbv3.interceptors;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.database.constant.DatabaseType;
 import com.huaweicloud.sermant.database.entity.DatabaseInfo;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
+import com.huaweicloud.sermant.database.interceptor.AbstractMongoDbInterceptor;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.connection.ConnectionDescription;
-import com.mongodb.internal.connection.Connection;
+import com.mongodb.binding.WriteBinding;
+import com.mongodb.operation.MixedBulkWriteOperation;
 
 /**
- * 执行executeCommand方法的拦截器
+ * MixedBulkWriteOperation类execute方法拦截声明器
  *
  * @author daizhenyu
- * @since 2024-01-18
+ * @since 2024-01-16
  **/
-public class ExecuteCommandInterceptor extends AbstractMongoDbInterceptor {
-    private static final int PARAM_INDEX = 5;
-
+public class MixedBulkWriteOperationInterceptor extends AbstractMongoDbInterceptor {
     /**
      * 无参构造方法
      */
-    public ExecuteCommandInterceptor() {
+    public MixedBulkWriteOperationInterceptor() {
     }
 
     /**
@@ -45,7 +44,7 @@ public class ExecuteCommandInterceptor extends AbstractMongoDbInterceptor {
      *
      * @param handler 写操作处理器
      */
-    public ExecuteCommandInterceptor(DatabaseHandler handler) {
+    public MixedBulkWriteOperationInterceptor(DatabaseHandler handler) {
         this.handler = handler;
     }
 
@@ -53,13 +52,12 @@ public class ExecuteCommandInterceptor extends AbstractMongoDbInterceptor {
     protected void createAndCacheDatabaseInfo(ExecuteContext context) {
         DatabaseInfo info = new DatabaseInfo(DatabaseType.MONGODB);
         context.setLocalFieldValue(DATABASE_INFO, info);
-        info.setDatabaseName((String) context.getArguments()[0]);
-        Connection connection = (Connection) context.getArguments()[PARAM_INDEX];
-        ConnectionDescription description = connection.getDescription();
-        if (description != null) {
-            ServerAddress serverAddress = description.getServerAddress();
-            info.setHostAddress(serverAddress.getHost());
-            info.setPort(serverAddress.getPort());
-        }
+        ServerAddress serverAddress = ((WriteBinding) context.getArguments()[0])
+                .getWriteConnectionSource()
+                .getServerDescription()
+                .getAddress();
+        info.setDatabaseName(((MixedBulkWriteOperation) context.getObject()).getNamespace().getDatabaseName());
+        info.setHostAddress(serverAddress.getHost());
+        info.setPort(serverAddress.getPort());
     }
 }

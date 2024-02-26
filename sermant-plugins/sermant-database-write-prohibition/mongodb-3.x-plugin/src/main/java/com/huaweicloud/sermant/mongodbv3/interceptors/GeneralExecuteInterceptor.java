@@ -14,27 +14,28 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.sermant.mongodb.interceptors;
+package com.huaweicloud.sermant.mongodbv3.interceptors;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.database.constant.DatabaseType;
 import com.huaweicloud.sermant.database.entity.DatabaseInfo;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
+import com.huaweicloud.sermant.database.interceptor.AbstractMongoDbInterceptor;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.internal.binding.WriteBinding;
+import com.mongodb.binding.WriteBinding;
 
 /**
- * 执行重试write操作的拦截器
+ * CommandOperationHelper executeCommand、executeRetryableCommand方法拦截器
  *
  * @author daizhenyu
  * @since 2024-01-18
  **/
-public class ExecuteRetryableCommandInterceptor extends AbstractMongoDbInterceptor {
+public class GeneralExecuteInterceptor extends AbstractMongoDbInterceptor {
     /**
      * 无参构造方法
      */
-    public ExecuteRetryableCommandInterceptor() {
+    public GeneralExecuteInterceptor() {
     }
 
     /**
@@ -42,7 +43,7 @@ public class ExecuteRetryableCommandInterceptor extends AbstractMongoDbIntercept
      *
      * @param handler 写操作处理器
      */
-    public ExecuteRetryableCommandInterceptor(DatabaseHandler handler) {
+    public GeneralExecuteInterceptor(DatabaseHandler handler) {
         this.handler = handler;
     }
 

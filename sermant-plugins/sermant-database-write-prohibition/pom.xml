@@ -11,6 +11,9 @@
 
     <artifactId>sermant-database-write-prohibition</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>mongodb-3.x-plugin</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

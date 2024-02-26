@@ -21,9 +21,7 @@ import com.huaweicloud.sermant.core.plugin.agent.matcher.ClassMatcher;
 import com.huaweicloud.sermant.core.plugin.agent.matcher.MethodMatcher;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
 import com.huaweicloud.sermant.mongodb.constant.MethodParamTypeName;
-import com.huaweicloud.sermant.mongodb.interceptors.ExecuteCommandInterceptor;
-import com.huaweicloud.sermant.mongodb.interceptors.ExecuteRetryableCommandInterceptor;
-import com.huaweicloud.sermant.mongodb.interceptors.ExecuteWriteCommandInterceptor;
+import com.huaweicloud.sermant.mongodb.interceptors.GeneralExecuteInterceptor;
 import com.huaweicloud.sermant.mongodb.interceptors.MixedBulkWriteOperationInterceptor;
 
 /**
@@ -37,24 +35,67 @@ public class MongoDbEnhancementHelper {
 
     private static final String COMMAND_OPERATION_CLASS = "com.mongodb.internal.operation.CommandOperationHelper";
 
+    private static final String SYNC_OPERATION_CLASS = "com.mongodb.internal.operation.SyncOperationHelper";
+
     private static final String EXECUTE_METHOD_NAME = "execute";
 
     private static final String EXECUTE_COMMAND_METHOD_NAME = "executeCommand";
 
-    private static final String EXECUTE_WRITE_COMMAND_METHOD_NAME = "executeWriteCommand";
-
     private static final String EXECUTE_RETRYABLE_COMMAND_METHOD_NAME = "executeRetryableCommand";
+
+    private static final String EXECUTE_RETRYABLE_WRITE = "executeRetryableWrite";
 
     private static final int METHOD_PARAM_COUNT = 9;
 
-    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE = {
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_FIRST = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
+            MethodParamTypeName.STRING_CLASS_NAME,
+            MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
+            MethodParamTypeName.DECODER_CLASS_NAME,
+            MethodParamTypeName.CONNECTION_CLASS_NAME,
+            MethodParamTypeName.COMMAND_WRITE_TRANSFORMER_CLASS_NAME
+    };
+
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_SECOND = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
             MethodParamTypeName.STRING_CLASS_NAME,
             MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
             MethodParamTypeName.FIELD_NAME_VALIDATOR_CLASS_NAME,
             MethodParamTypeName.DECODER_CLASS_NAME,
-            MethodParamTypeName.CONNECTION_SOURCE_CLASS_NAME,
             MethodParamTypeName.CONNECTION_CLASS_NAME,
-            MethodParamTypeName.READ_PREFERENCE_CLASS_NAME
+            MethodParamTypeName.COMMAND_WRITE_TRANSFORMER_CLASS_NAME
+    };
+
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_THIRD = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
+            MethodParamTypeName.STRING_CLASS_NAME,
+            MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
+            MethodParamTypeName.FIELD_NAME_VALIDATOR_CLASS_NAME,
+            MethodParamTypeName.DECODER_CLASS_NAME,
+            MethodParamTypeName.COMMAND_WRITE_TRANSFORMER_CLASS_NAME
+    };
+
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_FOURTH = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
+            MethodParamTypeName.STRING_CLASS_NAME,
+            MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
+            MethodParamTypeName.CONNECTION_CLASS_NAME
+    };
+
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_FIFTH = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
+            MethodParamTypeName.STRING_CLASS_NAME,
+            MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
+            MethodParamTypeName.DECODER_CLASS_NAME,
+            MethodParamTypeName.COMMAND_WRITE_TRANSFORMER_CLASS_NAME
+    };
+
+    private static final String[] EXECUTE_COMMAND_PARAMS_TYPE_SIXTH = {
+            MethodParamTypeName.WRITE_BINDING_CLASS_NAME,
+            MethodParamTypeName.STRING_CLASS_NAME,
+            MethodParamTypeName.BSON_DOCUMENT_CLASS_NAME,
+            MethodParamTypeName.CONNECTION_CLASS_NAME,
+            MethodParamTypeName.COMMAND_WRITE_TRANSFORMER_CLASS_NAME
     };
 
     private static final String[] EXECUTE_RETRY_COMMAND_PARAMS_TYPE = {
@@ -90,16 +131,12 @@ public class MongoDbEnhancementHelper {
     }
 
     /**
-     * 获取MixedBulkWriteOperation写操作无参拦截器数组
+     * 获取SyncOperationHelperDeclarer类的ClassMatcher
      *
-     * @return InterceptDeclarer[] MixedBulkWriteOperation写操作无参拦截器数组
+     * @return ClassMatcher 类匹配器
      */
-    public static InterceptDeclarer[] getMixedBulkWriteOperationInterceptDeclarers() {
-        MixedBulkWriteOperationInterceptor mixedBulkWriteOperationInterceptor =
-                new MixedBulkWriteOperationInterceptor();
-        return new InterceptDeclarer[]{
-                InterceptDeclarer.build(getExecuteMethodMatcher(), mixedBulkWriteOperationInterceptor),
-        };
+    public static ClassMatcher getSyncOperationHelperDeclarerClassMatcher() {
+        return ClassMatcher.nameEquals(SYNC_OPERATION_CLASS);
     }
 
     /**
@@ -124,16 +161,74 @@ public class MongoDbEnhancementHelper {
     }
 
     /**
+     * 获取SyncOperationHelper类 无参拦截器数组
+     *
+     * @return InterceptDeclarer[] SyncOperationHelper 无参拦截器数组
+     */
+    public static InterceptDeclarer[] getSyncOperationHelperInterceptDeclarers() {
+        GeneralExecuteInterceptor generalExecuteInterceptor = new GeneralExecuteInterceptor();
+        return new InterceptDeclarer[]{
+                InterceptDeclarer.build(getExecuteCommandMethodMatcher(), generalExecuteInterceptor),
+                InterceptDeclarer.build(getExecuteRetryableWriteMethodMatcher(), generalExecuteInterceptor)
+        };
+    }
+
+    /**
+     * 获取SyncOperationHelper executeCommand方法无参拦截器
+     *
+     * @return InterceptDeclarer SyncOperationHelper executeCommand方法无参拦截器
+     */
+    public static InterceptDeclarer getExecuteCommandInterceptDeclarer4Sync() {
+        return InterceptDeclarer.build(getExecuteCommandMethodMatcher(),
+                new GeneralExecuteInterceptor());
+    }
+
+    /**
+     * 获取SyncOperationHelper executeCommand方法有参拦截器
+     *
+     * @param handler 数据库自定义处理器
+     * @return InterceptDeclarer SyncOperationHelper executeCommand方法有参拦截器
+     */
+    public static InterceptDeclarer getExecuteCommandInterceptDeclarer4Sync(DatabaseHandler handler) {
+        return InterceptDeclarer.build(getExecuteCommandMethodMatcher(),
+                new GeneralExecuteInterceptor(handler));
+    }
+
+    /**
+     * 获取SyncOperationHelper executeRetryableWrite方法无参拦截器
+     *
+     * @return InterceptDeclarer SyncOperationHelper executeRetryableWrite方法无参拦截器
+     */
+    public static InterceptDeclarer getExecuteRetryableWriteInterceptDeclarer4Sync() {
+        return InterceptDeclarer.build(getExecuteRetryableWriteMethodMatcher(),
+                new GeneralExecuteInterceptor());
+    }
+
+    /**
+     * 获取SyncOperationHelper executeRetryableWrite方法有参拦截器
+     *
+     * @param handler 数据库自定义处理器
+     * @return InterceptDeclarer SyncOperationHelper executeRetryableWrite方法有参拦截器
+     */
+    public static InterceptDeclarer getExecuteRetryableWriteInterceptDeclarer4Sync(DatabaseHandler handler) {
+        return InterceptDeclarer.build(getExecuteCommandMethodMatcher(),
+                new GeneralExecuteInterceptor(handler));
+    }
+
+    /**
      * 获取CommandOperationHelper写操作无参拦截器数组
      *
      * @return InterceptDeclarer[] CommandOperationHelper写操作无参拦截器数组
      */
     public static InterceptDeclarer[] getCommandOperationHelperInterceptDeclarers() {
+        GeneralExecuteInterceptor generalExecuteInterceptor = new GeneralExecuteInterceptor();
         return new InterceptDeclarer[]{
-                InterceptDeclarer.build(getExecuteCommandMethodMatcher(), new ExecuteCommandInterceptor()),
-                InterceptDeclarer.build(getExecuteWriteCommandMethodMatcher(), new ExecuteWriteCommandInterceptor()),
-                InterceptDeclarer.build(getExecuteRetryableCommandMethodMatcher(),
-                        new ExecuteRetryableCommandInterceptor())
+                InterceptDeclarer.build(getExecuteCommandMethodMatcher4CommandOperation(),
+                        generalExecuteInterceptor),
+                InterceptDeclarer.build(getExecuteRetryableCommandMethodMatcher4CommandOperation(),
+                        generalExecuteInterceptor),
+                InterceptDeclarer.build(getExecuteRetryableWriteMethodMatcher(),
+                        generalExecuteInterceptor)
         };
     }
 
@@ -143,7 +238,8 @@ public class MongoDbEnhancementHelper {
      * @return InterceptDeclarer CommandOperationHelper executeCommand方法无参拦截器
      */
     public static InterceptDeclarer getExecuteCommandInterceptDeclarer() {
-        return InterceptDeclarer.build(getExecuteCommandMethodMatcher(), new ExecuteCommandInterceptor());
+        return InterceptDeclarer
+                .build(getExecuteCommandMethodMatcher4CommandOperation(), new GeneralExecuteInterceptor());
     }
 
     /**
@@ -153,28 +249,8 @@ public class MongoDbEnhancementHelper {
      * @return InterceptDeclarer CommandOperationHelper executeCommand方法有参拦截器
      */
     public static InterceptDeclarer getExecuteCommandInterceptDeclarer(DatabaseHandler handler) {
-        return InterceptDeclarer.build(getExecuteCommandMethodMatcher(), new ExecuteCommandInterceptor(handler));
-    }
-
-    /**
-     * 获取CommandOperationHelper executeWriteCommand方法无参拦截器
-     *
-     * @return InterceptDeclarer CommandOperationHelper executeWriteCommand方法无参拦截器
-     */
-    public static InterceptDeclarer getExecuteWriteCommandInterceptDeclarer() {
-        return InterceptDeclarer.build(getExecuteWriteCommandMethodMatcher(), new ExecuteWriteCommandInterceptor());
-    }
-
-    /**
-     * 获取CommandOperationHelper executeWriteCommand方法有参拦截器
-     *
-     * @param handler 数据库自定义处理器
-     * @return InterceptDeclarer CommandOperationHelper executeWriteCommand方法有参拦截器
-     */
-    public static InterceptDeclarer getExecuteWriteCommandInterceptDeclarer(
-            DatabaseHandler handler) {
         return InterceptDeclarer
-                .build(getExecuteWriteCommandMethodMatcher(), new ExecuteWriteCommandInterceptor(handler));
+                .build(getExecuteCommandMethodMatcher4CommandOperation(), new GeneralExecuteInterceptor(handler));
     }
 
     /**
@@ -184,7 +260,8 @@ public class MongoDbEnhancementHelper {
      */
     public static InterceptDeclarer getExecuteRetryableCommandInterceptDeclarer() {
         return InterceptDeclarer
-                .build(getExecuteRetryableCommandMethodMatcher(), new ExecuteRetryableCommandInterceptor());
+                .build(getExecuteRetryableCommandMethodMatcher4CommandOperation(),
+                        new GeneralExecuteInterceptor());
     }
 
     /**
@@ -196,25 +273,63 @@ public class MongoDbEnhancementHelper {
     public static InterceptDeclarer getExecuteRetryableCommandInterceptDeclarer(
             DatabaseHandler handler) {
         return InterceptDeclarer
-                .build(getExecuteRetryableCommandMethodMatcher(), new ExecuteRetryableCommandInterceptor(handler));
+                .build(getExecuteRetryableCommandMethodMatcher4CommandOperation(),
+                        new GeneralExecuteInterceptor(handler));
+    }
+
+    /**
+     * 获取CommandOperationHelper executeRetryableWrite方法无参拦截器
+     *
+     * @return InterceptDeclarer CommandOperationHelper executeRetryableWrite方法无参拦截器
+     */
+    public static InterceptDeclarer getExecuteRetryableWriteInterceptDeclarer() {
+        return InterceptDeclarer
+                .build(getExecuteRetryableWriteMethodMatcher(),
+                        new GeneralExecuteInterceptor());
+    }
+
+    /**
+     * 获取CommandOperationHelper executeRetryableWrite方法有参拦截器
+     *
+     * @param handler 数据库自定义处理器
+     * @return InterceptDeclarer CommandOperationHelper executeRetryableWrite方法有参拦截器
+     */
+    public static InterceptDeclarer getExecuteRetryableWriteInterceptDeclarer(
+            DatabaseHandler handler) {
+        return InterceptDeclarer
+                .build(getExecuteRetryableWriteMethodMatcher(),
+                        new GeneralExecuteInterceptor(handler));
     }
 
     private static MethodMatcher getExecuteMethodMatcher() {
         return MethodMatcher.nameEquals(EXECUTE_METHOD_NAME);
     }
 
-    private static MethodMatcher getExecuteCommandMethodMatcher() {
-        return MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
-                .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE));
+    private static MethodMatcher getExecuteCommandMethodMatcher4CommandOperation() {
+        return (MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_FIRST)))
+                .or(MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_SECOND)))
+                .or(MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_THIRD)))
+                .or(MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_FOURTH)))
+                .or(MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_FIFTH)))
+                .or(MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME)
+                        .and(MethodMatcher.paramTypesEqual(EXECUTE_COMMAND_PARAMS_TYPE_SIXTH)));
     }
 
-    private static MethodMatcher getExecuteWriteCommandMethodMatcher() {
-        return MethodMatcher.nameEquals(EXECUTE_WRITE_COMMAND_METHOD_NAME)
-                .and(MethodMatcher.paramCountEquals(METHOD_PARAM_COUNT));
-    }
-
-    private static MethodMatcher getExecuteRetryableCommandMethodMatcher() {
+    private static MethodMatcher getExecuteRetryableCommandMethodMatcher4CommandOperation() {
         return MethodMatcher.nameEquals(EXECUTE_RETRYABLE_COMMAND_METHOD_NAME)
                 .and(MethodMatcher.paramTypesEqual(EXECUTE_RETRY_COMMAND_PARAMS_TYPE));
+    }
+
+    private static MethodMatcher getExecuteCommandMethodMatcher() {
+        return MethodMatcher.nameEquals(EXECUTE_COMMAND_METHOD_NAME);
+    }
+
+    private static MethodMatcher getExecuteRetryableWriteMethodMatcher() {
+        return MethodMatcher.nameEquals(EXECUTE_RETRYABLE_WRITE);
     }
 }

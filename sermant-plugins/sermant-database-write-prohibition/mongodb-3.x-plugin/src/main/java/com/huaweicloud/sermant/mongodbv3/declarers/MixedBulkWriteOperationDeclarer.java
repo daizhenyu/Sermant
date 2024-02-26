@@ -14,12 +14,12 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.sermant.mongodb.declarers;
+package com.huaweicloud.sermant.mongodbv3.declarers;
 
 import com.huaweicloud.sermant.core.plugin.agent.declarer.AbstractPluginDeclarer;
 import com.huaweicloud.sermant.core.plugin.agent.declarer.InterceptDeclarer;
 import com.huaweicloud.sermant.core.plugin.agent.matcher.ClassMatcher;
-import com.huaweicloud.sermant.mongodb.utils.MongoDbEnhancementHelper;
+import com.huaweicloud.sermant.mongodbv3.utils.MongoDbEnhancementHelper;
 
 /**
  * MixedBulkWriteOperation类增强声明器

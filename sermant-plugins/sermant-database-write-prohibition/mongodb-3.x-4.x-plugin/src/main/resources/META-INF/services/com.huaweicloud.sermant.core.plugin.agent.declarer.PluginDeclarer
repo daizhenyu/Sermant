@@ -15,3 +15,4 @@
 #
 com.huaweicloud.sermant.mongodb.declarers.MixedBulkWriteOperationDeclarer
 com.huaweicloud.sermant.mongodb.declarers.CommandOperationHelperDeclarer
+com.huaweicloud.sermant.mongodb.declarers.SyncOperationHelperDeclarer

@@ -20,13 +20,14 @@ import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.database.constant.DatabaseType;
 import com.huaweicloud.sermant.database.entity.DatabaseInfo;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
+import com.huaweicloud.sermant.database.interceptor.AbstractMongoDbInterceptor;
 
 import com.mongodb.ServerAddress;
 import com.mongodb.internal.binding.WriteBinding;
 import com.mongodb.internal.operation.MixedBulkWriteOperation;
 
 /**
- * MixedBulkWriteOperation类拦截声明器
+ * MixedBulkWriteOperation类execute方法拦截声明器
  *
  * @author daizhenyu
  * @since 2024-01-16

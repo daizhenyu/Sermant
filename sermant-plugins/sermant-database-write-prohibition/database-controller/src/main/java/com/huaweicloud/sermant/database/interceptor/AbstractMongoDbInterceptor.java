@@ -14,12 +14,11 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.sermant.mongodb.interceptors;
+package com.huaweicloud.sermant.database.interceptor;
 
 import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.database.config.DatabaseWriteProhibitionManager;
 import com.huaweicloud.sermant.database.controller.DatabaseController;
-import com.huaweicloud.sermant.database.interceptor.AbstractDatabaseInterceptor;
 
 /**
  * mongodb抽象interceptor

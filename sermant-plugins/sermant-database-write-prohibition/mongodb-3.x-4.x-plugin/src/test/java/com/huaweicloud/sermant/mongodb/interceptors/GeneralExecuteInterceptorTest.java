@@ -22,9 +22,9 @@ import com.huaweicloud.sermant.database.config.DatabaseWriteProhibitionManager;
 
 import com.mongodb.MongoNamespace;
 import com.mongodb.ServerAddress;
-import com.mongodb.connection.ConnectionDescription;
-import com.mongodb.internal.connection.Connection;
-import com.mongodb.internal.connection.DefaultServerConnection;
+import com.mongodb.connection.ServerDescription;
+import com.mongodb.internal.binding.SingleServerBinding;
+import com.mongodb.internal.binding.WriteBinding;
 import com.mongodb.internal.operation.MixedBulkWriteOperation;
 
 import org.junit.AfterClass;
@@ -43,7 +43,7 @@ import java.util.Set;
  * @author daizhenyu
  * @since 2024-01-23
  **/
-public class ExecuteWriteCommandInterceptorTest {
+public class GeneralExecuteInterceptorTest {
     private static DatabaseWriteProhibitionConfig globalConfig = new DatabaseWriteProhibitionConfig();
 
     private static MongoNamespace namespace = new MongoNamespace("database-test",
@@ -57,7 +57,7 @@ public class ExecuteWriteCommandInterceptorTest {
 
     private static Object[] argument;
 
-    private ExecuteWriteCommandInterceptor interceptor = new ExecuteWriteCommandInterceptor();
+    private GeneralExecuteInterceptor interceptor = new GeneralExecuteInterceptor();
 
     @BeforeClass
     public static void setUp() {
@@ -65,12 +65,12 @@ public class ExecuteWriteCommandInterceptorTest {
         operationMock = Mockito.mock(MixedBulkWriteOperation.class);
         methodMock = Mockito.mock(Method.class);
         Mockito.when(operationMock.getNamespace()).thenReturn(namespace);
-        Connection connection = Mockito.mock(DefaultServerConnection.class);
-        ConnectionDescription description = Mockito.mock(ConnectionDescription.class);
+        WriteBinding binding = Mockito.mock(SingleServerBinding.class);
+        ServerDescription description = Mockito.mock(ServerDescription.class);
         ServerAddress serverAddress = new ServerAddress("127.0.0.1", 8080);
-        Mockito.when(connection.getDescription()).thenReturn(description);
-        Mockito.when(description.getServerAddress()).thenReturn(serverAddress);
-        argument = new Object[]{"database-test", null, null, null, connection};
+        Mockito.when(binding.getWriteConnectionSource()).thenReturn(new ConnectionSourceImpl(description));
+        Mockito.when(description.getAddress()).thenReturn(serverAddress);
+        argument = new Object[] {binding, "database-test"};
     }
 
     @AfterClass

@@ -22,21 +22,19 @@ import com.huaweicloud.sermant.core.plugin.agent.matcher.ClassMatcher;
 import com.huaweicloud.sermant.mongodb.utils.MongoDbEnhancementHelper;
 
 /**
- * MixedBulkWriteOperation类增强声明器
+ * SyncOperationHelperDeclarer类增强声明器
  *
  * @author daizhenyu
- * @since 2024-01-16
+ * @since 2024-02-22
  **/
-public class MixedBulkWriteOperationDeclarer extends AbstractPluginDeclarer {
+public class SyncOperationHelperDeclarer extends AbstractPluginDeclarer {
     @Override
     public ClassMatcher getClassMatcher() {
-        return MongoDbEnhancementHelper.getMixedBulkWriteOperationClassMatcher();
+        return MongoDbEnhancementHelper.getSyncOperationHelperDeclarerClassMatcher();
     }
 
     @Override
     public InterceptDeclarer[] getInterceptDeclarers(ClassLoader classLoader) {
-        return new InterceptDeclarer[]{
-                MongoDbEnhancementHelper.getExecuteInterceptDeclarer(),
-        };
+        return MongoDbEnhancementHelper.getSyncOperationHelperInterceptDeclarers();
     }
 }

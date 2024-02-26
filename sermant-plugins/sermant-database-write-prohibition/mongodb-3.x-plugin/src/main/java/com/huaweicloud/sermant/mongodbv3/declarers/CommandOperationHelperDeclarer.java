@@ -14,29 +14,27 @@
  *   limitations under the License.
  */
 
-package com.huaweicloud.sermant.mongodb.declarers;
+package com.huaweicloud.sermant.mongodbv3.declarers;
 
 import com.huaweicloud.sermant.core.plugin.agent.declarer.AbstractPluginDeclarer;
 import com.huaweicloud.sermant.core.plugin.agent.declarer.InterceptDeclarer;
 import com.huaweicloud.sermant.core.plugin.agent.matcher.ClassMatcher;
-import com.huaweicloud.sermant.mongodb.utils.MongoDbEnhancementHelper;
+import com.huaweicloud.sermant.mongodbv3.utils.MongoDbEnhancementHelper;
 
 /**
- * MixedBulkWriteOperation类增强声明器
+ * mongodb写操作增强声明器
  *
  * @author daizhenyu
  * @since 2024-01-16
  **/
-public class MixedBulkWriteOperationDeclarer extends AbstractPluginDeclarer {
+public class CommandOperationHelperDeclarer extends AbstractPluginDeclarer {
     @Override
     public ClassMatcher getClassMatcher() {
-        return MongoDbEnhancementHelper.getMixedBulkWriteOperationClassMatcher();
+        return MongoDbEnhancementHelper.getCommandOperationHelperClassMatcher();
     }
 
     @Override
     public InterceptDeclarer[] getInterceptDeclarers(ClassLoader classLoader) {
-        return new InterceptDeclarer[]{
-                MongoDbEnhancementHelper.getExecuteInterceptDeclarer(),
-        };
+        return MongoDbEnhancementHelper.getCommandOperationHelperInterceptDeclarers();
     }
 }

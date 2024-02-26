@@ -20,24 +20,22 @@ import com.huaweicloud.sermant.core.plugin.agent.entity.ExecuteContext;
 import com.huaweicloud.sermant.database.constant.DatabaseType;
 import com.huaweicloud.sermant.database.entity.DatabaseInfo;
 import com.huaweicloud.sermant.database.handler.DatabaseHandler;
+import com.huaweicloud.sermant.database.interceptor.AbstractMongoDbInterceptor;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.connection.ConnectionDescription;
-import com.mongodb.internal.connection.Connection;
+import com.mongodb.internal.binding.WriteBinding;
 
 /**
- * 执行executeWriteCommand方法的拦截器
+ * executeCommand、executeRetryableCommand、executeRetryableWrite方法拦截器
  *
  * @author daizhenyu
- * @since 2024-01-18
+ * @since 2024-02-23
  **/
-public class ExecuteWriteCommandInterceptor extends AbstractMongoDbInterceptor {
-    private static final int PARAM_INDEX = 4;
-
+public class GeneralExecuteInterceptor extends AbstractMongoDbInterceptor {
     /**
      * 无参构造方法
      */
-    public ExecuteWriteCommandInterceptor() {
+    public GeneralExecuteInterceptor() {
     }
 
     /**
@@ -45,7 +43,7 @@ public class ExecuteWriteCommandInterceptor extends AbstractMongoDbInterceptor {
      *
      * @param handler 写操作处理器
      */
-    public ExecuteWriteCommandInterceptor(DatabaseHandler handler) {
+    public GeneralExecuteInterceptor(DatabaseHandler handler) {
         this.handler = handler;
     }
 
@@ -53,13 +51,12 @@ public class ExecuteWriteCommandInterceptor extends AbstractMongoDbInterceptor {
     protected void createAndCacheDatabaseInfo(ExecuteContext context) {
         DatabaseInfo info = new DatabaseInfo(DatabaseType.MONGODB);
         context.setLocalFieldValue(DATABASE_INFO, info);
-        info.setDatabaseName((String) context.getArguments()[0]);
-        Connection connection = (Connection) context.getArguments()[PARAM_INDEX];
-        ConnectionDescription description = connection.getDescription();
-        if (description != null) {
-            ServerAddress serverAddress = description.getServerAddress();
-            info.setHostAddress(serverAddress.getHost());
-            info.setPort(serverAddress.getPort());
-        }
+        ServerAddress serverAddress = ((WriteBinding) context.getArguments()[0])
+                .getWriteConnectionSource()
+                .getServerDescription()
+                .getAddress();
+        info.setDatabaseName((String) context.getArguments()[1]);
+        info.setHostAddress(serverAddress.getHost());
+        info.setPort(serverAddress.getPort());
     }
 }
