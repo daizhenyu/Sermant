@@ -43,6 +43,12 @@ ROCKETMQ_514_FILE_NAME=rocketmq-all-5.1.4-bin-release.zip
 #======================================kafka配置======================================
 KAFKA_ADDRESS=https://archive.apache.org/dist/kafka/2.7.0/kafka_2.13-2.7.0.tgz
 KAFKA_FILE_NAME=kafka_2.13-2.7.0.tgz
+#======================================MongoDB配置======================================
+MONGODB_ADDRESS=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-7.0.6.tgz
+MONGODB_FILE_NAME=mongodb-linux-x86_64-ubuntu2004-7.0.6.tgz
+#======================================MySQL配置======================================
+MYSQL_ADDRESS=https://downloads.mysql.com/archives/get/p/23/file/mysql-8.0.28-linux-glibc2.12-x86_64.tar.xz
+MYSQL_FILE_NAME=mysql-8.0.28-linux-glibc2.12-x86_64.tar.xz
 
 #重试次数
 TRY_TIMES=3
@@ -95,6 +101,12 @@ elif [ $midleware == "rocketmq514" ]; then
 elif [ $midleware == "kafka" ]; then
   ADDRESS=$KAFKA_ADDRESS
   FILE_NAME=$KAFKA_FILE_NAME
+elif [ $midleware == "mongodb" ]; then
+  ADDRESS=$MONGODB_ADDRESS
+  FILE_NAME=$MONGODB_FILE_NAME
+elif [ $midleware == "mysql" ]; then
+  ADDRESS=$MYSQL_ADDRESS
+  FILE_NAME=$MYSQL_FILE_NAME
 else
   ADDRESS=$CSE_ADDRESS
   FILE_NAME=$CSE_FILE_NAME
