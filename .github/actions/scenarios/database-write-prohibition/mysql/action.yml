@@ -19,10 +19,12 @@ runs:
     - name: start mongodb
       shell: bash
       run: |
+        echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
         sudo apt-get update
-        sudo apt-get install -y mongodb
-        sudo systemctl start mongodb
-        sudo systemctl status mongodb
+        sudo apt-get upgrade
+        sudo apt-get install -y mongodb-org
+        sudo systemctl start mongodb-org
+        sudo systemctl status mongodb-org
 #    - name: Set up root password
 #      shell: bash
 #      run: |
