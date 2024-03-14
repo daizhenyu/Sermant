@@ -1,5 +1,5 @@
-name: "MQ Consume Prohibition Plugin rocketmq Test"
-description: "Auto test for mq consume prohibition by rocketmq with one topic"
+name: "Database Write Prohibition Plugin MySQL Test"
+description: "Auto test for mysql write prohibition"
 runs:
   using: composite
   steps:

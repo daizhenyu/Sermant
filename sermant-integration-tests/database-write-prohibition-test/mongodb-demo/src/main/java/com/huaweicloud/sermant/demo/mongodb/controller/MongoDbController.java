@@ -62,6 +62,16 @@ public class MongoDbController {
     }
 
     /**
+     * check running status
+     *
+     * @return running status
+     */
+    @RequestMapping("checkStatus")
+    public String ping() {
+        return "ok";
+    }
+
+    /**
      * createCollection
      *
      * @param databaseName database name

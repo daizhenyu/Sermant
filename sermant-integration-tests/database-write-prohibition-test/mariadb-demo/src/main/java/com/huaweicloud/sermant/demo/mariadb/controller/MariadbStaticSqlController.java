@@ -41,6 +41,16 @@ public class MariadbStaticSqlController {
     private String mysqlAddress;
 
     /**
+     * check running status
+     *
+     * @return running status
+     */
+    @RequestMapping("checkStatus")
+    public String ping() {
+        return "ok";
+    }
+
+    /**
      * createTable
      *
      * @param table table name
