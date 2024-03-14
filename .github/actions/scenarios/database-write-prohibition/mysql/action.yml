@@ -14,24 +14,25 @@ runs:
         sudo apt-get install -y mysql-server
         sudo systemctl start mysql.service
         sudo systemctl status mysql.service
+        sudo cat -n /etc/mysql/mysql.conf.d/mysqld.cnf
 #    - name: Set up root password
 #      shell: bash
 #      run: |
 #        TEMP_PASSWORD=$(sudo grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
 #        mysql -u root -p"$TEMP_PASSWORD" --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
 #        mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
-    - name: exit
-      if: always()
-      uses: ./.github/actions/common/exit
-      with:
-        processor-keyword: rocketmq
-    - name: if failure then upload error log
-      uses: actions/upload-artifact@v3
-      if: ${{ failure() || cancelled() }}
-      with:
-        name: (${{ github.job }})-mq-consume-prohibition-rocketmq-one-topic-(${{ matrix.rocketMqVersion }}-logs
-        path: |
-          ./*.log
-          ./logs/**
-        if-no-files-found: warn
-        retention-days: 2
+#    - name: exit
+#      if: always()
+#      uses: ./.github/actions/common/exit
+#      with:
+#        processor-keyword: rocketmq
+#    - name: if failure then upload error log
+#      uses: actions/upload-artifact@v3
+#      if: ${{ failure() || cancelled() }}
+#      with:
+#        name: (${{ github.job }})-mq-consume-prohibition-rocketmq-one-topic-(${{ matrix.rocketMqVersion }}-logs
+#        path: |
+#          ./*.log
+#          ./logs/**
+#        if-no-files-found: warn
+#        retention-days: 2
