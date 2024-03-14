@@ -30,7 +30,7 @@ runs:
       run: |
         nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
         -Dsermant_log_dir=${{ env.logDir }}/mongodb \
-        sermant-integration-tests/database-write-prohibition-test/mongodb-demo/target/mongodb.jar > ${{ env.logDir }}/mongodb.log 2>&1 &
+        sermant-integration-tests/database-write-prohibition-test/mongodb-demo/target/mongodb-demo.jar > ${{ env.logDir }}/mongodb.log 2>&1 &
     - name: waiting for services start
       shell: bash
       run: |
