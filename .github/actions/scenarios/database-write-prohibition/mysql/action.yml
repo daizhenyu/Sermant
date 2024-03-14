@@ -12,14 +12,13 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y mysql-server
-        sudo systemctl start mysqld
-        sudo systemctl enable mysqld
-    - name: Set up root password
-      shell: bash
-      run: |
-        TEMP_PASSWORD=$(sudo grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
-        mysql -u root -p"$TEMP_PASSWORD" --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
-        mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+        systemctl status mysql.service
+#    - name: Set up root password
+#      shell: bash
+#      run: |
+#        TEMP_PASSWORD=$(sudo grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
+#        mysql -u root -p"$TEMP_PASSWORD" --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
+#        mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
     - name: exit
       if: always()
       uses: ./.github/actions/common/exit
