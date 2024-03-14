@@ -90,7 +90,7 @@ jobs:
           - mongodbClientVersion: "3.11.3"
           - mongodbClientVersion: "3.12.14"
           - mongodbClientVersion: "4.0.6"
-          - mongodbClientVersion: "4.2.14"
+          - mongodbClientVersion: "4.2.3"
           - mongodbClientVersion: "4.5.1"
           - mongodbClientVersion: "4.7.2"
           - mongodbClientVersion: "4.9.1"

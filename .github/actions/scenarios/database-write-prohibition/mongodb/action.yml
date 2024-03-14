@@ -45,7 +45,7 @@ runs:
       if: always()
       uses: ./.github/actions/common/exit
       with:
-        processor-keyword: mongodb
+        processor-keyword: mongo
     - name: if failure then upload error log
       uses: actions/upload-artifact@v3
       if: ${{ failure() || cancelled() }}
