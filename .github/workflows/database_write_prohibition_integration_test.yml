@@ -33,28 +33,28 @@ jobs:
         run: |
           export ROOT_PATH=$(pwd)
           bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh zk
-      - name: cache mongodb
-        uses: actions/cache@v3
-        with:
-          path: mongodb-linux-x86_64-ubuntu2004-7.0.6.tgz
-          key: ${{ runner.os }}-mongodb-linux-x86_64-ubuntu2004-7.0.6
-          restore-keys: |
-            ${{ runner.os }}-mongodb-linux-x86_64-ubuntu2004-7.0.6
-      - name: download mongodb
-        run: |
-          export ROOT_PATH=$(pwd)
-          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh mongodb
-      - name: cache mysql
-        uses: actions/cache@v3
-        with:
-          path: mysql-8.0.28-linux-glibc2.12-x86_64.tar.xz
-          key: ${{ runner.os }}-mysql-8.0.28-linux-glibc2.12-x86_64
-          restore-keys: |
-            ${{ runner.os }}-mysql-8.0.28-linux-glibc2.12-x86_64
-      - name: download mysql
-        run: |
-          export ROOT_PATH=$(pwd)
-          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh mysql
+#      - name: cache mongodb
+#        uses: actions/cache@v3
+#        with:
+#          path: mongodb-linux-x86_64-ubuntu2004-7.0.6.tgz
+#          key: ${{ runner.os }}-mongodb-linux-x86_64-ubuntu2004-7.0.6
+#          restore-keys: |
+#            ${{ runner.os }}-mongodb-linux-x86_64-ubuntu2004-7.0.6
+#      - name: download mongodb
+#        run: |
+#          export ROOT_PATH=$(pwd)
+#          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh mongodb
+#      - name: cache mysql
+#        uses: actions/cache@v3
+#        with:
+#          path: mysql-8.0.28-linux-glibc2.12-x86_64.tar.xz
+#          key: ${{ runner.os }}-mysql-8.0.28-linux-glibc2.12-x86_64
+#          restore-keys: |
+#            ${{ runner.os }}-mysql-8.0.28-linux-glibc2.12-x86_64
+#      - name: download mysql
+#        run: |
+#          export ROOT_PATH=$(pwd)
+#          bash ./sermant-integration-tests/scripts/tryDownloadMidware.sh mysql
   build-agent-and-cache:
     name: build agent and cache
     runs-on: ubuntu-latest
