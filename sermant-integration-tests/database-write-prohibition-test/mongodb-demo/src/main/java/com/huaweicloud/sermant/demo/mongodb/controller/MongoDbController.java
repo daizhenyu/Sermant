@@ -332,6 +332,6 @@ public class MongoDbController {
             throws SQLException {
         MongoCollection<Document> collection = database.getCollection(collectionName);
         collection.replaceOne(Filters.eq(fieldName, value),
-                new Document("$set", new Document(fieldName, "newValue")));
+                new Document(fieldName, "newValue"));
     }
 }
