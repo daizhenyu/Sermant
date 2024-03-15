@@ -17,7 +17,7 @@ runs:
         sudo systemctl start mysql.service
         sudo systemctl status mysql.service
         config_file="/etc/mysql/debian.cnf"
-        password=$(awk -F "=" '/password/ {print $2}' "$config_file" | tr -d '[:space:]')
+        sudo password=$(awk -F "=" '/password/ {print $2}' "$config_file" | tr -d '[:space:]')
         echo "Password is: $password"
         cat /etc/mysql/debian.cnf
         if sudo lsof -Pi :3306 -sTCP:LISTEN -t >/dev/null ; then
