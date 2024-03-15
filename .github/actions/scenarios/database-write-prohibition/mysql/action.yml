@@ -6,28 +6,38 @@ runs:
     - name: entry
       uses: ./.github/actions/common/entry
       with:
-        log-dir: ./logs/mq-consume-prohibition/rocketmq-one-topic
+        log-dir: ./logs/databse-write-prohibition/mysql
     - name: start mysql
       shell: bash
       run: |
         sudo apt-get update
         sudo apt-get install -y mysql-server
         sudo sed -i '/^\[mysqld\]/a skip-grant-tables' /etc/mysql/mysql.conf.d/mysqld.cnf
+        cat /etc/mysql/mysql.conf.d/mysqld.cnf
         sudo systemctl start mysql.service
         sudo systemctl status mysql.service
         sudo mysql -u root -p
-    - name: start mongodb
-      shell: bash
-      run: |
-        sudo apt-get install gnupg curl
-        curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
-           sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-           --dearmor
-        echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-        sudo apt-get update
-        sudo apt-get install -y mongodb-org
-        sudo systemctl start mongod
-        sudo systemctl status mongod
+#    - name: package demos
+#      shell: bash
+#      run: |
+#        mvn package -Dmariadb.version=${{ matrix.mysqlClientVersion }} -DskipTests -Pmysql-test --file \
+#        sermant-integration-tests/database-write-prohibition-test/pom.xml
+#    - name: start mysql demo
+#      shell: bash
+#      run: |
+#        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+#        -Dsermant_log_dir=${{ env.logDir }}/mysql \
+#        sermant-integration-tests/database-write-prohibition-test/mariadb-demo/target/mariadb-demo.jar > ${{ env.logDir }}/mariadb.log 2>&1 &
+#    - name: waiting for services start
+#      shell: bash
+#      run: |
+#        ps -ef | grep java
+#        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9098/static/checkStatus 120
+#    - name: test mysql
+#      shell: bash
+#      run: |
+#        mvn test -Ddatabase.write.prohibition.integration.test.type=MARIADB --file \
+#        sermant-integration-tests/database-write-prohibition-test/database-write-prohibition-integration-test/pom.xml
 #    - name: Set up root password
 #      shell: bash
 #      run: |
@@ -38,12 +48,12 @@ runs:
 #      if: always()
 #      uses: ./.github/actions/common/exit
 #      with:
-#        processor-keyword: rocketmq
+#        processor-keyword: mariadb
 #    - name: if failure then upload error log
 #      uses: actions/upload-artifact@v3
 #      if: ${{ failure() || cancelled() }}
 #      with:
-#        name: (${{ github.job }})-mq-consume-prohibition-rocketmq-one-topic-(${{ matrix.rocketMqVersion }}-logs
+#        name: (${{ github.job }})-database-write-prohibition-mariadb-(${{ matrix.mysqlClientVersion }}-logs
 #        path: |
 #          ./*.log
 #          ./logs/**
