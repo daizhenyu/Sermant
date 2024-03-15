@@ -12,7 +12,6 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y mysql-server
-#        sudo sed -i '/^\[mysqld\]/a skip-grant-tables' /etc/mysql/mysql.conf.d/mysqld.cnf
         sudo sed -i '/^\s*#\s*\(pid-file\|socket\|port\|datadir\)/ s/^#\s*//' /etc/mysql/mysql.conf.d/mysqld.cnf
         cat /etc/mysql/mysql.conf.d/mysqld.cnf
         sudo systemctl start mysql.service
