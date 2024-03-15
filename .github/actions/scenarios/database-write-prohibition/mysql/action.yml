@@ -29,45 +29,45 @@ runs:
 #        y
 #        EOF
 #        echo ""|sudo mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS test;"
-#    - name: package demos
-#      shell: bash
-#      run: |
-#        mvn package -Dmariadb.version=${{ matrix.mysqlClientVersion }} -DskipTests -Pmysql-test --file \
-#        sermant-integration-tests/database-write-prohibition-test/pom.xml
-#    - name: start mysql demo
-#      shell: bash
-#      run: |
-#        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
-#        -Dsermant_log_dir=${{ env.logDir }}/mysql \
-#        sermant-integration-tests/database-write-prohibition-test/mariadb-demo/target/mariadb-demo.jar > ${{ env.logDir }}/mariadb.log 2>&1 &
-#    - name: waiting for services start
-#      shell: bash
-#      run: |
-#        ps -ef | grep java
-#        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9098/static/checkStatus 120
-#    - name: test mysql
-#      shell: bash
-#      run: |
-#        mvn test -Ddatabase.write.prohibition.integration.test.type=MARIADB --file \
-#        sermant-integration-tests/database-write-prohibition-test/database-write-prohibition-integration-test/pom.xml
+    - name: package demos
+      shell: bash
+      run: |
+        mvn package -Dmariadb.version=${{ matrix.mysqlClientVersion }} -DskipTests -Pmysql-test --file \
+        sermant-integration-tests/database-write-prohibition-test/pom.xml
+    - name: start mysql demo
+      shell: bash
+      run: |
+        nohup java -javaagent:sermant-agent-${{ env.sermantVersion }}/agent/sermant-agent.jar=appName=default -jar \
+        -Dsermant_log_dir=${{ env.logDir }}/mysql \
+        sermant-integration-tests/database-write-prohibition-test/mariadb-demo/target/mariadb-demo.jar > ${{ env.logDir }}/mariadb.log 2>&1 &
+    - name: waiting for services start
+      shell: bash
+      run: |
+        ps -ef | grep java
+        bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:9098/static/checkStatus 120
+    - name: test mysql
+      shell: bash
+      run: |
+        mvn test -Ddatabase.write.prohibition.integration.test.type=MARIADB --file \
+        sermant-integration-tests/database-write-prohibition-test/database-write-prohibition-integration-test/pom.xml
 #    - name: Set up root password
 #      shell: bash
 #      run: |
 #        TEMP_PASSWORD=$(sudo grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
 #        mysql -u root -p"$TEMP_PASSWORD" --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
 #        mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';"
-#    - name: exit
-#      if: always()
-#      uses: ./.github/actions/common/exit
-#      with:
-#        processor-keyword: mariadb
-#    - name: if failure then upload error log
-#      uses: actions/upload-artifact@v3
-#      if: ${{ failure() || cancelled() }}
-#      with:
-#        name: (${{ github.job }})-database-write-prohibition-mariadb-(${{ matrix.mysqlClientVersion }}-logs
-#        path: |
-#          ./*.log
-#          ./logs/**
-#        if-no-files-found: warn
-#        retention-days: 2
+    - name: exit
+      if: always()
+      uses: ./.github/actions/common/exit
+      with:
+        processor-keyword: mariadb
+    - name: if failure then upload error log
+      uses: actions/upload-artifact@v3
+      if: ${{ failure() || cancelled() }}
+      with:
+        name: (${{ github.job }})-database-write-prohibition-mariadb-(${{ matrix.mysqlClientVersion }}-logs
+        path: |
+          ./*.log
+          ./logs/**
+        if-no-files-found: warn
+        retention-days: 2

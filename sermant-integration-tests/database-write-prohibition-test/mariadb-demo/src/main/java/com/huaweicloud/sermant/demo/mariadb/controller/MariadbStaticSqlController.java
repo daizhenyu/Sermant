@@ -68,6 +68,7 @@ public class MariadbStaticSqlController {
             if (e.getMessage().contains(DatabaseConstant.SQL_EXCEPTION_MESSAGE_PREFIX)) {
                 return DatabaseConstant.SUCCEED_PROHIBITION_CODE;
             }
+            System.out.println(e.getMessage());
         }
         return DatabaseConstant.FAILED_PROHIBITION_CODE;
     }
@@ -227,7 +228,7 @@ public class MariadbStaticSqlController {
             ResultSet resultSet = statement.executeQuery(selectQuery);
             rowCount = countRows(resultSet);
         } catch (SQLException e) {
-            // ignore
+            System.out.println(e.getMessage());
         }
         return rowCount;
     }
