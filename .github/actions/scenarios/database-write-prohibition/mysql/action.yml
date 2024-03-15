@@ -8,11 +8,9 @@ runs:
       with:
         log-dir: ./logs/databse-write-prohibition/mysql
     - name: start mysql
-      env:
-        SUPER_SECRET: ${{ secrets.TEST_PASSWORD }}
       shell: bash
       run: |
-        echo "$SUPER_SECRET"
+        echo "$TEST_SECRET"
         sudo apt-get update
         sudo apt-get install -y mysql-server
         sudo systemctl start mysql.service

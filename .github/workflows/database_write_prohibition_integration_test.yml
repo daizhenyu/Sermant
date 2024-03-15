@@ -1,6 +1,7 @@
 name: database-write-prohibition integration test
 env:
   sermantVersion: 1.0.0
+  TEST_SECRET: ${{ secrets.TEST_PASSWORD }}
 on:
   push:
   pull_request:
