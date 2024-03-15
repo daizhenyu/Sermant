@@ -15,7 +15,7 @@ runs:
         sudo sed -i '/^\[mysqld\]/a skip-grant-tables' /etc/mysql/mysql.conf.d/mysqld.cnf
         sudo systemctl start mysql.service
         sudo systemctl status mysql.service
-        sudo mysql -u root
+        sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS test;"
 #        TEMP_PASSWORD=$(grep "A temporary password" /var/log/mysqld.log | awk '{print $NF}')
 #        echo "Temporary Password: $TEMP_PASSWORD"
 #        sudo mysql_secure_installation << EOF
