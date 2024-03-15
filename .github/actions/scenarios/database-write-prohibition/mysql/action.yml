@@ -20,7 +20,8 @@ runs:
         echo "kaishi"
         cat /var/log/mysql/error.log
         echo "jieshu"
-        sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS test;"
+        result=$(sudo mysql -u root -s -e "CREATE DATABASE IF NOT EXISTS test;" 2>&1)
+        echo "$result"
 #        TEMP_PASSWORD=$(grep "A temporary password" /var/log/mysqld.log | awk '{print $NF}')
 #        echo "Temporary Password: $TEMP_PASSWORD"
 #        sudo mysql_secure_installation << EOF
