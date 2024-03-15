@@ -8,15 +8,17 @@ runs:
       with:
         log-dir: ./logs/databse-write-prohibition/mysql
     - name: start mysql
+      env:
+        SUPER_SECRET: ${{ secrets.SuperSecret }}
       shell: bash
       run: |
+        echo "$SUPER_SECRET"
         sudo apt-get update
         sudo apt-get install -y mysql-server
-        sudo sed -i '/^\[mysqld\]/a skip-grant-tables' /etc/mysql/mysql.conf.d/mysqld.cnf
-        cat /etc/mysql/mysql.conf.d/mysqld.cnf
         sudo systemctl start mysql.service
+        sudo sudo mysql_secure_installation
         sudo systemctl status mysql.service
-        echo ""|sudo mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS test;"
+#        echo ""|sudo mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS test;"
 #    - name: package demos
 #      shell: bash
 #      run: |
