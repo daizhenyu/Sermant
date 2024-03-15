@@ -13,6 +13,7 @@ runs:
         sudo apt-get update
         sudo apt-get install -y mysql-server
         sudo systemctl start mysql.service
+        sudo systemctl status mysql.service
         TEMP_PASSWORD=$(grep "A temporary password" /var/log/mysqld.log | awk '{print $NF}')
         echo "Temporary Password: $TEMP_PASSWORD"
 #        sudo mysql_secure_installation << EOF
@@ -25,7 +26,6 @@ runs:
 #        n
 #        y
 #        EOF
-        sudo systemctl status mysql.service
 #        echo ""|sudo mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS test;"
 #    - name: package demos
 #      shell: bash
