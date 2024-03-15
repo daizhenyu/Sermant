@@ -9,7 +9,7 @@ runs:
         log-dir: ./logs/databse-write-prohibition/mysql
     - name: start mysql
       env:
-        SUPER_SECRET: ${{ secrets.SuperSecret }}
+        SUPER_SECRET: ${{ secrets.TEST_PASSWORD }}
       shell: bash
       run: |
         echo "$SUPER_SECRET"
