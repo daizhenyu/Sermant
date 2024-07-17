@@ -15,6 +15,9 @@ runs:
         mkdir -p ${log_dir}
         echo "logDir=${log_dir}" >> $GITHUB_ENV
         echo "=======check log dir======"
+        echo ${log_dir}
+        echo $PWD
+        ls -l
         ls -l ${log_dir}
 
 
