@@ -20,6 +20,10 @@ runs:
     - name: Wait for spring-client pod to be ready
       shell: bash
       run: |
+        sleep 5s
+        spring_client_pod=$(kubectl get pods -l app=spring-client -o jsonpath='{.items[0].metadata.name}')
+        kubectl describe pod $spring_client_pod
+        kubectl logs -f $spring_client_pod
         kubectl wait --for=condition=ready pod -l app=spring-client --timeout=10s
         kubectl wait --for=condition=ready pod -l app=spring-server --timeout=10s
         kubectl port-forward svc/spring-client 8080:8080 &
