@@ -20,7 +20,7 @@ spec:
         - containerPort: 8080
         volumeMounts:
         - name: log-volume
-          mountPath: /log/sermant-logs
+          mountPath: /logs/xds-service
         env:
         - name: agent_service_dynamic_config_enable
           value: "false"
@@ -29,7 +29,7 @@ spec:
       volumes:
       - name: log-volume
         hostPath:
-          path: /Users/daizhenyu/work/logs
+          path: /home/runner/work/Sermant/Sermant/logs/xds-service
           type: Directory
       imagePullSecrets:
         - name: default-secret

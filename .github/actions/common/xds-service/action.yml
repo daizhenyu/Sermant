@@ -49,3 +49,7 @@ runs:
       with:
         path: sermant-integration-tests/xds-service-test/product/
         key: ${{ runner.os }}-xds-service-product-${{ github.run_id }}
+    - name: entry
+      uses: ./.github/actions/common/entry
+      with:
+        log-dir: ./logs/xds-service

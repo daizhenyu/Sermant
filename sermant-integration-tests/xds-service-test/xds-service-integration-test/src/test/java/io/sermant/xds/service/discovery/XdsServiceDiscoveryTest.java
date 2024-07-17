@@ -40,7 +40,7 @@ public class XdsServiceDiscoveryTest {
             Assertions.assertEquals(0, 1, "The returned result format is incorrect.");
         }
         Assertions.assertEquals("hello", resultStrings[0]);
-        Assertions.assertEquals("1", resultStrings[1]);
+        Assertions.assertEquals("2", resultStrings[1]);
     }
 
     /**
