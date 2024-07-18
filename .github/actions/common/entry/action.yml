@@ -13,11 +13,17 @@ runs:
       run: |
         log_dir=${{ inputs.log-dir }}
         mkdir -p ${log_dir}
+        chmod 777 ${log_dir}
         echo "logDir=${log_dir}" >> $GITHUB_ENV
         echo "=======check log dir======"
         echo ${log_dir}
         echo $PWD
         ls -l
+        cd logs/
+        ls -l
+        cd xds-service/
+        ls -l
+        cd ../../
         ls -l ${log_dir}
 
 
