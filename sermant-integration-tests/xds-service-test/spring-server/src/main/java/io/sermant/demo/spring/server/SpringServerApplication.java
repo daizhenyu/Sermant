@@ -14,25 +14,25 @@
  *   limitations under the License.
  */
 
-package io.demo.spring.client;
+package io.sermant.demo.spring.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * SpringClientApplication
+ * SpringServerApplication
  *
  * @author daizhenyu
  * @since 2024-07-02
  **/
 @SpringBootApplication
-public class SpringClientApplication {
+public class SpringServerApplication {
     /**
      * main
      *
      * @param args args
      */
     public static void main(String[] args) {
-        SpringApplication.run(SpringClientApplication.class, args);
+        SpringApplication.run(SpringServerApplication.class, args);
     }
 }

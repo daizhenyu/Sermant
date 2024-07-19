@@ -23,6 +23,8 @@ spec:
           value: "false"
         - name: agent_service_xds_service_enable
           value: "true"
+        - name: agent_config_ignoredPrefixes
+          value: ""
       imagePullSecrets:
         - name: default-secret
 ---

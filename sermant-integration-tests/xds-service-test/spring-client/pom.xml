@@ -37,7 +37,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.version}</version>
                 <configuration>
-                    <mainClass>io.demo.spring.client.SpringClientApplication</mainClass>
+                    <mainClass>io.sermant.demo.spring.client.SpringClientApplication</mainClass>
                     <finalName>spring-client</finalName>
                     <outputDirectory>${pom.basedir}/../product/spring-client</outputDirectory>
                 </configuration>

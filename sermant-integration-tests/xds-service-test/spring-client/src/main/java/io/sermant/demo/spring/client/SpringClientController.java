@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package io.demo.spring.client;
+package io.sermant.demo.spring.client;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;

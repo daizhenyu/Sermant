@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package io.demo.spring.server;
+package io.sermant.demo.spring.server;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

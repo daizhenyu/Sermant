@@ -31,7 +31,7 @@ public class TemplateDeclarer extends AbstractPluginDeclarer {
     @Override
     public ClassMatcher getClassMatcher() {
         // Matches the class to be intercepted by fully qualified name
-        return ClassMatcher.nameEquals("io.demo.spring.client.SpringClientController");
+        return ClassMatcher.nameEquals("io.sermant.demo.spring.client.SpringClientController");
     }
 
     @Override
