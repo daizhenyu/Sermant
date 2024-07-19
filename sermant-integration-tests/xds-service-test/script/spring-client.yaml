@@ -24,7 +24,7 @@ spec:
         - name: agent_service_xds_service_enable
           value: "true"
         - name: agent_config_ignoredPrefixes
-          value: ""
+          value: "com.huaweicloud.sermant"
       imagePullSecrets:
         - name: default-secret
 ---
