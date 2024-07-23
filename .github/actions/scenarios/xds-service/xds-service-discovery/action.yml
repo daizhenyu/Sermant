@@ -64,7 +64,6 @@ runs:
         kubectl delete -f sermant-integration-tests/xds-service-test/script/spring-client.yaml
         kubectl apply -f sermant-integration-tests/xds-service-test/script/spring-client-subscribe.yaml
         kubectl wait --for=condition=ready pod -l app=spring-client --timeout=10s
-        pkill -f "kubectl port-forward svc/spring-client"
         kubectl port-forward svc/spring-client 8080:8080 &
     - name: test sermant xds service use security mode
       shell: bash
