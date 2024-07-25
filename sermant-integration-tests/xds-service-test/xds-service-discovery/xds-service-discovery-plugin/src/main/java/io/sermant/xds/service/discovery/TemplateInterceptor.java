@@ -66,6 +66,9 @@ public class TemplateInterceptor implements Interceptor {
 
     @Override
     public ExecuteContext before(ExecuteContext context) {
+        if (!templateConfig.isEnabled()) {
+            return context;
+        }
         if (templateConfig.getType().equals("get")) {
             instanceList = new ArrayList<>(xdsServiceDiscovery
                     .getServiceInstance(templateConfig.getUpstreamServiceName()));
@@ -84,6 +87,9 @@ public class TemplateInterceptor implements Interceptor {
 
     @Override
     public ExecuteContext after(ExecuteContext context) {
+        if (!templateConfig.isEnabled()) {
+            return context;
+        }
         String oldResult = (String) context.getResult();
         context.changeResult(oldResult + "-" + context.getLocalFieldValue("serviceCount"));
         return context;

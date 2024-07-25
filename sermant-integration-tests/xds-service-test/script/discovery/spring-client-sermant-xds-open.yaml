@@ -25,6 +25,8 @@ spec:
           value: "true"
         - name: agent_config_ignoredPrefixes
           value: "ignore"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-javaagent:/home/agent/sermant-agent.jar"
       imagePullSecrets:
         - name: default-secret
 ---

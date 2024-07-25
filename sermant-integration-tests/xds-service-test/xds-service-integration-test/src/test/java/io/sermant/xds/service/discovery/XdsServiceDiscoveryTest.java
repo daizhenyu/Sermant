@@ -88,7 +88,29 @@ public class XdsServiceDiscoveryTest {
         Assertions.assertEquals("2", resultStrings[1]);
     }
 
-    private String[] splitResult (String result) {
+    /**
+     * one server instance with client using envoy
+     */
+    @Test
+    @EnabledIfSystemProperty(named = "xds.service.integration.test.type", matches =
+            "DISCOVERY_ONE_SERVER_INSTANCE_ENVOY")
+    public void testDiscoveryWithClientUsingEnvoyAndOneInstance() {
+        Assertions.assertEquals("hello", HttpRequestUtils.doGet("http://127.0.0.1:8080/hello?address=spring-server"
+                + ".default.svc.cluster.local:8080"));
+    }
+
+    /**
+     * zero server instance with client using envoy
+     */
+    @Test
+    @EnabledIfSystemProperty(named = "xds.service.integration.test.type", matches =
+            "DISCOVERY_ZERO_SERVER_INSTANCE_ENVOY")
+    public void testDiscoveryWithClientUsingEnvoyAndZeroInstance() {
+        Assertions.assertEquals("", HttpRequestUtils.doGet("http://127.0.0.1:8080/hello?address=spring-server"
+                + ".default.svc.cluster.local:8080"));
+    }
+
+    private String[] splitResult(String result) {
         Assertions.assertNotNull(result, "The returned result is null.");
         return result.split("-");
     }

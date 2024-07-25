@@ -40,8 +40,9 @@ jobs:
           sed -i '/sermant-backend/d' pom.xml
           sed -i '/sermant-injector/d' pom.xml
           mvn package -DskipTests -Ptest --file pom.xml
-  test-for-xds-service-discovery:
-    name: Test for xds service discovery
+          cp -r sermant-integration-tests/xds-service-test/product/spring-client/agent sermant-integration-tests/xds-service-test/product/spring-server/
+  test-for-xds-service-discovery-onlysermant:
+    name: Test for xds service discovery with only sermant
     runs-on: ubuntu-latest
     needs: [build-agent-and-cache]
     steps:
@@ -54,4 +55,34 @@ jobs:
       - name: xds common operation
         uses: ./.github/actions/common/xds-service
       - name: xds service discovery
-        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery
+        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/sermant-only
+  test-for-xds-service-discovery-with-server-envoy:
+    name: Test for xds service discovery with spring-server using envoy
+    runs-on: ubuntu-latest
+    needs: [build-agent-and-cache]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+      - name: set java version to environment
+        run: |
+          echo "javaVersion=8" >> $GITHUB_ENV
+      - name: xds common operation
+        uses: ./.github/actions/common/xds-service
+      - name: xds service discovery
+        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/server-envoy
+  test-for-xds-service-discovery-with-client-envoy:
+    name: Test for xds service discovery with spring-client using enovy
+    runs-on: ubuntu-latest
+    needs: [build-agent-and-cache]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+      - name: set java version to environment
+        run: |
+          echo "javaVersion=8" >> $GITHUB_ENV
+      - name: xds common operation
+        uses: ./.github/actions/common/xds-service
+      - name: xds service discovery
+        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/client-envoy

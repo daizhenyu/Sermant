@@ -39,6 +39,8 @@ spec:
           value: "true"
         - name: xds_config_service_account_token_path
           value: "/var/run/secrets/tokens/token"
+        - name: JAVA_TOOL_OPTIONS
+          value: "-javaagent:/home/agent/sermant-agent.jar"
       volumes:
       - name: token-volume
         secret:

@@ -34,6 +34,17 @@ public class TemplateConfig implements PluginConfig {
     @ConfigFieldKey("type")
     private String type;
 
+    @ConfigFieldKey("enabled")
+    private boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public String getType() {
         return type;
     }

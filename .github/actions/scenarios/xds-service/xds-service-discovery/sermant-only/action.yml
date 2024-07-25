@@ -15,8 +15,8 @@ runs:
     - name: start spring-client and spring-server
       shell: bash
       run: |
-        kubectl apply -f sermant-integration-tests/xds-service-test/script/spring-client.yaml
-        kubectl apply -f sermant-integration-tests/xds-service-test/script/spring-server.yaml
+        kubectl apply -f sermant-integration-tests/xds-service-test/script/discovery/spring-client-sermant-xds-open.yaml
+        kubectl apply -f sermant-integration-tests/xds-service-test/script/discovery/spring-server.yaml
     - name: Wait for spring-client pod to be ready
       shell: bash
       run: |
@@ -31,7 +31,7 @@ runs:
     - name: stop spring-server
       shell: bash
       run: |
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/spring-server.yaml
+        kubectl delete -f sermant-integration-tests/xds-service-test/script/discovery/spring-server.yaml
         sleep 3s
     - name: test the number of spring-server instances changes from 1 to 0
       shell: bash
@@ -41,7 +41,7 @@ runs:
     - name: start spring-server with 2 replicas
       shell: bash
       run: |
-        kubectl apply -f sermant-integration-tests/xds-service-test/script/spring-server-2-replicas.yaml
+        kubectl apply -f sermant-integration-tests/xds-service-test/script/discovery/spring-server-2-replicas.yaml
         kubectl wait --for=condition=ready pod -l app=spring-server --timeout=10s
         sleep 2s
     - name: test the number of spring-server instances changes from 0 to 2
@@ -61,9 +61,9 @@ runs:
     - name: restart spring-client and sermant xds service use security mode
       shell: bash
       run: |
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/spring-client.yaml
+        kubectl delete -f sermant-integration-tests/xds-service-test/script/discovery/spring-client-sermant-xds-open.yaml
         sleep 5s
-        kubectl apply -f sermant-integration-tests/xds-service-test/script/spring-client-subscribe.yaml
+        kubectl apply -f sermant-integration-tests/xds-service-test/script/discovery/spring-client-sermant-xds-subscribe-secure.yaml
         kubectl wait --for=condition=ready pod -l app=spring-client --timeout=10s
         pkill -f "kubectl port-forward svc/spring-client"
         kubectl port-forward svc/spring-client 8080:8080 &
@@ -80,5 +80,5 @@ runs:
     - name: close all service
       shell: bash
       run: |
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/spring-client-subscribe.yaml
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/spring-server-2-replicas.yaml
+        kubectl delete -f sermant-integration-tests/xds-service-test/script/discovery/spring-client-sermant-xds-subscribe-secure.yaml
+        kubectl delete -f sermant-integration-tests/xds-service-test/script/discovery/spring-server-2-replicas.yaml
