@@ -103,14 +103,13 @@ jobs:
       - name: cache xds service package
         uses: actions/cache@v3
         with:
-          path: sermant-integration-tests/xds-service-test/product/
-          key: ${{ runner.os }}-xds-service-product-${{ github.run_id }}
+          path: sermant-integration-tests/xds-service-test/product/sermant-agent-*/
+          key: ${{ runner.os }}-xds-service-product-agent-${{ github.run_id }}
       - name: package agent
         run: |
           sed -i '/sermant-backend/d' pom.xml
           sed -i '/sermant-injector/d' pom.xml
           mvn package -DskipTests -Ptest --file pom.xml
-          cp -r sermant-integration-tests/xds-service-test/product/spring-client/agent sermant-integration-tests/xds-service-test/product/spring-server/
           mkdir -p sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/agentcore-test-plugin/plugin
           mkdir -p sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/dynamic-test-first-plugin/plugin
           mkdir -p sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/dynamic-test-second-plugin/plugin
