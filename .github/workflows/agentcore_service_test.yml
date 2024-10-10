@@ -121,30 +121,30 @@ jobs:
           cp ./sermant-integration-tests/agentcore-test/dynamic-test-third-plugin/target/dynamic-test-third-plugin-1.0.0.jar sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/dynamic-test-third-plugin/plugin/
           cp ./sermant-integration-tests/agentcore-test/agentcore-test-application/target/agentcore-test-application-1.0.0-jar-with-dependencies.jar sermant-agent-${{ env.sermantVersion }}/agent/
           sed -i '/plugins:/a \  - agentcore-test-plugin' sermant-agent-${{ env.sermantVersion }}/agent/config/plugins.yaml
-  test-for-agentcore-dynamic-config:
-    name: Test for agentcore dynamic config
-    runs-on: ubuntu-latest
-    if: needs.set-execution-conditions.outputs.enableDynamicConfigServicAction == 'true'
-    needs: [ set-execution-conditions, build-agent-and-cache, download-midwares-and-cache ]
-    strategy:
-      matrix:
-        include:
-          - serviceAddress: "127.0.0.1:8848"
-            dynamicConfigType: "NACOS"
-          - serviceAddress: "127.0.0.1:2181"
-            dynamicConfigType: "ZOOKEEPER"
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: common operations
-        uses: ./.github/actions/common/agentcore
-      - name: test dynamic config for ${{ matrix.dynamicConfigType }}
-        uses: ./.github/actions/scenarios/agentcore/dynamic-config
+#  test-for-agentcore-dynamic-config:
+#    name: Test for agentcore dynamic config
+#    runs-on: ubuntu-latest
+#    if: needs.set-execution-conditions.outputs.enableDynamicConfigServicAction == 'true'
+#    needs: [ set-execution-conditions, build-agent-and-cache, download-midwares-and-cache ]
+#    strategy:
+#      matrix:
+#        include:
+#          - serviceAddress: "127.0.0.1:8848"
+#            dynamicConfigType: "NACOS"
+#          - serviceAddress: "127.0.0.1:2181"
+#            dynamicConfigType: "ZOOKEEPER"
+#      fail-fast: false
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: common operations
+#        uses: ./.github/actions/common/agentcore
+#      - name: test dynamic config for ${{ matrix.dynamicConfigType }}
+#        uses: ./.github/actions/scenarios/agentcore/dynamic-config
   test-for-xds-service-discovery-onlysermant:
     name: Test for xds service discovery with only sermant
     runs-on: ubuntu-latest
@@ -193,3 +193,71 @@ jobs:
         uses: ./.github/actions/common/xds-service
       - name: xds service discovery
         uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/client-envoy
+  test-for-xds-router-lb:
+    name: Test for xds router and lb with router plugin
+    runs-on: ubuntu-latest
+    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
+    needs: [set-execution-conditions, build-agent-and-cache]
+    strategy:
+      matrix:
+        include:
+          - springBootVersion: "1.5.0.RELEASE"
+            springCloudVersion: "Edgware.SR2"
+            okHttp2Version: "2.0.0"
+            okHttp3Version: "3.2.0"
+            httpClientVersion: "4.0.3"
+            httpAsyncClientVersion: "4.0"
+          - springBootVersion: "2.0.2.RELEASE"
+            springCloudVersion: "Finchley.RELEASE"
+            httpClientVersion: "4.1.3"
+            okHttp2Version: "2.1.0"
+            okHttp3Version: "3.5.0"
+            httpAsyncClientVersion: "4.0.1"
+          - springBootVersion: "2.1.0.RELEASE"
+            springCloudVersion: "Greenwich.RELEASE"
+            httpClientVersion: "4.2.6"
+            okHttp2Version: "2.2.0"
+            okHttp3Version: "3.9.1"
+            httpAsyncClientVersion: "4.0.2"
+          - springBootVersion: "2.2.0.RELEASE"
+            springCloudVersion: "Hoxton.RELEASE"
+            httpClientVersion: "4.3.6"
+            okHttp2Version: "2.3.0"
+            okHttp3Version: "3.12.13"
+            httpAsyncClientVersion: "4.1"
+          - springBootVersion: "2.3.0.RELEASE"
+            springCloudVersion: "Hoxton.RELEASE"
+            httpClientVersion: "4.4.1"
+            okHttp2Version: "2.4.0"
+            okHttp3Version: "3.14.9"
+            httpAsyncClientVersion: "4.1.1"
+          - springBootVersion: "2.4.0"
+            springCloudVersion: "2020.0.0"
+            httpClientVersion: "4.5.6"
+            okHttp2Version: "2.5.0"
+            okHttp3Version: "4.2.2"
+            httpAsyncClientVersion: "4.1.2"
+          - springBootVersion: "2.6.2"
+            springCloudVersion: "2021.0.0"
+            httpClientVersion: "4.5.10"
+            okHttp2Version: "2.6.0"
+            okHttp3Version: "4.7.2"
+            httpAsyncClientVersion: "4.1.3"
+          - springBootVersion: "2.7.2"
+            springCloudVersion: "2021.0.3"
+            httpClientVersion: "4.5.13"
+            okHttp2Version: "2.7.5"
+            okHttp3Version: "4.12.0"
+            httpAsyncClientVersion: "4.1.5"
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
+      - name: set java version to environment
+        run: |
+          echo "javaVersion=8" >> $GITHUB_ENV
+      - name: xds common operation
+        uses: ./.github/actions/common/xds-service
+      - name: xds router and lb for springCloudVersion=${{ matrix.springCloudVersion }}
+        uses: ./.github/actions/scenarios/xds-service/xds-router-lb

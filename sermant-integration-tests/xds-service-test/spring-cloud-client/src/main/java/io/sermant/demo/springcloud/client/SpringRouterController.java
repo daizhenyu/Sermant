@@ -60,6 +60,16 @@ public class SpringRouterController {
     private RestTemplate restTemplate;
 
     /**
+     * check service status
+     *
+     * @return result
+     */
+    @RequestMapping("checkStatus")
+    public String checkStatus() {
+        return "ok";
+    }
+
+    /**
      * test httpclient routing
      *
      * @param host host
