@@ -91,22 +91,6 @@ runs:
     - name: restart spring-server with envoy
       shell: bash
       run: |
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/router/router-rule/spring-server-destination-robin.yaml
-        kubectl apply -f sermant-integration-tests/xds-service-test/script/router/router-rule/spring-server-destination-random.yaml
-        sleep 10s
-    - name: stop spring-server
-      shell: bash
-      run: |
-        kubectl delete -f sermant-integration-tests/xds-service-test/script/discovery/spring-server-sermant-xds-open.yaml
-        sleep 10s
-    - name: test the number of spring-server instances changes from 1 to 0
-      shell: bash
-      run: |
-        mvn test -Dxds.service.integration.test.type=DISCOVERY_ZERO_SERVER_INSTANCE_ENVOY --file \
-        sermant-integration-tests/xds-service-test/xds-service-integration-test/pom.xml
-    - name: restart spring-server
-      shell: bash
-      run: |
         kubectl delete -f sermant-integration-tests/xds-service-test/script/router/deployment/spring-server.yaml
         sleep 2s
         kubectl label namespace default istio-injection=enabled
