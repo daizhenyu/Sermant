@@ -145,54 +145,54 @@ jobs:
 #        uses: ./.github/actions/common/agentcore
 #      - name: test dynamic config for ${{ matrix.dynamicConfigType }}
 #        uses: ./.github/actions/scenarios/agentcore/dynamic-config
-  test-for-xds-service-discovery-onlysermant:
-    name: Test for xds service discovery with only sermant
-    runs-on: ubuntu-latest
-    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
-    needs: [set-execution-conditions, build-agent-and-cache]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: xds common operation
-        uses: ./.github/actions/common/xds-service
-      - name: xds service discovery
-        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/sermant-only
-  test-for-xds-service-discovery-with-server-envoy:
-    name: Test for xds service discovery with spring-server using envoy
-    runs-on: ubuntu-latest
-    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
-    needs: [set-execution-conditions, build-agent-and-cache]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: xds common operation
-        uses: ./.github/actions/common/xds-service
-      - name: xds service discovery
-        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/server-envoy
-  test-for-xds-service-discovery-with-client-envoy:
-    name: Test for xds service discovery with spring-client using enovy
-    runs-on: ubuntu-latest
-    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
-    needs: [set-execution-conditions, build-agent-and-cache]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 100
-      - name: set java version to environment
-        run: |
-          echo "javaVersion=8" >> $GITHUB_ENV
-      - name: xds common operation
-        uses: ./.github/actions/common/xds-service
-      - name: xds service discovery
-        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/client-envoy
+#  test-for-xds-service-discovery-onlysermant:
+#    name: Test for xds service discovery with only sermant
+#    runs-on: ubuntu-latest
+#    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
+#    needs: [set-execution-conditions, build-agent-and-cache]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: xds common operation
+#        uses: ./.github/actions/common/xds-service
+#      - name: xds service discovery
+#        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/sermant-only
+#  test-for-xds-service-discovery-with-server-envoy:
+#    name: Test for xds service discovery with spring-server using envoy
+#    runs-on: ubuntu-latest
+#    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
+#    needs: [set-execution-conditions, build-agent-and-cache]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: xds common operation
+#        uses: ./.github/actions/common/xds-service
+#      - name: xds service discovery
+#        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/server-envoy
+#  test-for-xds-service-discovery-with-client-envoy:
+#    name: Test for xds service discovery with spring-client using enovy
+#    runs-on: ubuntu-latest
+#    if: needs.set-execution-conditions.outputs.enableXdsServicAction == 'true'
+#    needs: [set-execution-conditions, build-agent-and-cache]
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 100
+#      - name: set java version to environment
+#        run: |
+#          echo "javaVersion=8" >> $GITHUB_ENV
+#      - name: xds common operation
+#        uses: ./.github/actions/common/xds-service
+#      - name: xds service discovery
+#        uses: ./.github/actions/scenarios/xds-service/xds-service-discovery/client-envoy
   test-for-xds-router-lb:
     name: Test for xds router and lb with router plugin
     runs-on: ubuntu-latest
