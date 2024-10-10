@@ -92,10 +92,11 @@ runs:
       shell: bash
       run: |
         kubectl delete -f sermant-integration-tests/xds-service-test/script/router/deployment/spring-server.yaml
-        sleep 2s
+        sleep 5s
         kubectl label namespace default istio-injection=enabled
         kubectl apply -f sermant-integration-tests/xds-service-test/script/router/deployment/spring-server.yaml
         kubectl wait --for=condition=ready pod -l app=spring-server --timeout=10s
+        sleep 5s
         nohup kubectl port-forward svc/spring-server 8081:8081 &
         sleep 2s
         bash ./sermant-integration-tests/scripts/checkService.sh http://127.0.0.1:8081/hello 150
