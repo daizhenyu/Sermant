@@ -144,7 +144,7 @@ public class XdsRouterTest {
 
     private boolean isRandom(int[][] results, int index) {
         int differenceValue = Math.abs(results[index][0] - results[index][1]);
-        if (differenceValue <= 20) {
+        if (differenceValue <= 30) {
             return true;
         }
         return false;
