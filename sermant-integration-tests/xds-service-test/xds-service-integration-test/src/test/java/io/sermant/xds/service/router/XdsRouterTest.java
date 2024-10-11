@@ -38,11 +38,11 @@ public class XdsRouterTest {
         Assertions.assertEquals("v1",
                 HttpRequestUtils.doGet("http://127.0.0.1:8080/router/okHttp2?host=spring-server&version=v1"));
         Assertions.assertEquals("v1",
+                HttpRequestUtils.doGet("http://127.0.0.1:8080/router/httpAsyncClient?host=spring-server&version=v1"));
+        Assertions.assertEquals("v1",
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/httpClient?host=spring-server&version=v1"));
         Assertions.assertEquals("v1",
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/jdkHttp?host=spring-server&version=v1"));
-        Assertions.assertEquals("v1",
-                HttpRequestUtils.doGet("http://127.0.0.1:8082/router/httpAsyncClient?host=spring-server&version=v1"));
         Assertions.assertEquals("v1",
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/okHttp3?host=spring-server&version=v1"));
         Assertions.assertEquals("v1",

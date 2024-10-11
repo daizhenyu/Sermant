@@ -39,11 +39,6 @@
             <artifactId>okhttp</artifactId>
             <version>${okhttp3.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpasyncclient</artifactId>
-            <version>${httpclient.async.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
