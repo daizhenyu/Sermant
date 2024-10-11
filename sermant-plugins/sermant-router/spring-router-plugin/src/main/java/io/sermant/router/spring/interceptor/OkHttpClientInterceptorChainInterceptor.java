@@ -17,7 +17,6 @@
 package io.sermant.router.spring.interceptor;
 
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Request;
 
 import io.sermant.core.common.LoggerFactory;
@@ -90,7 +89,7 @@ public class OkHttpClientInterceptorChainInterceptor implements Interceptor {
 
     private Request rebuildRequest(Request request, URI uri, ServiceInstance serviceInstance) {
         return request.newBuilder()
-                .url(HttpUrl.parse(BaseHttpRouterUtils.rebuildUrlByXdsServiceInstance(uri, serviceInstance)))
+                .url(BaseHttpRouterUtils.rebuildUrlByXdsServiceInstance(uri, serviceInstance))
                 .build();
     }
 
