@@ -67,7 +67,8 @@ public class XdsRouterTest {
             countCalls(results, 2,
                     HttpRequestUtils.doGet("http://127.0.0.1:8082/router/jdkHttp?host=spring-server&version=v2"));
             countCalls(results, 3,
-                    HttpRequestUtils.doGet("http://127.0.0.1:8082/router/httpAsyncClient?host=spring-server&version=v2"));
+                    HttpRequestUtils.doGet("http://127.0.0.1:8080/router/httpAsyncClient?host=spring-server&version"
+                            + "=v2"));
             countCalls(results, 4,
                     HttpRequestUtils.doGet("http://127.0.0.1:8082/router/okHttp3?host=spring-server&version=v2"));
         }
@@ -94,8 +95,8 @@ public class XdsRouterTest {
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/jdkHttp?host=spring-server&version=v2"),
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/jdkHttp?host=spring-server&version=v2"));
         Assertions.assertNotEquals(
-                HttpRequestUtils.doGet("http://127.0.0.1:8082/router/httpAsyncClient?host=spring-server&version=v2"),
-                HttpRequestUtils.doGet("http://127.0.0.1:8082/router/httpAsyncClient?host=spring-server&version=v2"));
+                HttpRequestUtils.doGet("http://127.0.0.1:8080/router/httpAsyncClient?host=spring-server&version=v2"),
+                HttpRequestUtils.doGet("http://127.0.0.1:8080/router/httpAsyncClient?host=spring-server&version=v2"));
         Assertions.assertNotEquals(
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/okHttp3?host=spring-server&version=v2"),
                 HttpRequestUtils.doGet("http://127.0.0.1:8082/router/okHttp3?host=spring-server&version=v2"));
@@ -121,7 +122,7 @@ public class XdsRouterTest {
                     HttpRequestUtils.doGet("http://127.0.0.1:8082/router/jdkHttp?host=spring-server&version=base"));
             Assertions.assertEquals("v2",
                     HttpRequestUtils
-                            .doGet("http://127.0.0.1:8082/router/httpAsyncClient?host=spring-server&version=base"));
+                            .doGet("http://127.0.0.1:8080/router/httpAsyncClient?host=spring-server&version=base"));
             Assertions.assertEquals("v2",
                     HttpRequestUtils.doGet("http://127.0.0.1:8082/router/okHttp3?host=spring-server&version=base"));
             Assertions.assertEquals("v2",
