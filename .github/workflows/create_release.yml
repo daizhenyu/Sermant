@@ -35,7 +35,7 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package -P agent -DskipTests
-          cd ${{ github.workspace }}/script
+          cd ${{ github.workspace }}/scripts
           javac -cp "%JAVA_HOME%\lib\tools.jar" AgentLoader.java -encoding utf-8
           cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
           cd ..
