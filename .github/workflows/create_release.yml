@@ -36,12 +36,12 @@ jobs:
         run: |
           mvn clean package -P agent -DskipTests
           cd ${{ github.workspace }}/scripts
-          echo Checking JAVA_HOME: %JAVA_HOME%
-          if exist "%JAVA_HOME%\lib\tools.jar" (
-            echo tools.jar found at %JAVA_HOME%\lib\tools.jar
-          ) else (
-            echo tools.jar not found
-          )
+          echo "Checking JAVA_HOME: $env:JAVA_HOME"
+          if (Test-Path "$env:JAVA_HOME\lib\tools.jar") {
+            echo "tools.jar found at $env:JAVA_HOME\lib\tools.jar"
+          } else {
+            echo "tools.jar not found"
+          }
           javac -cp "%JAVA_HOME%\lib\tools.jar" AgentLoader.java -encoding utf-8
           cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
           cd ..
