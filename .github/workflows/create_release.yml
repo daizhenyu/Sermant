@@ -34,18 +34,12 @@ jobs:
           mvn versions:set -DnewVersion='${{ env.version }}'
       - name: Build with Maven
         run: |
-          mvn clean package -P agent -DskipTests
-          cd ${{ github.workspace }}/scripts
-          echo "Checking JAVA_HOME: $env:JAVA_HOME"
-          if (Test-Path "$env:JAVA_HOME\lib\tools.jar") {
-            echo "tools.jar found at $env:JAVA_HOME\lib\tools.jar"
-          } else {
-            echo "tools.jar not found"
-          }
-          javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
-          cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
-          cd ..
-          mvn clean package -P package -DskipTests
+          mvn clean package -P agent -P package -DskipTests
+#          cd ${{ github.workspace }}/scripts
+#          javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
+#          cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
+#          cd ..
+#          mvn clean package -P package -DskipTests
           mkdir ${{ github.workspace }}/package
           cp ${{ github.workspace }}/sermant-agent-*.tar.gz ${{ github.workspace }}/package/sermant-${{ env.version }}.tar.gz
           ls ${{ github.workspace }}/package
