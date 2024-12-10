@@ -41,8 +41,8 @@ jobs:
           javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
           javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoaderEn.java -encoding utf-8
           javac AesUtil.java -encoding utf-8
-          choco install mingw -y
-          echo "::add-path::C:\ProgramData\chocolatey\bin"
+          choco install msys2 -y
+          echo "C:\tools\msys64\usr\bin" >> $GITHUB_PATH
           gcc --version
           gcc attach.c -o attach
           New-Item -Path "${{ github.workspace }}/sermant-agent-${{ env.version }}/tools" -ItemType Directory
