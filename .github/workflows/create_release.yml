@@ -32,19 +32,26 @@ jobs:
       - name: set version
         run: |
           mvn versions:set -DnewVersion='${{ env.version }}'
-      - name: Build with Maven
+      - name: Build agent with Maven
         run: |
           mvn clean package -P agent -DskipTests
+      - name: compile tools
+        run: |
           cd ${{ github.workspace }}/scripts
-          echo "Checking JAVA_HOME: $env:JAVA_HOME"
-          if (Test-Path "$env:JAVA_HOME\lib\tools.jar") {
-            echo "tools.jar found at $env:JAVA_HOME\lib\tools.jar"
-          } else {
-            echo "tools.jar not found"
-          }
           javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
-          cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
-          cd ..
+          javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoaderEn.java -encoding utf-8
+          javac AesUtil.java -encoding utf-8
+          choco install mingw -y
+          echo "::add-path::C:\ProgramData\chocolatey\bin"
+          gcc --version
+          gcc attach.c -o attach
+          New-Item -Path "${{ github.workspace }}/sermant-agent-${{ env.version }}/tools" -ItemType Directory
+          cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
+          cp AgentLoaderEn.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
+          cp AesUtil.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
+          cp attach.c ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
+      - name: package sermant
+        run: |
           mvn package -P package -DskipTests
           mkdir ${{ github.workspace }}/package
           cp ${{ github.workspace }}/sermant-agent-*.tar.gz ${{ github.workspace }}/package/sermant-${{ env.version }}.tar.gz
