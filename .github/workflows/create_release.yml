@@ -45,7 +45,7 @@ jobs:
           javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
           cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}
           cd ..
-          mvn clean package -P package -DskipTests
+          mvn package -P package -DskipTests
           mkdir ${{ github.workspace }}/package
           cp ${{ github.workspace }}/sermant-agent-*.tar.gz ${{ github.workspace }}/package/sermant-${{ env.version }}.tar.gz
           ls ${{ github.workspace }}/package
