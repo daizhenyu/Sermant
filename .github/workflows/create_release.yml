@@ -11,7 +11,7 @@ env:
 jobs:
   auto-create-release:
     name: Auto Create Release
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: save env version
         shell: bash
@@ -38,18 +38,16 @@ jobs:
       - name: compile tools
         run: |
           cd ${{ github.workspace }}/scripts
-          javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoader.java -encoding utf-8
-          javac -cp "$env:JAVA_HOME\lib\tools.jar" AgentLoaderEn.java -encoding utf-8
-          javac AesUtil.java -encoding utf-8
-          choco install msys2 -y
-          echo "C:\tools\msys64\usr\bin" >> $GITHUB_PATH
+          javac -cp ./:$JAVA_HOME/lib/tools.jar AgentLoader.java
+          javac -cp ./:$JAVA_HOME/lib/tools.jar AgentLoaderEn.java
+          javac AesUtil.java
           gcc --version
           gcc attach.c -o attach
-          New-Item -Path "${{ github.workspace }}/sermant-agent-${{ env.version }}/tools" -ItemType Directory
+          mkdir ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
           cp AgentLoader.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
           cp AgentLoaderEn.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
           cp AesUtil.class ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
-          cp attach.c ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
+          cp attach ${{ github.workspace }}/sermant-agent-${{ env.version }}/tools
       - name: package sermant
         run: |
           mvn package -P package -DskipTests
