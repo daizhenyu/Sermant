@@ -25,24 +25,9 @@ package io.sermant.xds.service.traffic.management.constant;
  */
 public class HandlerConstants {
     /**
-     * monitoring priority
-     */
-    public static final int MONITOR_ORDER = -3000;
-
-    /**
-     * service processing priority
-     */
-    public static final int BUSINESS_ORDER = -1000;
-
-    /**
      * xds service processing priority
      */
     public static final int XDS_BUSINESS_ORDER = -2000;
-
-    /**
-     * fault injection priority
-     */
-    public static final int FAULT_ORDER = 4000;
 
     /**
      *  xds fault injection priority
@@ -52,52 +37,7 @@ public class HandlerConstants {
     /**
      * rate limiting priority
      */
-    public static final int RATE_LIMIT_ORDER = 6000;
-
-    /**
-     * rate limiting priority
-     */
     public static final int XDS_RATE_LIMIT_ORDER = 5000;
-
-    /**
-     * isolation bin priority
-     */
-    public static final int BULK_HEAD_ORDER = 7000;
-
-    /**
-     * Instance isolation priority, which must be greater than the circuit breaker priority
-     */
-    public static final int INSTANCE_ISOLATION_ORDER = 9000;
-
-    /**
-     * circuit breaker priority
-     */
-    public static final int CIRCUIT_BREAKER_ORDER = 10000;
-
-    /**
-     * system rule flow control priority
-     */
-    public static final int SYSTEM_RULE_FLOW_CONTROL = 11000;
-
-    /**
-     * Flags whether the current thread has a flow control exception
-     */
-    public static final String OCCURRED_FLOW_EXCEPTION = "__OCCURRED_FLOW_EXCEPTION__";
-
-    /**
-     * Flags whether the current thread triggers a request exception
-     */
-    public static final String OCCURRED_REQUEST_EXCEPTION = "__OCCURRED_REQUEST_EXCEPTION__";
-
-    /**
-     * thread variable provider key prefix
-     */
-    public static final String THREAD_LOCAL_DUBBO_PROVIDER_PREFIX = "PROVIDER:";
-
-    /**
-     * thread variable consumer key prefix
-     */
-    public static final String THREAD_LOCAL_DUBBO_CONSUMER_PREFIX = "CONSUMER:";
 
     /**
      * key prefix

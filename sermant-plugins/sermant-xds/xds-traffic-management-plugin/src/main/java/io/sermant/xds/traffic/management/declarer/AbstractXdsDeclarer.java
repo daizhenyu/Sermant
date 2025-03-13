@@ -18,7 +18,7 @@ package io.sermant.xds.traffic.management.declarer;
 
 import io.sermant.core.plugin.agent.declarer.AbstractPluginDeclarer;
 import io.sermant.core.plugin.config.PluginConfigManager;
-import io.sermant.xds.common.config.XdsFlowControlConfig;
+import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 
 /**
  * okhttp request declarer
@@ -27,7 +27,8 @@ import io.sermant.xds.common.config.XdsFlowControlConfig;
  * @since 2024-11-30
  */
 public abstract class AbstractXdsDeclarer extends AbstractPluginDeclarer {
-    private final XdsFlowControlConfig config = PluginConfigManager.getPluginConfig(XdsFlowControlConfig.class);
+    private final XdsTrafficManagementConfig config = PluginConfigManager
+            .getPluginConfig(XdsTrafficManagementConfig.class);
 
     @Override
     public boolean isEnabled() {

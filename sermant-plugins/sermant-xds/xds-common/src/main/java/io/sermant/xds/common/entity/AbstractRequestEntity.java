@@ -74,14 +74,4 @@ public abstract class AbstractRequestEntity implements RequestEntity {
     public int hashCode() {
         return Objects.hash(getHeaders(), getApiPath(), getMethod());
     }
-
-    @Override
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    @Override
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
 }

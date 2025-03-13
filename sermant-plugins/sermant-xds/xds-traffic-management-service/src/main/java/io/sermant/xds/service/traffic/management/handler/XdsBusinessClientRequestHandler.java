@@ -57,4 +57,9 @@ public class XdsBusinessClientRequestHandler extends AbstractXdsChainHandler {
     protected RequestType direct() {
         return RequestType.CLIENT;
     }
+
+    @Override
+    protected boolean isSkip(RequestEntity requestEntity, FlowControlScenario flowControlScenario) {
+        return false;
+    }
 }

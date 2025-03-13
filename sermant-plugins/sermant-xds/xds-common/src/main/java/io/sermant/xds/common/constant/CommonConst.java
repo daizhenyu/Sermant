@@ -24,51 +24,10 @@ package io.sermant.xds.common.constant;
  * @since 2022-01-28
  */
 public class CommonConst {
-
-    /**
-     * version key name obtained from url
-     */
-    public static final String URL_VERSION_KEY = "version";
-
-    /**
-     * flow control configuration key
-     */
-    public static final String FLOW_RULE_CONFIG_KEY = "FlowRule";
-
-    /**
-     * circuit breaker configuration key
-     */
-    public static final String BREAKER_RULE_CONFIG_KEY = "DegradeRule";
-
-    /**
-     * isolation configuration key
-     */
-    public static final String BULK_RULE_CONFIG_KEY = "IsolateRule";
-
-    /**
-     * retry configuration key
-     */
-    public static final String RETRY_RULE_CONFIG_KEY = "RetryRule";
-
-    /**
-     * permission rule configuration key
-     */
-    public static final String AUTHORITY_RULE_CONFIG_KEY = "AuthorityRule";
-
-    /**
-     * system rule configuration key
-     */
-    public static final String SYSTEM_RULE_CONFIG_KEY = "SystemRule";
-
     /**
      * http too many request exception codes
      */
     public static final int TOO_MANY_REQUEST_CODE = 429;
-
-    /**
-     * instance isolation status code
-     */
-    public static final int INSTANCE_ISOLATION_REQUEST_CODE = 503;
 
     /**
      * service exception
@@ -76,143 +35,9 @@ public class CommonConst {
     public static final int INTERVAL_SERVER_ERROR = 500;
 
     /**
-     * request normal response
-     */
-    public static final int HTTP_OK = 200;
-
-    /**
      * empty string
      */
     public static final String EMPTY_STR = "";
-
-    /**
-     * name of the periodically executed thread pool
-     */
-    public static final String SENTINEL_SEND_CFC_TASK = "sentinel-send-cfc-task";
-
-    /**
-     * Thread pool startup delays the time of the first execution
-     */
-    public static final int INITIAL_DELAY = 5000;
-
-    /**
-     * Whether to back up rules to redis, default backup, console parameter transfer true is no backup
-     */
-    public static final String REDIS_RULE_STORE = "redis.rule.store";
-
-    /**
-     * retry times
-     */
-    public static final int RETRY_TIMES = 3;
-
-    /**
-     * retry interval
-     */
-    public static final int SLEEP_TIME = 1000;
-
-    /**
-     * flowcontrol rule
-     */
-    public static final String SENTINEL_RULE_FLOW = "flow";
-
-    /**
-     * downgrade rule
-     */
-    public static final String SENTINEL_RULE_DEGRADE = "degrade";
-
-    /**
-     * authorization rule
-     */
-    public static final String SENTINEL_RULE_AUTHORITY = "authority";
-
-    /**
-     * system rule
-     */
-    public static final String SENTINEL_RULE_SYSTEM = "system";
-
-    /**
-     * slash symbol
-     */
-    public static final String SLASH_SIGN = "/";
-
-    /**
-     * sentinel configuration parameter, default interval for sending heartbeat packets，unitMillisecond
-     */
-    public static final long FLOW_CONTROL_HEARTBEAT_INTERVAL = 10000L;
-
-    /**
-     * sentinel configuration parameter, default interval for sending flow control information，unitMillisecond
-     */
-    public static final long FLOW_CONTROL_METRIC_INTERVAL = 1000L;
-
-    /**
-     * sentinel configuration parameter, Specifies the period during
-     * which flow control information data is initially loaded after startup
-     */
-    public static final long METRIC_INITIAL_DURATION = 60000L;
-
-    /**
-     * sentinel configuration parameter,the default number of data loaded at the end time of querying flow control
-     * information is not provided
-     */
-    public static final long METRIC_MAX_LINE = 12000L;
-
-    /**
-     * sentinel configuration parameter, when querying flow control data, sleep for a period of time
-     * and wait until the flow limiting data is written into the file
-     */
-    public static final long METRIC_SLEEP_TIME = 2000L;
-
-    /**
-     * kafka configuration parameter, Control the maximum size of requests sent by the producer. The default is 1 M
-     * （This parameter is related to the message.max.bytes parameter of the Kafka host）
-     */
-    public static final long KAFKA_MAX_REQUEST_SIZE = 1048576L;
-
-    /**
-     * kafka configuration parameter, producer memory buffer size 32m
-     */
-    public static final long KAFKA_BUFFER_MEMORY = 33554432L;
-
-    /**
-     * kafka configuration parameter, The maximum time the client will wait for a response to the request
-     */
-    public static final long KAFKA_REQUEST_TIMEOUT_MS = 10000L;
-
-    /**
-     * kafka configuration parameter, Maximum blocking time, beyond which an exception is thrown
-     */
-    public static final long KAFKA_MAX_BLOCK_MS = 60000L;
-
-    /**
-     * default indicator sending interval
-     */
-    public static final long DEFAULT_METRIC_SEND_INTERVAL_MS = 1000L;
-
-    /**
-     * second to millisecond conversion unit
-     */
-    public static final long S_MS_UNIT = 1000L;
-
-    /**
-     * a unit of seconds to minutes
-     */
-    public static final long S_M_UNIT = 60L;
-
-    /**
-     * percentage
-     */
-    public static final double PERCENT = 100.0d;
-
-    /**
-     * traffic limiting request number conversion
-     */
-    public static final double RATE_DIV_POINT = 1000.0d;
-
-    /**
-     * record the request time key
-     */
-    public static final String REQUEST_START_TIME = "requestStartTime";
 
     /**
      * the connect for request address

@@ -16,7 +16,6 @@
 
 package io.sermant.xds.traffic.management.declarer;
 
-import io.sermant.core.plugin.agent.declarer.AbstractPluginDeclarer;
 import io.sermant.core.plugin.agent.declarer.InterceptDeclarer;
 import io.sermant.core.plugin.agent.matcher.ClassMatcher;
 import io.sermant.core.plugin.agent.matcher.MethodMatcher;
@@ -28,7 +27,7 @@ import io.sermant.xds.traffic.management.interceptor.OkHttpClientInterceptorChai
  * @author zhp
  * @since 2024-12-20
  */
-public class OkHttpClientInterceptorChainDeclarer extends AbstractPluginDeclarer {
+public class OkHttpClientInterceptorChainDeclarer extends AbstractXdsDeclarer {
     private static final String ENHANCE_CLASSES =
             "com.squareup.okhttp.Call$ApplicationInterceptorChain";
 

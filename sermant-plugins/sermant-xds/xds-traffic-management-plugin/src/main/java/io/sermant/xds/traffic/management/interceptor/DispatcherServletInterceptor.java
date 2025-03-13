@@ -86,11 +86,10 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
         if (request == null) {
             return Optional.empty();
         }
-        String uri = getRequestUri.apply(request);
         return Optional.of(new HttpRequestEntity.Builder()
                 .setRequestType(RequestType.SERVER)
                 .setPathInfo(getPathInfo.apply(request))
-                .setServletPath(uri)
+                .setServletPath(getRequestUri.apply(request))
                 .setHeaders(getHeaders(request))
                 .setMethod(getMethod.apply(request))
                 .build());

@@ -18,7 +18,7 @@ package io.sermant.xds.common.flowcontrol.retry.condition;
 
 import io.sermant.core.plugin.config.PluginConfigManager;
 import io.sermant.core.utils.CollectionUtils;
-import io.sermant.xds.common.config.XdsFlowControlConfig;
+import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
 import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 import io.sermant.xds.common.utils.StringUtils;
@@ -31,7 +31,8 @@ import io.sermant.xds.common.utils.StringUtils;
  * @since 2024-11-29
  */
 public class RetriableStatusCodesRetryCondition implements RetryCondition {
-    private static final XdsFlowControlConfig CONFIG = PluginConfigManager.getPluginConfig(XdsFlowControlConfig.class);
+    private static final XdsTrafficManagementConfig CONFIG = PluginConfigManager.getPluginConfig(
+            XdsTrafficManagementConfig.class);
 
     @Override
     public boolean isNeedRetry(Retry retry, Throwable ex, String statusCode, Object result) {

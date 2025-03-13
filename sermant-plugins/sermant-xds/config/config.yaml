@@ -1,5 +1,5 @@
-xds.flow.control.config:
-  # Whether to enable Xds flow control
+xds.traffic.management.config:
+  # Whether to enable Xds traffic management
   enable: false
   # The specified response status codes that need to be retried. Retry will be performed when the response's status
   # code matches one of the specified codes.

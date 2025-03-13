@@ -23,7 +23,7 @@ import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.core.plugin.agent.interceptor.Interceptor;
 import io.sermant.core.plugin.config.PluginConfigManager;
 import io.sermant.core.plugin.service.PluginServiceManager;
-import io.sermant.xds.common.config.XdsFlowControlConfig;
+import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
 import io.sermant.xds.common.support.ReflectMethodCacheSupport;
@@ -66,7 +66,7 @@ public abstract class InterceptorSupporter extends ReflectMethodCacheSupport imp
 
     private static final Logger LOGGER = LoggerFactory.getLogger();
 
-    protected final XdsFlowControlConfig xdsFlowControlConfig;
+    protected final XdsTrafficManagementConfig xdsTrafficManagementConfig;
 
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -78,7 +78,7 @@ public abstract class InterceptorSupporter extends ReflectMethodCacheSupport imp
      * constructor
      */
     protected InterceptorSupporter() {
-        xdsFlowControlConfig = PluginConfigManager.getPluginConfig(XdsFlowControlConfig.class);
+        xdsTrafficManagementConfig = PluginConfigManager.getPluginConfig(XdsTrafficManagementConfig.class);
     }
 
     /**

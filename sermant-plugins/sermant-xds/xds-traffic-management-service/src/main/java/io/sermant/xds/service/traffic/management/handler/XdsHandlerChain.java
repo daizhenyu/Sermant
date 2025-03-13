@@ -16,6 +16,9 @@
 
 package io.sermant.xds.service.traffic.management.handler;
 
+import io.sermant.xds.common.entity.FlowControlScenario;
+import io.sermant.xds.common.entity.RequestEntity;
+
 /**
  * Xds HandlerChain
  *
@@ -43,5 +46,10 @@ public class XdsHandlerChain extends AbstractXdsChainHandler {
     @Override
     public int getOrder() {
         return 0;
+    }
+
+    @Override
+    protected boolean isSkip(RequestEntity requestEntity, FlowControlScenario flowControlScenario) {
+        return false;
     }
 }

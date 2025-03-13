@@ -16,8 +16,6 @@
 
 package io.sermant.xds.service.traffic.management.handler;
 
-import io.sermant.core.plugin.config.PluginConfigManager;
-import io.sermant.xds.common.config.XdsFlowControlConfig;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
@@ -30,9 +28,6 @@ import io.sermant.xds.common.entity.RequestEntity.RequestType;
  * @since 2024-12-28
  */
 public abstract class AbstractXdsChainHandler implements XdsRequestHandler, Comparable<AbstractXdsChainHandler> {
-    protected static final XdsFlowControlConfig XDS_FLOW_CONTROL_CONFIG =
-            PluginConfigManager.getPluginConfig(XdsFlowControlConfig.class);
-
     private AbstractXdsChainHandler next;
 
     @Override
@@ -96,9 +91,7 @@ public abstract class AbstractXdsChainHandler implements XdsRequestHandler, Comp
      * @param flowControlScenario matched scenario information
      * @return skip or not
      */
-    protected boolean isSkip(RequestEntity requestEntity, FlowControlScenario flowControlScenario) {
-        return !XDS_FLOW_CONTROL_CONFIG.isEnable();
-    }
+    protected abstract boolean isSkip(RequestEntity requestEntity, FlowControlScenario flowControlScenario);
 
     @Override
     public int compareTo(AbstractXdsChainHandler handler) {

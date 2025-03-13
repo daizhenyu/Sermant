@@ -34,11 +34,6 @@ public class DispatcherServletDeclarer extends AbstractXdsDeclarer {
      */
     private static final String ENHANCE_CLASS = "org.springframework.web.servlet.DispatcherServlet";
 
-    /**
-     * the fully qualified name of the interceptor class
-     */
-    private static final String INTERCEPT_CLASS = DispatcherServletInterceptor.class.getCanonicalName();
-
     @Override
     public ClassMatcher getClassMatcher() {
         return ClassMatcher.nameEquals(ENHANCE_CLASS);

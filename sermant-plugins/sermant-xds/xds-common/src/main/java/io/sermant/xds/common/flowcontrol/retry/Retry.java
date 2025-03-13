@@ -88,21 +88,6 @@ public interface Retry {
      */
     enum RetryFramework {
         /**
-         * spring retry
-         */
-        SPRING_CLOUD,
-
-        /**
-         * alibaba dubbo retry
-         */
-        ALIBABA_DUBBO,
-
-        /**
-         * apache dubbo retry
-         */
-        APACHE_DUBBO,
-
-        /**
          * Spring retry
          */
         SPRING;

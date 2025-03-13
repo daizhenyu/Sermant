@@ -21,7 +21,6 @@ import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
-import io.sermant.xds.common.support.ReflectMethodCacheSupport;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,21 +32,7 @@ import java.util.Set;
  * @author zhouss
  * @since 2022-02-10
  */
-public abstract class AbstractRetry extends ReflectMethodCacheSupport implements Retry {
-    /**
-     * retry exception class
-     */
-    protected Class<? extends Throwable>[] classes;
-
-    @Override
-    public boolean isNeedRetry(Set<String> statusList, Object result) {
-        if (result == null) {
-            return false;
-        }
-        final Optional<String> code = getCode(result);
-        return code.filter(statusList::contains).isPresent();
-    }
-
+public abstract class AbstractRetry implements Retry {
     @Override
     public boolean isNeedRetry(Object result, XdsRetryPolicy retryPolicy) {
         if (result == null) {
@@ -111,8 +96,7 @@ public abstract class AbstractRetry extends ReflectMethodCacheSupport implements
     }
 
     /**
-     * implemented by subclasses， if subclass implement {@link #isNeedRetry(Set, Object)}, no need to implement the get
-     * code method
+     * implemented by subclasses， if subclass implement, no need to implement the get code method
      *
      * @param result interface response result
      * @return response status code

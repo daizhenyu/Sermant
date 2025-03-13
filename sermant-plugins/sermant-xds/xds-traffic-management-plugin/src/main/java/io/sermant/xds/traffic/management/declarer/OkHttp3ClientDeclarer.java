@@ -16,7 +16,6 @@
 
 package io.sermant.xds.traffic.management.declarer;
 
-import io.sermant.core.plugin.agent.declarer.AbstractPluginDeclarer;
 import io.sermant.core.plugin.agent.declarer.InterceptDeclarer;
 import io.sermant.core.plugin.agent.matcher.ClassMatcher;
 import io.sermant.core.plugin.agent.matcher.MethodMatcher;
@@ -28,7 +27,7 @@ import io.sermant.xds.traffic.management.interceptor.OkHttp3ClientInterceptor;
  * @author zhp
  * @since 2024-12-20
  */
-public class OkHttp3ClientDeclarer extends AbstractPluginDeclarer {
+public class OkHttp3ClientDeclarer extends AbstractXdsDeclarer {
     /**
      * The fully qualified name of the enhanced okhttp request
      */

@@ -29,8 +29,8 @@ import java.util.List;
  * @author zhp
  * @since 2025-03-11
  */
-@ConfigTypeKey("xds.flow.control.config")
-public class XdsFlowControlConfig implements PluginConfig {
+@ConfigTypeKey("xds.traffic.management.config")
+public class XdsTrafficManagementConfig implements PluginConfig {
     /**
      * Specify the response code for retry, and retry will be executed when the response code is included
      */

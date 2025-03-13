@@ -25,7 +25,7 @@ import java.util.Map;
  * @author zhouss
  * @since 2022-01-22
  */
-public interface RequestEntity extends Timed {
+public interface RequestEntity {
     /**
      * request path
      *

@@ -19,7 +19,6 @@ package io.sermant.xds.service.traffic.management.handler.exception;
 
 import io.sermant.core.common.LoggerFactory;
 import io.sermant.xds.common.entity.FlowControlResult;
-import io.sermant.xds.service.traffic.management.handler.AbstractChainHandler;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,7 +63,7 @@ public class ExceptionHandlerManager {
     private void loadHandlers() {
         final HashMap<Class<?>, ExceptionHandler<?>> map = new HashMap<>();
         for (ExceptionHandler<?> handler : ServiceLoader.load(ExceptionHandler.class,
-                AbstractChainHandler.class.getClassLoader())) {
+                this.getClass().getClassLoader())) {
             map.put(handler.targetException(), handler);
         }
         handlers = Collections.unmodifiableMap(map);
