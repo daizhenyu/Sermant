@@ -26,7 +26,6 @@ import io.sermant.core.plugin.service.PluginServiceManager;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
-import io.sermant.xds.common.support.ReflectMethodCacheSupport;
 import io.sermant.xds.traffic.management.handler.RetryHandlerV2;
 import io.sermant.xds.traffic.management.service.rest4j.XdsHttpFlowControlService;
 
@@ -41,29 +40,7 @@ import java.util.logging.Logger;
  * @author zhouss
  * @since 2022-01-25
  */
-public abstract class InterceptorSupporter extends ReflectMethodCacheSupport implements Interceptor {
-    /**
-     * flag that the current request is in retry
-     */
-    protected static final String RETRY_KEY = "$$$$RETRY$$$";
-
-    /**
-     * flag that the current request is in retry
-     */
-    protected static final String RETRY_VALUE = "$$$$RETRY_VALUE$$$";
-
-    /**
-     * apache dubbo Cluster class name
-     */
-    protected static final String APACHE_DUBBO_CLUSTER_CLASS_NAME = "org.apache.dubbo.rpc.cluster.Cluster";
-
-    /**
-     * alibaba dubbo Cluster class name
-     */
-    protected static final String ALIBABA_DUBBO_CLUSTER_CLASS_NAME = "com.alibaba.dubbo.rpc.cluster.Cluster";
-
-    private static final String REFUSE_REPLACE_INVOKER = "close";
-
+public abstract class InterceptorSupporter implements Interceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger();
 
     protected final XdsTrafficManagementConfig xdsTrafficManagementConfig;

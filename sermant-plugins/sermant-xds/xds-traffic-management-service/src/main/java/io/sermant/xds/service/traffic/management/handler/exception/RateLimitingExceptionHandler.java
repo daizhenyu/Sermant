@@ -35,7 +35,7 @@ import java.util.Map;
  * @author zhouss
  * @since 2024-12-05
  */
-public class XdsRateLimitingExceptionHandler extends AbstractExceptionHandler<RateLimitException> {
+public class RateLimitingExceptionHandler extends AbstractExceptionHandler<RateLimitException> {
     @Override
     protected FlowControlResponse getFlowControlResponse(RateLimitException ex, FlowControlResult flowControlResult) {
         Map<String, List<String>> headers = new HashMap<>();
@@ -51,7 +51,7 @@ public class XdsRateLimitingExceptionHandler extends AbstractExceptionHandler<Ra
             }
             headers.put(header.getKey(), Collections.singletonList(header.getValue()));
         }
-        return new FlowControlResponse("Rate Limited", CommonConst.TOO_MANY_REQUEST_CODE, headers, null);
+        return new FlowControlResponse(ex.getMsg(), ex.getCode(), headers, null);
     }
 
     @Override

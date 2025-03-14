@@ -20,6 +20,7 @@ import io.sermant.core.common.LoggerFactory;
 import io.sermant.xds.common.entity.FlowControlResult;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
+import io.sermant.xds.service.traffic.management.exception.FlowControlException;
 import io.sermant.xds.service.traffic.management.utils.FlowControlExceptionUtils;
 
 import java.util.logging.Level;
@@ -53,7 +54,7 @@ public enum XdsHandlerChainEntry {
     public void onBefore(RequestEntity requestEntity, FlowControlResult flowControlResult) {
         try {
             chain.onBefore(requestEntity, null);
-        } catch (Exception ex) {
+        } catch (FlowControlException ex) {
             flowControlResult.setRequestType(requestEntity.getRequestType());
             FlowControlExceptionUtils.handleException(ex, flowControlResult);
             LOGGER.log(Level.FINE, ex, ex::getMessage);

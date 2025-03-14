@@ -20,6 +20,7 @@ import io.sermant.core.service.xds.entity.FractionalPercent;
 import io.sermant.core.service.xds.entity.XdsRateLimit;
 import io.sermant.core.service.xds.entity.XdsTokenBucket;
 import io.sermant.core.utils.StringUtils;
+import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
@@ -66,7 +67,8 @@ public class XdsRateLimitRequestHandler extends AbstractXdsChainHandler {
         }
         if (!XdsRateLimitManager.fillAndConsumeToken(scenarioInfo.getServiceName(), scenarioInfo.getRouteName(),
                 tokenBucket)) {
-            throw new RateLimitException(xdsRateLimit.getResponseHeaderOption());
+            throw new RateLimitException(CommonConst.TOO_MANY_REQUEST_CODE, "Rate Limited",
+                    xdsRateLimit.getResponseHeaderOption());
         }
     }
 

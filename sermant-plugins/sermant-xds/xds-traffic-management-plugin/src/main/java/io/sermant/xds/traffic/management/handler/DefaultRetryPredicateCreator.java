@@ -18,20 +18,16 @@
 package io.sermant.xds.traffic.management.handler;
 
 import io.sermant.core.service.xds.entity.XdsRetryPolicy;
-import io.sermant.core.utils.ReflectUtils;
-import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
 
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -41,10 +37,6 @@ import java.util.function.Predicate;
  * @since 2022-04-11
  */
 public class DefaultRetryPredicateCreator implements RetryPredicateCreator {
-    private static final String ALIBABA_GENERIC_EXCEPTION = "com.alibaba.dubbo.rpc.service.GenericException";
-
-    private static final String APACHE_GENERIC_EXCEPTION = "org.apache.dubbo.rpc.service.GenericException";
-
     /**
      * default retry status code
      */
@@ -59,61 +51,8 @@ public class DefaultRetryPredicateCreator implements RetryPredicateCreator {
     );
 
     @Override
-    public Predicate<Throwable> createExceptionPredicate(Class<? extends Throwable>[] retryExceptions) {
-        final List<Class<? extends Throwable>> exceptions = new ArrayList<>(Arrays.asList(retryExceptions));
-        exceptions.addAll(STRICT_RETRYABLE);
-        return exceptions.stream().distinct().map(this::createExceptionPredicate).reduce(Predicate::or)
-                .orElseGet(() -> throwable -> true);
-    }
-
-    @Override
     public Predicate<Throwable> createExceptionPredicate(Retry retry, XdsRetryPolicy policy) {
         return (Throwable ex) -> retry.isNeedRetry(ex, policy);
-    }
-
-    private Predicate<Throwable> createExceptionPredicate(Class<? extends Throwable> retryClass) {
-        return (Throwable ex) -> {
-            if (retryClass.isAssignableFrom(getRealExceptionClass(ex))) {
-                return true;
-            }
-            final Optional<String> realExceptionClassName = getRealExceptionClassName(ex);
-            return realExceptionClassName.isPresent() && retryClass.getName().equals(realExceptionClassName.get());
-        };
-    }
-
-    /**
-     * handling of packaging exceptions
-     * <p></p>
-     * currently only GenericException is supported
-     *
-     * @param ex service exception
-     * @return exception name
-     */
-    private Optional<String> getRealExceptionClassName(Throwable ex) {
-        String mayBeRealClassName = null;
-        if (isGenericException(ex.getClass().getName())) {
-            final Optional<Object> getExceptionClass = ReflectUtils
-                    .invokeMethod(ex, "getExceptionClass", null, null);
-            if (getExceptionClass.isPresent()) {
-                mayBeRealClassName = (String) getExceptionClass.get();
-            }
-        }
-        return Optional.ofNullable(mayBeRealClassName);
-    }
-
-    private boolean isGenericException(String className) {
-        return ALIBABA_GENERIC_EXCEPTION.equals(className) || APACHE_GENERIC_EXCEPTION.equals(className);
-    }
-
-    private Class<? extends Throwable> getRealExceptionClass(Throwable ex) {
-        if (ex instanceof InvokerWrapperException) {
-            // Determine whether it is an exception in the target wrapper
-            InvokerWrapperException invokerWrapperException = (InvokerWrapperException) ex;
-            if (invokerWrapperException.getRealException() != null) {
-                return invokerWrapperException.getRealException().getClass();
-            }
-        }
-        return ex.getClass();
     }
 
     @Override

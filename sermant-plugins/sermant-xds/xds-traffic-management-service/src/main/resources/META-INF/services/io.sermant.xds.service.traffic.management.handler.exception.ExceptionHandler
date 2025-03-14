@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 #
-io.sermant.xds.service.traffic.management.handler.exception.XdsRateLimitingExceptionHandler
+io.sermant.xds.service.traffic.management.handler.exception.RateLimitingExceptionHandler
 io.sermant.xds.service.traffic.management.handler.exception.FaultExceptionHandler

@@ -32,14 +32,6 @@ public interface RetryPredicateCreator {
     /**
      * Create exception Predicate
      *
-     * @param retryExceptions retry exception set
-     * @return Predicate
-     */
-    Predicate<Throwable> createExceptionPredicate(Class<? extends Throwable>[] retryExceptions);
-
-    /**
-     * Create exception Predicate
-     *
      * @param retry retry
      * @param policy retry rule
      * @return Predicate

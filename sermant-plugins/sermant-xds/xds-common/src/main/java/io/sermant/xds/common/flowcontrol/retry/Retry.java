@@ -30,15 +30,6 @@ import java.util.Set;
  */
 public interface Retry {
     /**
-     * Retry based on the request result. Retrying is required if the request status is in the statusList.
-     *
-     * @param statusList List of status codes, valid only for http applications
-     * @param result responseResult
-     * @return retryOrNot
-     */
-    boolean isNeedRetry(Set<String> statusList, Object result);
-
-    /**
      * Retry based on the request result. If the request result meets the retry conditions in the retry policy,
      * a retry will be executed
      *

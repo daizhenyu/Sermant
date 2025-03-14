@@ -26,15 +26,18 @@ import java.util.List;
  * @author zhp
  * @since 2024-12-05
  */
-public class RateLimitException extends RuntimeException {
+public class RateLimitException extends FlowControlException {
     private List<XdsHeaderOption> xdsHeaderOptions;
 
     /**
      * Constructor
      *
+     * @param code error code
+     * @param msg prompt message
      * @param xdsHeaderOptions Header name/value pair plus option
      */
-    public RateLimitException(List<XdsHeaderOption> xdsHeaderOptions) {
+    public RateLimitException(int code, String msg, List<XdsHeaderOption> xdsHeaderOptions) {
+        super(code, msg);
         this.xdsHeaderOptions = xdsHeaderOptions;
     }
 
