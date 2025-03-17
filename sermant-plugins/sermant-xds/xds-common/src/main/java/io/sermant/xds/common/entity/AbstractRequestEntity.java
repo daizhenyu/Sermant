@@ -36,8 +36,6 @@ public abstract class AbstractRequestEntity implements RequestEntity {
      */
     private RequestType requestType;
 
-    private long timestamp;
-
     @Override
     public String getServiceName() {
         return serviceName;

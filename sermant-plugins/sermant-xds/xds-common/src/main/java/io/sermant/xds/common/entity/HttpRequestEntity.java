@@ -17,8 +17,6 @@
 
 package io.sermant.xds.common.entity;
 
-import io.sermant.xds.common.utils.FilterUtil;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -31,21 +29,9 @@ import java.util.Map;
 public class HttpRequestEntity extends AbstractRequestEntity {
     private String apiPath;
 
-    private String pathInfo;
-
-    private String servletPath;
-
     private Map<String, String> headers;
 
     private String method;
-
-    private void setPathInfo(String pathInfo) {
-        this.pathInfo = pathInfo;
-    }
-
-    private void setServletPath(String servletPath) {
-        this.servletPath = servletPath;
-    }
 
     @Override
     public String getApiPath() {
@@ -93,28 +79,6 @@ public class HttpRequestEntity extends AbstractRequestEntity {
          */
         public Builder setServiceName(String serviceName) {
             this.httpRequestEntity.setServiceName(serviceName);
-            return this;
-        }
-
-        /**
-         * setting path information
-         *
-         * @param pathInfo path
-         * @return Builder
-         */
-        public Builder setPathInfo(String pathInfo) {
-            this.httpRequestEntity.setPathInfo(pathInfo);
-            return this;
-        }
-
-        /**
-         * set request path
-         *
-         * @param servletPath request path
-         * @return Builder
-         */
-        public Builder setServletPath(String servletPath) {
-            this.httpRequestEntity.setServletPath(servletPath);
             return this;
         }
 
@@ -170,12 +134,7 @@ public class HttpRequestEntity extends AbstractRequestEntity {
          */
         public HttpRequestEntity build() {
             if (httpRequestEntity.apiPath == null) {
-                if (httpRequestEntity.servletPath == null && httpRequestEntity.pathInfo == null) {
-                    throw new IllegalArgumentException("Can not config request apiPath!");
-                } else {
-                    this.httpRequestEntity.apiPath = FilterUtil.filterTarget(httpRequestEntity.pathInfo,
-                            httpRequestEntity.servletPath);
-                }
+                throw new IllegalArgumentException("Can not config request apiPath!");
             }
             return this.httpRequestEntity;
         }

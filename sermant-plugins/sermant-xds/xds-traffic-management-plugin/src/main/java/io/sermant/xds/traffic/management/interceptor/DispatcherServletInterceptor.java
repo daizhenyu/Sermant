@@ -54,8 +54,6 @@ import javax.servlet.http.HttpServletResponse;
 public class DispatcherServletInterceptor extends InterceptorSupporter {
     private Function<Object, String> getRequestUri;
 
-    private Function<Object, String> getPathInfo;
-
     private Function<Object, String> getMethod;
 
     private Function<Object, Enumeration<String>> getHeaderNames;
@@ -88,8 +86,7 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
         }
         return Optional.of(new HttpRequestEntity.Builder()
                 .setRequestType(RequestType.SERVER)
-                .setPathInfo(getPathInfo.apply(request))
-                .setServletPath(getRequestUri.apply(request))
+                .setApiPath(getRequestUri.apply(request))
                 .setHeaders(getHeaders(request))
                 .setMethod(getMethod.apply(request))
                 .build());
@@ -173,10 +170,6 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
         return getString(httpServletRequest, "getRequestURI");
     }
 
-    private String getPathInfo(Object httpServletRequest) {
-        return getString(httpServletRequest, "getPathInfo");
-    }
-
     private String getMethod(Object httpServletRequest) {
         return getString(httpServletRequest, "getMethod");
     }
@@ -213,7 +206,6 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
         boolean canLoadLowVersion = canLoadLowVersion();
         if (canLoadLowVersion) {
             getRequestUri = obj -> ((HttpServletRequest) obj).getRequestURI();
-            getPathInfo = obj -> ((HttpServletRequest) obj).getPathInfo();
             getMethod = obj -> ((HttpServletRequest) obj).getMethod();
             getHeaderNames = obj -> ((HttpServletRequest) obj).getHeaderNames();
             getHeader = (obj, key) -> ((HttpServletRequest) obj).getHeader(key);
@@ -227,7 +219,6 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
             setStatus = (obj, code) -> ((HttpServletResponse) obj).setStatus(code);
         } else {
             getRequestUri = this::getRequestUri;
-            getPathInfo = this::getPathInfo;
             getMethod = this::getMethod;
             getHeaderNames = this::getHeaderNames;
             getHeader = this::getHeader;
