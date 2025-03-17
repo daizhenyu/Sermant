@@ -16,14 +16,12 @@
 
 package io.sermant.xds.common.lb;
 
-import io.sermant.core.common.LoggerFactory;
 import io.sermant.core.service.xds.entity.XdsLbPolicy;
 import io.sermant.xds.common.handler.XdsHandler;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 /**
  * XdsLoadBalancerFactory
@@ -32,8 +30,6 @@ import java.util.logging.Logger;
  * @since 2024-08-30
  **/
 public class XdsLoadBalancerFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger();
-
     private static final Map<String, XdsLoadBalancer> LOAD_BALANCERS = new ConcurrentHashMap<>();
 
     private static final String RANDOM = "RANDOM";

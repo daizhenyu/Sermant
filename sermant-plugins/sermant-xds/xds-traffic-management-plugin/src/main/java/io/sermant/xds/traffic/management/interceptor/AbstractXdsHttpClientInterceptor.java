@@ -24,6 +24,7 @@ import io.sermant.core.service.xds.entity.XdsInstanceCircuitBreakers;
 import io.sermant.core.service.xds.entity.XdsRequestCircuitBreakers;
 import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
+import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
@@ -34,7 +35,6 @@ import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
 import io.sermant.xds.common.handler.XdsHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
-import io.sermant.xds.common.utils.StringUtils;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
 import io.sermant.xds.traffic.management.service.InterceptorSupporter;
 
@@ -245,10 +245,10 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         if (CollectionUtils.isEmpty(serviceInstanceSet)) {
             return Optional.empty();
         }
+        removeCircuitBreakerInstance(scenarioInfo, serviceInstanceSet);
         if (RetryContext.INSTANCE.isPolicyNeedRetry()) {
             removeRetriedServiceInstance(serviceInstanceSet);
         }
-        removeCircuitBreakerInstance(scenarioInfo, serviceInstanceSet);
         return Optional.ofNullable(chooseServiceInstanceByLoadBalancer(serviceInstanceSet, scenarioInfo));
     }
 

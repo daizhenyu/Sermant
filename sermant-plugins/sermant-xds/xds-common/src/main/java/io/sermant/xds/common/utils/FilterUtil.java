@@ -17,6 +17,8 @@
 
 package io.sermant.xds.common.utils;
 
+import io.sermant.core.utils.StringUtils;
+
 /**
  * filter tools
  *
