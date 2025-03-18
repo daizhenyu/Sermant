@@ -50,12 +50,7 @@ public class FlowControlResult {
         if (response == null) {
             return "";
         }
-        if (response.isReplaceResult()) {
-            // Replace the scenario and use the serialized result directly
-            return response.getSerializeResult();
-        } else {
-            return response.getMsg();
-        }
+        return response.getMsg();
     }
 
     public boolean isSkip() {

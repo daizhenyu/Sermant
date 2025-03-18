@@ -21,6 +21,8 @@ import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +44,7 @@ public abstract class AbstractRetry implements Retry {
         if (CollectionUtils.isEmpty(conditions)) {
             return false;
         }
-        Optional<String> statusCodeOptional = this.getCode(result);
+        Optional<String> statusCodeOptional = this.getStatusCode(result);
         if (!statusCodeOptional.isPresent()) {
             return false;
         }
@@ -87,7 +89,7 @@ public abstract class AbstractRetry implements Retry {
      * @param statusCode status code
      * @return if the request is successful,true : success false: failure
      */
-    public static boolean isSuccess(String statusCode) {
+    protected static boolean isSuccess(String statusCode) {
         if (StringUtils.isEmpty(statusCode)) {
             return false;
         }
@@ -102,7 +104,7 @@ public abstract class AbstractRetry implements Retry {
      * @return response status code
      * @throws UnsupportedOperationException unsupported operation
      */
-    public Optional<String> getCode(Object result) {
+    public Optional<String> getStatusCode(Object result) {
         return Optional.empty();
     }
 

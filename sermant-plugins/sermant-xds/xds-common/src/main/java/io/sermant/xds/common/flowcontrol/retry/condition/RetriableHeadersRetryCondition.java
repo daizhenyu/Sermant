@@ -22,7 +22,6 @@ import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 
 import java.util.Optional;
 import java.util.Set;

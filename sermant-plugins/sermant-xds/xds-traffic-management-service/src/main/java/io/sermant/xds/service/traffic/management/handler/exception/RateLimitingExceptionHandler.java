@@ -19,7 +19,6 @@ package io.sermant.xds.service.traffic.management.handler.exception;
 import io.sermant.core.service.xds.entity.XdsHeader;
 import io.sermant.core.service.xds.entity.XdsHeaderOption;
 import io.sermant.core.utils.StringUtils;
-import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.entity.FlowControlResponse;
 import io.sermant.xds.common.entity.FlowControlResult;
 import io.sermant.xds.service.traffic.management.exception.RateLimitException;
@@ -51,7 +50,7 @@ public class RateLimitingExceptionHandler extends AbstractExceptionHandler<RateL
             }
             headers.put(header.getKey(), Collections.singletonList(header.getValue()));
         }
-        return new FlowControlResponse(ex.getMsg(), ex.getCode(), headers, null);
+        return new FlowControlResponse(ex.getMsg(), ex.getCode(), headers);
     }
 
     @Override

@@ -200,7 +200,7 @@ public enum XdsHandler {
         if (xdsLoadBalanceService == null || StringUtils.isEmpty(serviceName) || StringUtils.isEmpty(clusterName)) {
             return Optional.empty();
         }
-        return Optional.of(xdsLoadBalanceService.getLbPolicyOfCluster(serviceName, clusterName));
+        return Optional.ofNullable(xdsLoadBalanceService.getLbPolicyOfCluster(serviceName, clusterName));
     }
 
     /**
@@ -272,5 +272,14 @@ public enum XdsHandler {
             serviceInstances.addAll(xdsLocalitySetEntry.getValue());
         }
         return serviceInstances;
+    }
+
+    /**
+     * updateXdsLoadBalanceService
+     *
+     * @param loadBalanceService
+     */
+    public void updateXdsLoadBalanceService(XdsLoadBalanceService loadBalanceService) {
+        this.xdsLoadBalanceService = loadBalanceService;
     }
 }

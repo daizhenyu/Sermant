@@ -14,7 +14,9 @@
  *   limitations under the License.
  */
 
-package io.sermant.xds.common.flowcontrol.retry;
+package io.sermant.xds.common.flowcontrol.retry.condition;
+
+import io.sermant.xds.common.flowcontrol.retry.Retry;
 
 /**
  * Retry Evaluator

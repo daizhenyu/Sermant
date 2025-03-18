@@ -128,7 +128,7 @@ public class OkHttpClientInterceptorChainInterceptor extends AbstractXdsHttpClie
 
     @Override
     public int getStatusCode(ExecuteContext context) {
-        Optional<String> statusCodeOptional = retry.getCode(context.getResult());
+        Optional<String> statusCodeOptional = retry.getStatusCode(context.getResult());
         return statusCodeOptional.map(Integer::parseInt).orElse(CommonConst.DEFAULT_RESPONSE_CODE);
     }
 
@@ -162,7 +162,7 @@ public class OkHttpClientInterceptorChainInterceptor extends AbstractXdsHttpClie
      */
     public static class OkHttpRetry extends AbstractRetry {
         @Override
-        public Optional<String> getCode(Object result) {
+        public Optional<String> getStatusCode(Object result) {
             if (!(result instanceof Response)) {
                 return Optional.empty();
             }

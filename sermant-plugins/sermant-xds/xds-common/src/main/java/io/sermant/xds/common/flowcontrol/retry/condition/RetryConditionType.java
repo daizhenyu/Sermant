@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 Sermant Authors. All rights reserved.
+ * Copyright (C) 2025-2025 Sermant Authors. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,18 +14,10 @@
  *   limitations under the License.
  */
 
-package io.sermant.xds.common.flowcontrol.retry;
+package io.sermant.xds.common.flowcontrol.retry.condition;
 
 
 import io.sermant.xds.common.constant.CommonConst;
-import io.sermant.xds.common.flowcontrol.retry.condition.ClientErrorRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.ConnectFailureRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.GatewayErrorRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.ResetBeforeRequestRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.ResetRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.RetriableHeadersRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.RetriableStatusCodesRetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.condition.ServerErrorRetryCondition;
 
 import java.util.HashMap;
 import java.util.Map;

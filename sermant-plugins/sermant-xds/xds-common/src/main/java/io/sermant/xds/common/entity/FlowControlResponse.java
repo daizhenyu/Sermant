@@ -33,24 +33,9 @@ public class FlowControlResponse {
     private final int code;
 
     /**
-     * In response to the result, directly replace the interface return value
-     */
-    private Object result;
-
-    /**
      * response
      */
     private Map<String, List<String>> headers;
-
-    /**
-     * Whether to replace the actual response result, if true, replace
-     */
-    private boolean isReplaceResult;
-
-    /**
-     * the result after serialization
-     */
-    private String serializeResult;
 
     /**
      * flow control response results
@@ -69,35 +54,11 @@ public class FlowControlResponse {
      * @param msg prompt message
      * @param code response code
      * @param headers response headers
-     * @param result response result
      */
-    public FlowControlResponse(String msg, int code, Map<String, List<String>> headers, Object result) {
+    public FlowControlResponse(String msg, int code, Map<String, List<String>> headers) {
         this.msg = msg;
         this.code = code;
         this.headers = headers;
-        this.result = result;
-    }
-
-    /**
-     * flow control response results
-     *
-     * @param msg prompt message
-     * @param code response code
-     * @param result response result
-     */
-    public FlowControlResponse(String msg, int code, Object result) {
-        this.msg = msg;
-        this.code = code;
-        this.result = result;
-        this.isReplaceResult = true;
-    }
-
-    public String getSerializeResult() {
-        return serializeResult;
-    }
-
-    public void setSerializeResult(String serializeResult) {
-        this.serializeResult = serializeResult;
     }
 
     public String getMsg() {
@@ -106,14 +67,6 @@ public class FlowControlResponse {
 
     public int getCode() {
         return code;
-    }
-
-    public Object getResult() {
-        return result;
-    }
-
-    public boolean isReplaceResult() {
-        return isReplaceResult;
     }
 
     public Map<String, List<String>> getHeaders() {

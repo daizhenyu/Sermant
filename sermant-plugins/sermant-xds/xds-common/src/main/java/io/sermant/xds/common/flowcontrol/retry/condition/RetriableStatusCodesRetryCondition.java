@@ -21,7 +21,6 @@ import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 
 /**
  * Retry condition check, determine if the response status code matches the specified status code, and trigger a retry

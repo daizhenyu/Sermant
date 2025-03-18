@@ -62,7 +62,7 @@ public interface Retry {
      * @param result interface response result
      * @return response status code
      */
-    Optional<String> getCode(Object result);
+    Optional<String> getStatusCode(Object result);
 
     /**
      * get header

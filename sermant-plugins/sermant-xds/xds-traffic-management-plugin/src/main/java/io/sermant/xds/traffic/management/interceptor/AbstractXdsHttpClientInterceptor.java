@@ -35,7 +35,7 @@ import io.sermant.xds.common.handler.XdsHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
-import io.sermant.xds.traffic.management.handler.RetryHandlerV2;
+import io.sermant.xds.traffic.management.handler.RetryHandler;
 import io.sermant.xds.traffic.management.service.InterceptorSupporter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -332,7 +332,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         }
         XdsRetryPolicy retryPolicy = retryPolicyOptional.get();
         RetryContext.INSTANCE.buildXdsRetryPolicy(retryPolicy);
-        return RetryHandlerV2.INSTANCE.getXdsRetryHandlers(scenarioInfo, retryPolicy);
+        return RetryHandler.INSTANCE.getXdsRetryHandlers(scenarioInfo, retryPolicy);
     }
 
     /**

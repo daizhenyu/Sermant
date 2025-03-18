@@ -18,7 +18,6 @@ package io.sermant.xds.common.flowcontrol.retry.condition;
 
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 
 import java.util.Arrays;
 import java.util.HashSet;

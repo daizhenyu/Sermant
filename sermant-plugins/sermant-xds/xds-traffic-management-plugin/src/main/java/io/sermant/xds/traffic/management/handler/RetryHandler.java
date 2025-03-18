@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhouss
  * @since 2022-02-18
  */
-public enum RetryHandlerV2 {
+public enum RetryHandler {
     /**
      * singleton
      */

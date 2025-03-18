@@ -19,7 +19,6 @@ package io.sermant.xds.common.flowcontrol.retry.condition;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
