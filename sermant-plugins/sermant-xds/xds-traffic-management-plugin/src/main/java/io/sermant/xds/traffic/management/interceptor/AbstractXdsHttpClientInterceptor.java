@@ -17,7 +17,6 @@
 package io.sermant.xds.traffic.management.interceptor;
 
 import io.github.resilience4j.retry.Retry;
-import io.sermant.core.common.LoggerFactory;
 import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.core.service.xds.entity.ServiceInstance;
 import io.sermant.core.service.xds.entity.XdsInstanceCircuitBreakers;
@@ -36,6 +35,7 @@ import io.sermant.xds.common.handler.XdsHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.traffic.management.handler.RetryHandlerV2;
 import io.sermant.xds.traffic.management.service.InterceptorSupporter;
 
 import java.lang.reflect.InvocationTargetException;
@@ -49,7 +49,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 /**
  * Enhance the client request sending functionality by performing Xds service instance discovery and circuit breaking
@@ -60,8 +59,6 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSupporter {
     protected static final String MESSAGE = "CircuitBreaker has forced open and deny any requests";
-
-    protected static final Logger LOGGER = LoggerFactory.getLogger();
 
     private static final int MIN_SUCCESS_CODE = 200;
 
@@ -335,7 +332,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         }
         XdsRetryPolicy retryPolicy = retryPolicyOptional.get();
         RetryContext.INSTANCE.buildXdsRetryPolicy(retryPolicy);
-        return getRetryHandler().getXdsRetryHandlers(scenarioInfo, retryPolicy);
+        return RetryHandlerV2.INSTANCE.getXdsRetryHandlers(scenarioInfo, retryPolicy);
     }
 
     /**

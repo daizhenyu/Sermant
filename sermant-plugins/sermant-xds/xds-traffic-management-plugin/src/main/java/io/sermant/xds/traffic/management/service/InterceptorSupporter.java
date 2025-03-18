@@ -26,10 +26,8 @@ import io.sermant.core.plugin.service.PluginServiceManager;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
-import io.sermant.xds.traffic.management.handler.RetryHandlerV2;
 import io.sermant.xds.traffic.management.service.rest4j.XdsHttpFlowControlService;
 
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,38 +39,19 @@ import java.util.logging.Logger;
  * @since 2022-01-25
  */
 public abstract class InterceptorSupporter implements Interceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger();
+    protected static final Logger LOGGER = LoggerFactory.getLogger();
 
     protected final XdsTrafficManagementConfig xdsTrafficManagementConfig;
 
-    private final ReentrantLock lock = new ReentrantLock();
-
-    private RetryHandlerV2 retryHandler = null;
-
-    private XdsHttpFlowControlService xdsHttpFlowControlService;
+    private final XdsHttpFlowControlService xdsHttpFlowControlService;
 
     /**
      * constructor
      */
     protected InterceptorSupporter() {
         xdsTrafficManagementConfig = PluginConfigManager.getPluginConfig(XdsTrafficManagementConfig.class);
-    }
-
-    /**
-     * get retry handler
-     *
-     * @return RetryHandlerV2
-     */
-    protected final RetryHandlerV2 getRetryHandler() {
-        if (retryHandler == null) {
-            lock.lock();
-            try {
-                retryHandler = new RetryHandlerV2();
-            } finally {
-                lock.unlock();
-            }
-        }
-        return retryHandler;
+        xdsHttpFlowControlService =
+                PluginServiceManager.getPluginService(XdsHttpFlowControlService.class);
     }
 
     /**
@@ -81,14 +60,6 @@ public abstract class InterceptorSupporter implements Interceptor {
      * @return HttpService
      */
     protected XdsHttpFlowControlService getXdsHttpFlowControlService() {
-        if (xdsHttpFlowControlService == null) {
-            lock.lock();
-            try {
-                xdsHttpFlowControlService = PluginServiceManager.getPluginService(XdsHttpFlowControlService.class);
-            } finally {
-                lock.unlock();
-            }
-        }
         return xdsHttpFlowControlService;
     }
 
