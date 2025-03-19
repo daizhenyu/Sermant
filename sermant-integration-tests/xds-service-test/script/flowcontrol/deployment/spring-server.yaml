@@ -21,6 +21,8 @@ spec:
         ports:
         - containerPort: 8081
         env:
+        - name: xds_traffic_management_config_enable
+          value: "true"
         - name: SERVER_VERSION
           value: "v1"
         - name: ZOOKEEPER_IP
