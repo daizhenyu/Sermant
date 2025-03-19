@@ -19,7 +19,6 @@ package io.sermant.xds.traffic.management.interceptor;
 import io.sermant.core.common.LoggerFactory;
 import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.core.service.xds.entity.ServiceInstance;
-import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.MapUtils;
 import io.sermant.core.utils.ReflectUtils;
@@ -227,7 +226,7 @@ public class HttpUrlConnectionConnectInterceptor extends AbstractXdsHttpClientIn
         }
 
         @Override
-        public boolean isNeedRetry(Object result, XdsRetryPolicy retryPolicy) {
+        public boolean isNeedRetry(Object result) {
             return false;
         }
     }
