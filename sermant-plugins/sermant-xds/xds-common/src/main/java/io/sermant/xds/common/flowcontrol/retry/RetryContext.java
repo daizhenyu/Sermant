@@ -114,6 +114,6 @@ public enum RetryContext {
      * @param retryPolicy retry policy information
      */
     public void buildXdsRetryPolicy(XdsRetryPolicy retryPolicy) {
-        policyThreadLocal.set(new RetryOnUntriedPolicy((int) retryPolicy.getMaxAttempts()));
+        policyThreadLocal.set(new RetryOnUntriedPolicy(retryPolicy));
     }
 }

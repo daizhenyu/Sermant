@@ -17,12 +17,12 @@
 
 package io.sermant.xds.common.flowcontrol.retry;
 
-import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
+import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +36,12 @@ import java.util.Set;
  */
 public abstract class AbstractRetry implements Retry {
     @Override
-    public boolean isNeedRetry(Object result, XdsRetryPolicy retryPolicy) {
+    public boolean isNeedRetry(Object result) {
         if (result == null) {
+            return false;
+        }
+        RetryPolicy retryPolicy = RetryContext.INSTANCE.getRetryPolicy();
+        if (retryPolicy == null) {
             return false;
         }
         List<String> conditions = retryPolicy.getRetryConditions();
@@ -66,8 +70,12 @@ public abstract class AbstractRetry implements Retry {
     }
 
     @Override
-    public boolean isNeedRetry(Throwable ex, XdsRetryPolicy retryPolicy) {
+    public boolean isNeedRetry(Throwable ex) {
         if (ex == null) {
+            return false;
+        }
+        RetryPolicy retryPolicy = RetryContext.INSTANCE.getRetryPolicy();
+        if (retryPolicy == null) {
             return false;
         }
         for (String conditionName : retryPolicy.getRetryConditions()) {
