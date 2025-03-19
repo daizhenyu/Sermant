@@ -17,7 +17,6 @@
 
 package io.sermant.xds.traffic.management.handler;
 
-import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
 
 import java.util.function.Predicate;
@@ -33,17 +32,15 @@ public interface RetryPredicateCreator {
      * Create exception Predicate
      *
      * @param retry retry
-     * @param policy retry rule
      * @return Predicate
      */
-    Predicate<Throwable> createExceptionPredicate(Retry retry, XdsRetryPolicy policy);
+    Predicate<Throwable> createExceptionPredicate(Retry retry);
 
     /**
      * create retry result predicate
      *
      * @param retry retry
-     * @param xdsRetryPolicy retry rule
      * @return Predicate
      */
-    Predicate<Object> createResultPredicate(Retry retry, XdsRetryPolicy xdsRetryPolicy);
+    Predicate<Object> createResultPredicate(Retry retry);
 }

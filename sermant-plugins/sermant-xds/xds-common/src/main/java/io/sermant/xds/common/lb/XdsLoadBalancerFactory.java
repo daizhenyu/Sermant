@@ -16,12 +16,15 @@
 
 package io.sermant.xds.common.lb;
 
+import io.sermant.core.common.LoggerFactory;
+import io.sermant.core.service.ServiceManager;
+import io.sermant.core.service.xds.XdsCoreService;
+import io.sermant.core.service.xds.XdsLoadBalanceService;
 import io.sermant.core.service.xds.entity.XdsLbPolicy;
-import io.sermant.xds.common.handler.XdsHandler;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  * XdsLoadBalancerFactory
@@ -30,9 +33,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2024-08-30
  **/
 public class XdsLoadBalancerFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger();
+
     private static final Map<String, XdsLoadBalancer> LOAD_BALANCERS = new ConcurrentHashMap<>();
 
     private static final String RANDOM = "RANDOM";
+
+    private static XdsLoadBalanceService loadBalanceService;
+
+    static {
+        XdsCoreService coreService = ServiceManager.getService(XdsCoreService.class);
+        if (coreService != null) {
+            loadBalanceService = coreService.getLoadBalanceService();
+        } else {
+            LOGGER.severe("xDS service not open for xDS routing.");
+        }
+    }
 
     private XdsLoadBalancerFactory() {
     }
@@ -64,15 +80,16 @@ public class XdsLoadBalancerFactory {
      * @return XdsLoadBalancer
      */
     public static XdsLoadBalancer getLoadBalancer(String serviceName, String clusterName) {
-        Optional<XdsLbPolicy> lbPolicyOptional =
-                XdsHandler.INSTANCE.getLbPolicyOfCluster(serviceName, clusterName);
-        if (!lbPolicyOptional.isPresent()) {
+        if (loadBalanceService == null) {
+            LOGGER.severe("xDS service not open for xDS routing.");
             return getRoundRobinLoadBalancer(clusterName);
         }
-        XdsLbPolicy lbPolicy = lbPolicyOptional.get();
-        if (lbPolicy == XdsLbPolicy.RANDOM) {
-            return getRandomLoadBalancer();
+        XdsLbPolicy lbPolicy = loadBalanceService.getLbPolicyOfCluster(serviceName, clusterName);
+        switch (lbPolicy) {
+            case RANDOM:
+                return getRandomLoadBalancer();
+            default:
+                return getRoundRobinLoadBalancer(clusterName);
         }
-        return getRoundRobinLoadBalancer(clusterName);
     }
 }

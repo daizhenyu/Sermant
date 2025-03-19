@@ -21,14 +21,12 @@ import io.sermant.core.common.LoggerFactory;
 import io.sermant.core.service.ServiceManager;
 import io.sermant.core.service.xds.XdsCoreService;
 import io.sermant.core.service.xds.XdsFlowControlService;
-import io.sermant.core.service.xds.XdsLoadBalanceService;
 import io.sermant.core.service.xds.XdsRouteService;
 import io.sermant.core.service.xds.XdsServiceDiscovery;
 import io.sermant.core.service.xds.entity.ServiceInstance;
 import io.sermant.core.service.xds.entity.XdsClusterLoadAssigment;
 import io.sermant.core.service.xds.entity.XdsHttpFault;
 import io.sermant.core.service.xds.entity.XdsInstanceCircuitBreakers;
-import io.sermant.core.service.xds.entity.XdsLbPolicy;
 import io.sermant.core.service.xds.entity.XdsLocality;
 import io.sermant.core.service.xds.entity.XdsRateLimit;
 import io.sermant.core.service.xds.entity.XdsRequestCircuitBreakers;
@@ -69,8 +67,6 @@ public enum XdsHandler {
 
     private XdsServiceDiscovery xdsServiceDiscovery;
 
-    private XdsLoadBalanceService xdsLoadBalanceService;
-
     /**
      * constructor
      */
@@ -81,7 +77,6 @@ public enum XdsHandler {
             xdsRouteService = xdsCoreService.getXdsRouteService();
             xdsServiceDiscovery = xdsCoreService.getXdsServiceDiscovery();
             xdsFlowControlService = xdsCoreService.getXdsFlowControlService();
-            xdsLoadBalanceService = xdsCoreService.getLoadBalanceService();
         } catch (IllegalArgumentException e) {
             logger.severe("XdsCoreService not started");
         }
@@ -194,20 +189,6 @@ public enum XdsHandler {
      *
      * @param serviceName service name
      * @param clusterName cluster name
-     * @return lb policy
-     */
-    public Optional<XdsLbPolicy> getLbPolicyOfCluster(String serviceName, String clusterName) {
-        if (xdsLoadBalanceService == null || StringUtils.isEmpty(serviceName) || StringUtils.isEmpty(clusterName)) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(xdsLoadBalanceService.getLbPolicyOfCluster(serviceName, clusterName));
-    }
-
-    /**
-     * get ServiceInstance of service name and cluster name
-     *
-     * @param serviceName service name
-     * @param clusterName cluster name
      * @return Service Instance
      */
     public Set<ServiceInstance> getMatchedServiceInstance(String serviceName, String clusterName) {
@@ -272,14 +253,5 @@ public enum XdsHandler {
             serviceInstances.addAll(xdsLocalitySetEntry.getValue());
         }
         return serviceInstances;
-    }
-
-    /**
-     * updateXdsLoadBalanceService
-     *
-     * @param loadBalanceService
-     */
-    public void updateXdsLoadBalanceService(XdsLoadBalanceService loadBalanceService) {
-        this.xdsLoadBalanceService = loadBalanceService;
     }
 }

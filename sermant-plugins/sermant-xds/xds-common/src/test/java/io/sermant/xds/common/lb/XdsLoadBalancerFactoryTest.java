@@ -57,7 +57,6 @@ public class XdsLoadBalancerFactoryTest {
 
     @Test
     public void testGetLoadBalancer() {
-        XdsHandler.INSTANCE.updateXdsLoadBalanceService(loadBalanceService);
         // random
         Mockito.when(loadBalanceService.getLbPolicyOfCluster("serviceA",
                 "outbound|8080||serviceA.default.svc.cluster.local"))

@@ -17,6 +17,7 @@
 
 package io.sermant.xds.common.flowcontrol.retry.policy;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -58,4 +59,27 @@ public interface RetryPolicy {
      * @param instance instance
      */
     void updateRetriedInstance(Object instance);
+
+    /**
+     * get upstream timeout per retry attempt (including the initial attempt)
+     *
+     * @return try timeout
+     */
+    long getTryTimeout();
+
+    /**
+     * get retry conditions
+     *
+     * @return retry conditions
+     */
+    List<String> getRetryConditions();
+
+    /**
+     * get max attempt counts
+     *
+     * @return max attempt counts
+     */
+    long getMaxAttempts();
+
+    String getRetryPolicyName();
 }

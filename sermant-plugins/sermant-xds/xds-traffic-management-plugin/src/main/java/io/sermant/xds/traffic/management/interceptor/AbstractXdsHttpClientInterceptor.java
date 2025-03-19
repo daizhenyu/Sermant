@@ -268,7 +268,9 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
             FlowControlScenario scenarioInfo) {
         XdsLoadBalancer loadBalancer = XdsLoadBalancerFactory.getLoadBalancer(scenarioInfo.getServiceName(),
                 scenarioInfo.getClusterName());
-        return loadBalancer.selectInstance(new ArrayList<>(instanceSet));
+        ServiceInstance serviceInstance = loadBalancer.selectInstance(new ArrayList<>(instanceSet));
+        RetryContext.INSTANCE.updateRetriedServiceInstance(serviceInstance);
+        return serviceInstance;
     }
 
     private void removeCircuitBreakerInstance(FlowControlScenario scenarioInfo, Set<ServiceInstance> instanceSet) {
@@ -330,9 +332,8 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         if (!retryPolicyOptional.isPresent()) {
             return Collections.emptyList();
         }
-        XdsRetryPolicy retryPolicy = retryPolicyOptional.get();
-        RetryContext.INSTANCE.buildXdsRetryPolicy(retryPolicy);
-        return RetryHandler.INSTANCE.getXdsRetryHandlers(scenarioInfo, retryPolicy);
+        RetryContext.INSTANCE.buildXdsRetryPolicy(retryPolicyOptional.get());
+        return RetryHandler.INSTANCE.getXdsRetryHandlers(scenarioInfo);
     }
 
     /**

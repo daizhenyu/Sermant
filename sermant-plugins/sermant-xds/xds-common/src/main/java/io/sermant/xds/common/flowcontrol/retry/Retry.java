@@ -17,8 +17,6 @@
 
 package io.sermant.xds.common.flowcontrol.retry;
 
-import io.sermant.core.service.xds.entity.XdsRetryPolicy;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,20 +32,18 @@ public interface Retry {
      * a retry will be executed
      *
      * @param result responseResult
-     * @param retryPolicy retry policy information
      * @return retryOrNot
      */
-    boolean isNeedRetry(Object result, XdsRetryPolicy retryPolicy);
+    boolean isNeedRetry(Object result);
 
     /**
      * Retry based on the throwable. If the throwable during the execution of the request method meets the retry
      * conditions in the retry policy, a retry will be executed
      *
      * @param throwable Exception thrown during retry
-     * @param retryPolicy Xds Retry Policy information
      * @return retryOrNot
      */
-    boolean isNeedRetry(Throwable throwable, XdsRetryPolicy retryPolicy);
+    boolean isNeedRetry(Throwable throwable);
 
     /**
      * retry frame type

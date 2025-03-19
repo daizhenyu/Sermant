@@ -16,7 +16,10 @@
 
 package io.sermant.xds.common.flowcontrol.retry.policy;
 
+import io.sermant.core.service.xds.entity.XdsRetryPolicy;
+
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +29,7 @@ import java.util.Set;
  * @since 2024-11-28
  */
 public class RetryOnUntriedPolicy implements RetryPolicy {
-    private final int attempts;
+    private final XdsRetryPolicy retryPolicy;
 
     private final Set<Object> retriedInstance;
 
@@ -39,16 +42,16 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
     /**
      * retry constructor
      *
-     * @param attempts Maximum Retry Count
+     * @param retryPolicy xds retry policy
      */
-    public RetryOnUntriedPolicy(int attempts) {
-        this.attempts = attempts;
+    public RetryOnUntriedPolicy(XdsRetryPolicy retryPolicy) {
+        this.retryPolicy = retryPolicy;
         retriedInstance = new HashSet<>();
     }
 
     @Override
     public boolean isReachedRetryThreshold() {
-        return hasTriedCount < attempts;
+        return hasTriedCount < retryPolicy.getMaxAttempts();
     }
 
     @Override
@@ -75,5 +78,25 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
         if (!this.retriedInstance.contains(instance)) {
             this.retriedInstance.add(instance);
         }
+    }
+
+    @Override
+    public long getTryTimeout() {
+        return this.retryPolicy.getPerTryTimeout();
+    }
+
+    @Override
+    public List<String> getRetryConditions() {
+        return this.retryPolicy.getRetryConditions();
+    }
+
+    @Override
+    public long getMaxAttempts() {
+        return this.retryPolicy.getMaxAttempts();
+    }
+
+    @Override
+    public String getRetryPolicyName() {
+        return this.retryPolicy.toString();
     }
 }
