@@ -27,8 +27,8 @@ import io.sermant.core.utils.ReflectUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.flowcontrol.retry.AbstractRetry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
-import io.sermant.xds.common.flowcontrol.retry.RetryConditionType;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
 import sun.net.www.http.HttpClient;
 

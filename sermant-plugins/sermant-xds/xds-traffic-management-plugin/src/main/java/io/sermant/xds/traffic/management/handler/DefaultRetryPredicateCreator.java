@@ -20,14 +20,6 @@ package io.sermant.xds.traffic.management.handler;
 import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.NoRouteToHostException;
-import java.net.SocketTimeoutException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -37,19 +29,6 @@ import java.util.function.Predicate;
  * @since 2022-04-11
  */
 public class DefaultRetryPredicateCreator implements RetryPredicateCreator {
-    /**
-     * default retry status code
-     */
-    private static final Collection<String> DEFAULT_RETRY_ON_RESPONSE_STATUS = Arrays.asList("502", "503");
-
-    /**
-     * default retry exception
-     */
-    private static final List<Class<? extends Throwable>> STRICT_RETRYABLE = Collections.unmodifiableList(
-            Arrays.asList(ConnectException.class, SocketTimeoutException.class, IOException.class,
-                    NoRouteToHostException.class)
-    );
-
     @Override
     public Predicate<Throwable> createExceptionPredicate(Retry retry, XdsRetryPolicy policy) {
         return (Throwable ex) -> retry.isNeedRetry(ex, policy);

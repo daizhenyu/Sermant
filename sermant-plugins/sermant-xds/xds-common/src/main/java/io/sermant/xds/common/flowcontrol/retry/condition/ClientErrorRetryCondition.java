@@ -18,7 +18,6 @@ package io.sermant.xds.common.flowcontrol.retry.condition;
 
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.flowcontrol.retry.RetryCondition;
 
 /**
  * Retry condition check, determine if the current error is a client-side error, and trigger a retry if it is a

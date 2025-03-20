@@ -21,6 +21,8 @@ import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
+import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
 
 import java.util.List;
 import java.util.Optional;
