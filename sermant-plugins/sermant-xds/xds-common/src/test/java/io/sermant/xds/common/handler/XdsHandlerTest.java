@@ -86,11 +86,4 @@ public class XdsHandlerTest extends XdsAbstractTest {
                 getServiceInstanceByServiceName(SERVICE_NAME);
         assertEquals(3, result.size());
     }
-
-    @Test
-    public void testGetLbPolicyOfCluster() {
-        final Optional<XdsLbPolicy> result = XdsHandler.INSTANCE.getLbPolicyOfCluster(SERVICE_NAME,
-                CLUSTER_NAME);
-        assertEquals(Optional.of(XdsLbPolicy.RANDOM), result);
-    }
 }

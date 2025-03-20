@@ -19,10 +19,6 @@ package io.sermant.xds.service.traffic.management.handler.exception;
 
 import io.sermant.xds.common.entity.FlowControlResponse;
 import io.sermant.xds.common.entity.FlowControlResult;
-import io.sermant.xds.service.traffic.management.utils.SerializeUtils;
-
-import java.util.Locale;
-import java.util.Optional;
 
 /**
  * abstract public exception handling
@@ -35,16 +31,6 @@ public abstract class AbstractExceptionHandler<E extends Throwable> implements E
     @Override
     public void accept(E ex, FlowControlResult flowControlResult) {
         final FlowControlResponse response = getFlowControlResponse(ex, flowControlResult);
-        if (response.isReplaceResult()) {
-            final Optional<String> serializeResult = SerializeUtils.serialize2String(response.getResult());
-            if (serializeResult.isPresent()) {
-                response.setSerializeResult(serializeResult.get());
-            } else {
-                response.setSerializeResult(String.format(Locale.ENGLISH,
-                        "Can not serialize target class [%s]",
-                        response.getResult() == null ? "null result" : response.getResult().getClass().getName()));
-            }
-        }
         flowControlResult.setResponse(response);
     }
 

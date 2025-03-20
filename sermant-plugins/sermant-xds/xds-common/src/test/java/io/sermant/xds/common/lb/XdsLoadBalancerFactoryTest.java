@@ -20,6 +20,8 @@ import io.sermant.core.service.ServiceManager;
 import io.sermant.core.service.xds.XdsCoreService;
 import io.sermant.core.service.xds.XdsLoadBalanceService;
 import io.sermant.core.service.xds.entity.XdsLbPolicy;
+import io.sermant.xds.common.handler.XdsHandler;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

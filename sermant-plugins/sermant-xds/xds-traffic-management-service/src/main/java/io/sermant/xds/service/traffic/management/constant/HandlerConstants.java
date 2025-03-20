@@ -39,12 +39,6 @@ public class HandlerConstants {
      */
     public static final int XDS_RATE_LIMIT_ORDER = 5000;
 
-    /**
-     * key prefix
-     */
-    public static final String THREAD_LOCAL_KEY_PREFIX = HandlerConstants.class.getName()
-            + "___THREAD_LOCAL_KEY_PREFIX___";
-
     private HandlerConstants() {
     }
 }
