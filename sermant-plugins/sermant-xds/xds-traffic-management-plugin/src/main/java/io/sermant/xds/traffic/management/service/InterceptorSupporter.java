@@ -26,6 +26,7 @@ import io.sermant.core.plugin.service.PluginServiceManager;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
+import io.sermant.xds.traffic.management.handler.RetryHandler;
 import io.sermant.xds.traffic.management.service.rest4j.XdsHttpFlowControlService;
 
 import java.util.function.Predicate;
@@ -45,6 +46,8 @@ public abstract class InterceptorSupporter implements Interceptor {
 
     private final XdsHttpFlowControlService xdsHttpFlowControlService;
 
+    private final RetryHandler retryHandler;
+
     /**
      * constructor
      */
@@ -52,6 +55,16 @@ public abstract class InterceptorSupporter implements Interceptor {
         xdsTrafficManagementConfig = PluginConfigManager.getPluginConfig(XdsTrafficManagementConfig.class);
         xdsHttpFlowControlService =
                 PluginServiceManager.getPluginService(XdsHttpFlowControlService.class);
+        retryHandler = new RetryHandler();
+    }
+
+    /**
+     * get retry handler
+     *
+     * @return RetryHandler
+     */
+    protected final RetryHandler getRetryHandler() {
+        return retryHandler;
     }
 
     /**
