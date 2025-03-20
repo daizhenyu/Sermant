@@ -195,7 +195,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
      */
     public static class HttpUrlConnectionRetry extends AbstractRetry {
         @Override
-        public Optional<String> getCode(Object result) {
+        public Optional<String> getStatusCode(Object result) {
             HttpURLConnection connection = XdsThreadLocalUtil.getHttpUrlConnection();
             if (connection == null) {
                 return Optional.empty();
@@ -219,7 +219,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
             if (CollectionUtils.isEmpty(conditions)) {
                 return false;
             }
-            Optional<String> statusCodeOptional = this.getCode(null);
+            Optional<String> statusCodeOptional = this.getStatusCode(null);
             String statusCode = statusCodeOptional.orElse(StringUtils.EMPTY);
             if (isSuccess(statusCode)) {
                 return false;

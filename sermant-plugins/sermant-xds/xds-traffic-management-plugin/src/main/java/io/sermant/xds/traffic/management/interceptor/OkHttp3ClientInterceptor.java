@@ -153,7 +153,7 @@ public class OkHttp3ClientInterceptor extends AbstractXdsHttpClientInterceptor {
 
     @Override
     public int getStatusCode(ExecuteContext context) {
-        Optional<String> statusCodeOptional = retry.getCode(context.getResult());
+        Optional<String> statusCodeOptional = retry.getStatusCode(context.getResult());
         return statusCodeOptional.map(Integer::parseInt).orElse(CommonConst.DEFAULT_RESPONSE_CODE);
     }
 
@@ -214,7 +214,7 @@ public class OkHttp3ClientInterceptor extends AbstractXdsHttpClientInterceptor {
      */
     public static class OkHttp3Retry extends AbstractRetry {
         @Override
-        public Optional<String> getCode(Object result) {
+        public Optional<String> getStatusCode(Object result) {
             if (!(result instanceof Response)) {
                 return Optional.empty();
             }
