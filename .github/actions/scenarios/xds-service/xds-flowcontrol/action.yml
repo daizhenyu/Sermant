@@ -6,9 +6,9 @@ runs:
     - name: prepare image
       shell: bash
       run: |
-        echo -e "plugins:\n  - flowcontrol" > sermant-agent-${{ env.sermantVersion }}/agent/config/plugins.yaml
-        sudo sed -i '/x-sermant-retriable-status-codes:/a\ \ \ - 502' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/flowcontrol/config/config.yaml
-        sudo sed -i '/x-sermant-retriable-header-names:/a\ \ \ - needRetry' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/flowcontrol/config/config.yaml
+        echo -e "plugins:\n  - xds" > sermant-agent-${{ env.sermantVersion }}/agent/config/plugins.yaml
+        sudo sed -i '/x-sermant-retriable-status-codes:/a\ \ \ - 502' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/xds/config/config.yaml
+        sudo sed -i '/x-sermant-retriable-header-names:/a\ \ \ - needRetry' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/xds/config/config.yaml
         cat sermant-agent-${{ env.sermantVersion }}/agent/config/plugins.yaml
         cat sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/flowcontrol/config/config.yaml
         cp -r sermant-agent-*/agent sermant-integration-tests/xds-service-test/product/spring-client/
