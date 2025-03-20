@@ -268,9 +268,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
             FlowControlScenario scenarioInfo) {
         XdsLoadBalancer loadBalancer = XdsLoadBalancerFactory.getLoadBalancer(scenarioInfo.getServiceName(),
                 scenarioInfo.getClusterName());
-        ServiceInstance serviceInstance = loadBalancer.selectInstance(new ArrayList<>(instanceSet));
-        RetryContext.INSTANCE.updateRetriedServiceInstance(serviceInstance);
-        return serviceInstance;
+        return loadBalancer.selectInstance(new ArrayList<>(instanceSet));
     }
 
     private void removeCircuitBreakerInstance(FlowControlScenario scenarioInfo, Set<ServiceInstance> instanceSet) {
