@@ -31,7 +31,7 @@ import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.circuit.XdsCircuitBreakerManager;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
 import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
-import io.sermant.xds.common.handler.XdsHandler;
+import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
@@ -86,7 +86,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
                 || StringUtils.isEmpty(scenarioInfo.getClusterName())) {
             return false;
         }
-        Optional<XdsRequestCircuitBreakers> circuitBreakersOptional = XdsHandler.INSTANCE.
+        Optional<XdsRequestCircuitBreakers> circuitBreakersOptional = XdsTrafficManagementDataHandler.INSTANCE.
                 getRequestCircuitBreakers(scenarioInfo.getServiceName(), scenarioInfo.getClusterName());
         if (!circuitBreakersOptional.isPresent()) {
             return false;
@@ -198,7 +198,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
      * @param scenario scenario information
      */
     private void handleFailedRequests(FlowControlScenario scenario, int statusCode) {
-        Optional<XdsInstanceCircuitBreakers> instanceCircuitBreakersOptional = XdsHandler.INSTANCE.
+        Optional<XdsInstanceCircuitBreakers> instanceCircuitBreakersOptional = XdsTrafficManagementDataHandler.INSTANCE.
                 getInstanceCircuitBreakers(scenario.getServiceName(), scenario.getClusterName());
         if (!instanceCircuitBreakersOptional.isPresent()) {
             return;
@@ -228,14 +228,14 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         }
         if (StringUtils.isEmpty(scenarioInfo.getClusterName())) {
             scenarioInfo.setClusterName(StringUtils.EMPTY);
-            Set<ServiceInstance> serviceInstanceSet = XdsHandler.INSTANCE.
+            Set<ServiceInstance> serviceInstanceSet = XdsTrafficManagementDataHandler.INSTANCE.
                     getServiceInstanceByServiceName(scenarioInfo.getServiceName());
             if (CollectionUtils.isEmpty(serviceInstanceSet)) {
                 return Optional.empty();
             }
             return Optional.ofNullable(chooseServiceInstanceByLoadBalancer(serviceInstanceSet, scenarioInfo));
         }
-        Set<ServiceInstance> serviceInstanceSet = XdsHandler.INSTANCE.
+        Set<ServiceInstance> serviceInstanceSet = XdsTrafficManagementDataHandler.INSTANCE.
                 getMatchedServiceInstance(scenarioInfo.getServiceName(), scenarioInfo.getClusterName());
         if (CollectionUtils.isEmpty(serviceInstanceSet)) {
             return Optional.empty();
@@ -270,7 +270,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
     }
 
     private void removeCircuitBreakerInstance(FlowControlScenario scenarioInfo, Set<ServiceInstance> instanceSet) {
-        Optional<XdsInstanceCircuitBreakers> instanceCircuitBreakersOptional = XdsHandler.INSTANCE.
+        Optional<XdsInstanceCircuitBreakers> instanceCircuitBreakersOptional = XdsTrafficManagementDataHandler.INSTANCE.
                 getInstanceCircuitBreakers(scenarioInfo.getServiceName(), scenarioInfo.getClusterName());
         if (!instanceCircuitBreakersOptional.isPresent()) {
             return;
@@ -323,7 +323,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
                 || StringUtils.isEmpty(scenarioInfo.getRouteName())) {
             return Collections.emptyList();
         }
-        Optional<XdsRetryPolicy> retryPolicyOptional = XdsHandler.INSTANCE
+        Optional<XdsRetryPolicy> retryPolicyOptional = XdsTrafficManagementDataHandler.INSTANCE
                 .getRetryPolicy(scenarioInfo.getServiceName(), scenarioInfo.getRouteName());
         if (!retryPolicyOptional.isPresent()) {
             return Collections.emptyList();

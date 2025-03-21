@@ -25,7 +25,7 @@ import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
 import io.sermant.xds.common.flowcontrol.ratelimit.XdsRateLimitManager;
-import io.sermant.xds.common.handler.XdsHandler;
+import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.utils.RandomUtil;
 import io.sermant.xds.service.traffic.management.constant.HandlerConstants;
 import io.sermant.xds.service.traffic.management.exception.RateLimitException;
@@ -46,7 +46,7 @@ public class XdsRateLimitRequestHandler extends AbstractXdsChainHandler {
     }
 
     private void handleRateLimit(FlowControlScenario scenarioInfo) {
-        Optional<XdsRateLimit> xdsRateLimitOptional = XdsHandler.INSTANCE.getRateLimit(
+        Optional<XdsRateLimit> xdsRateLimitOptional = XdsTrafficManagementDataHandler.INSTANCE.getRateLimit(
                 scenarioInfo.getServiceName(), scenarioInfo.getRouteName(), scenarioInfo.getClusterName());
         if (!xdsRateLimitOptional.isPresent()) {
             return;

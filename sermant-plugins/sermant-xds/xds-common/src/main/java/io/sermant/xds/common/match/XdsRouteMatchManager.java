@@ -27,7 +27,7 @@ import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
-import io.sermant.xds.common.handler.XdsHandler;
+import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.utils.RandomUtil;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public enum XdsRouteMatchManager {
 
     private Optional<XdsRoute> getMatchedRoute(RequestEntity requestEntity, String serviceName) {
         List<XdsRoute> routes =
-                XdsHandler.INSTANCE.getServiceRouteByServiceName(serviceName);
+                XdsTrafficManagementDataHandler.INSTANCE.getServiceRouteByServiceName(serviceName);
         for (XdsRoute route : routes) {
             XdsRouteMatch routeMatch = route.getRouteMatch();
 

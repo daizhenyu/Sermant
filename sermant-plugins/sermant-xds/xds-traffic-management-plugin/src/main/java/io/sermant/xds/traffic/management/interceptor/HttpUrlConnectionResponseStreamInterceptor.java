@@ -20,15 +20,16 @@ import io.github.resilience4j.retry.RetryConfig;
 import io.sermant.core.common.LoggerFactory;
 import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.core.service.xds.entity.ServiceInstance;
-import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.MapUtils;
 import io.sermant.core.utils.ReflectUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.flowcontrol.retry.AbstractRetry;
+import io.sermant.xds.common.flowcontrol.retry.RetryContext;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
+import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
 import sun.net.www.http.HttpClient;
 
@@ -209,12 +210,16 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
         }
 
         @Override
-        public boolean isNeedRetry(Object result, XdsRetryPolicy retryPolicy) {
-            return this.isNeedRetry((Throwable) null, retryPolicy);
+        public boolean isNeedRetry(Object result) {
+            return this.isNeedRetry((Throwable) null);
         }
 
         @Override
-        public boolean isNeedRetry(Throwable throwable, XdsRetryPolicy retryPolicy) {
+        public boolean isNeedRetry(Throwable throwable) {
+            RetryPolicy retryPolicy = RetryContext.INSTANCE.getRetryPolicy();
+            if (retryPolicy == null) {
+                return false;
+            }
             List<String> conditions = retryPolicy.getRetryConditions();
             if (CollectionUtils.isEmpty(conditions)) {
                 return false;

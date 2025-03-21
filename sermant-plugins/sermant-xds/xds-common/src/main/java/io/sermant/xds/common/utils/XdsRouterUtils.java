@@ -22,7 +22,7 @@ import io.sermant.core.service.xds.entity.ServiceInstance;
 import io.sermant.core.service.xds.entity.XdsLocality;
 import io.sermant.core.utils.NetworkUtils;
 import io.sermant.core.utils.StringUtils;
-import io.sermant.xds.common.handler.XdsHandler;
+import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 
 import java.net.URI;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class XdsRouterUtils {
             if (StringUtils.isEmpty(podIp)) {
                 return Optional.empty();
             }
-            Set<ServiceInstance> serviceInstances = XdsHandler.INSTANCE
+            Set<ServiceInstance> serviceInstances = XdsTrafficManagementDataHandler.INSTANCE
                     .getServiceInstanceByServiceName(ConfigManager.getConfig(ServiceMeta.class).getService());
             Optional<ServiceInstance> serviceInstance = getMatchedServiceInstanceByPodIp(serviceInstances, podIp);
             if (!serviceInstance.isPresent()) {
