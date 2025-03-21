@@ -26,7 +26,7 @@ import io.sermant.xds.common.constant.CommonConst;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
-import io.sermant.xds.common.handler.XdsHandler;
+import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.utils.RandomUtil;
 import io.sermant.xds.service.traffic.management.constant.HandlerConstants;
 import io.sermant.xds.service.traffic.management.exception.FaultException;
@@ -48,7 +48,7 @@ public class XdsFaultRequestHandler extends AbstractXdsChainHandler {
 
     @Override
     public void onBefore(RequestEntity requestEntity, FlowControlScenario scenarioInfo) {
-        Optional<XdsHttpFault> xdsHttpFaultOptional = XdsHandler.INSTANCE.
+        Optional<XdsHttpFault> xdsHttpFaultOptional = XdsTrafficManagementDataHandler.INSTANCE.
                 getHttpFault(scenarioInfo.getServiceName(), scenarioInfo.getRouteName());
         if (!xdsHttpFaultOptional.isPresent()) {
             super.onBefore(requestEntity, scenarioInfo);

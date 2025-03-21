@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  * @author zhp
  * @since 2024-11-28
  */
-public enum XdsHandler {
+public enum XdsTrafficManagementDataHandler {
     /**
      * singleton
      */
@@ -70,7 +70,7 @@ public enum XdsHandler {
     /**
      * constructor
      */
-    XdsHandler() {
+    XdsTrafficManagementDataHandler() {
         Logger logger = LoggerFactory.getLogger();
         try {
             XdsCoreService xdsCoreService = ServiceManager.getService(XdsCoreService.class);

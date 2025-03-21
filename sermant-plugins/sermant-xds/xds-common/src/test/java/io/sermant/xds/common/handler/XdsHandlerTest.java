@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 public class XdsHandlerTest extends XdsAbstractTest {
     @Test
     public void testGetRequestCircuitBreakers() {
-        final Optional<XdsRequestCircuitBreakers> result = XdsHandler.INSTANCE.getRequestCircuitBreakers(
+        final Optional<XdsRequestCircuitBreakers> result = XdsTrafficManagementDataHandler.INSTANCE.getRequestCircuitBreakers(
                 SERVICE_NAME, CLUSTER_NAME);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(requestCircuitBreakers.getMaxRequests(), result.get().getMaxRequests());
@@ -44,7 +44,7 @@ public class XdsHandlerTest extends XdsAbstractTest {
 
     @Test
     public void testGetInstanceCircuitBreakers() {
-        final Optional<XdsInstanceCircuitBreakers> result = XdsHandler.INSTANCE.getInstanceCircuitBreakers(
+        final Optional<XdsInstanceCircuitBreakers> result = XdsTrafficManagementDataHandler.INSTANCE.getInstanceCircuitBreakers(
                 SERVICE_NAME, CLUSTER_NAME);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(instanceCircuitBreakers.getInterval(), result.get().getInterval());
@@ -52,7 +52,7 @@ public class XdsHandlerTest extends XdsAbstractTest {
 
     @Test
     public void testGetRetryPolicy() {
-        final Optional<XdsRetryPolicy> result = XdsHandler.INSTANCE.getRetryPolicy(
+        final Optional<XdsRetryPolicy> result = XdsTrafficManagementDataHandler.INSTANCE.getRetryPolicy(
                 SERVICE_NAME, ROUTE_NAME);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(retryPolicy.getRetryConditions().get(0), result.get().getRetryConditions().get(0));
@@ -60,7 +60,7 @@ public class XdsHandlerTest extends XdsAbstractTest {
 
     @Test
     public void testGetRateLimit() {
-        final Optional<XdsRateLimit> result = XdsHandler.INSTANCE.getRateLimit(
+        final Optional<XdsRateLimit> result = XdsTrafficManagementDataHandler.INSTANCE.getRateLimit(
                 SERVICE_NAME, ROUTE_NAME, CLUSTER_NAME);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(1, result.get().getResponseHeaderOption().size());
@@ -68,7 +68,7 @@ public class XdsHandlerTest extends XdsAbstractTest {
 
     @Test
     public void testGetHttpFault() {
-        final Optional<XdsHttpFault> result = XdsHandler.INSTANCE.getHttpFault(
+        final Optional<XdsHttpFault> result = XdsTrafficManagementDataHandler.INSTANCE.getHttpFault(
                 SERVICE_NAME, ROUTE_NAME);
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(httpFault.getDelay().getFixedDelay(), result.get().getDelay().getFixedDelay());
@@ -76,13 +76,13 @@ public class XdsHandlerTest extends XdsAbstractTest {
 
     @Test
     public void testGetServiceRouteByServiceName() {
-        final List<XdsRoute> result = XdsHandler.INSTANCE.getServiceRouteByServiceName(SERVICE_NAME);
+        final List<XdsRoute> result = XdsTrafficManagementDataHandler.INSTANCE.getServiceRouteByServiceName(SERVICE_NAME);
         assertEquals(1, result.size());
     }
 
     @Test
     public void testGetServiceInstanceByServiceName() {
-        final Set<ServiceInstance> result = XdsHandler.INSTANCE.
+        final Set<ServiceInstance> result = XdsTrafficManagementDataHandler.INSTANCE.
                 getServiceInstanceByServiceName(SERVICE_NAME);
         assertEquals(3, result.size());
     }
