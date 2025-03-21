@@ -28,7 +28,6 @@ import io.sermant.xds.common.entity.HttpRequestEntity;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
-import io.sermant.xds.traffic.management.service.InterceptorSupporter;
 
 import java.io.IOException;
 import java.io.PrintWriter;

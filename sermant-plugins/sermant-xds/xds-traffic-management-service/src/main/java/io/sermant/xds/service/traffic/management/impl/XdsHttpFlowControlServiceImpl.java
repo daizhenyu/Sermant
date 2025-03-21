@@ -20,7 +20,7 @@ import io.sermant.xds.common.entity.FlowControlResult;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.service.traffic.management.handler.XdsHandlerChainEntry;
-import io.sermant.xds.traffic.management.service.rest4j.XdsHttpFlowControlService;
+import io.sermant.xds.traffic.management.service.XdsHttpFlowControlService;
 
 /**
  * http request interception logic implementation

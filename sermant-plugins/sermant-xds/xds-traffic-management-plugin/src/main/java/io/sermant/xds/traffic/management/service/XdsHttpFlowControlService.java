@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package io.sermant.xds.traffic.management.service.rest4j;
+package io.sermant.xds.traffic.management.service;
 
 import io.sermant.core.plugin.service.PluginService;
 import io.sermant.xds.common.entity.FlowControlResult;
