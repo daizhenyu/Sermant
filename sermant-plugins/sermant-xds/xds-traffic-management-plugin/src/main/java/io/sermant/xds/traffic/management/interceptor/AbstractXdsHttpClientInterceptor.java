@@ -35,8 +35,6 @@ import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
 import io.sermant.xds.common.utils.XdsThreadLocalUtil;
-import io.sermant.xds.traffic.management.handler.RetryHandler;
-import io.sermant.xds.traffic.management.service.InterceptorSupporter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

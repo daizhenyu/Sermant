@@ -25,7 +25,6 @@ import io.sermant.core.plugin.service.PluginServiceManager;
 import io.sermant.xds.common.config.XdsTrafficManagementConfig;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.RetryContext;
-import io.sermant.xds.traffic.management.service.rest4j.XdsHttpFlowControlService;
 import io.sermant.xds.traffic.management.handler.RetryHandler;
 import io.sermant.xds.traffic.management.service.XdsHttpFlowControlService;
 
