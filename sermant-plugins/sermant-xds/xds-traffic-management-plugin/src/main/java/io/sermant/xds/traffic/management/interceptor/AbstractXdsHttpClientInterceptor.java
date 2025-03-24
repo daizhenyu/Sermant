@@ -25,6 +25,7 @@ import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.exception.InvokerWrapperException;
@@ -34,7 +35,6 @@ import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
 import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
-import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
