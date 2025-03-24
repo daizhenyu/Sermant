@@ -77,12 +77,13 @@ public enum RetryContext {
      *
      * @return Whether to perform retry in the current retry policy
      */
-    public boolean isPolicyNeedRetry() {
+    public boolean isRetriedRequest() {
         final RetryPolicy retryPolicy = getRetryPolicy();
         if (retryPolicy == null) {
             return false;
         }
-        return retryPolicy.isRetry() && retryPolicy.isReachedRetryThreshold();
+
+        return retryPolicy.isCalled();
     }
 
     /**
@@ -105,7 +106,6 @@ public enum RetryContext {
             return;
         }
         retryPolicy.updateRetriedInstance(serviceInstance);
-        retryPolicy.retryMark();
     }
 
     /**

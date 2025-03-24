@@ -33,10 +33,6 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
 
     private final Set<Object> retriedInstance;
 
-    private int hasTriedCount;
-
-    private boolean isRetry;
-
     private boolean isFirstRequest = true;
 
     /**
@@ -50,22 +46,13 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
     }
 
     @Override
-    public boolean isReachedRetryThreshold() {
-        return hasTriedCount < retryPolicy.getMaxAttempts();
-    }
-
-    @Override
     public void retryMark() {
-        if (!isFirstRequest) {
-            this.hasTriedCount++;
-        }
-        this.isRetry = true;
         isFirstRequest = false;
     }
 
     @Override
-    public boolean isRetry() {
-        return isRetry;
+    public boolean isCalled() {
+        return !isFirstRequest;
     }
 
     @Override

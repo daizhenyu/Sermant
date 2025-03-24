@@ -28,13 +28,6 @@ import java.util.Set;
  */
 public interface RetryPolicy {
     /**
-     * is reached max attempts
-     *
-     * @return retry or not
-     */
-    boolean isReachedRetryThreshold();
-
-    /**
      * retry mark
      */
     void retryMark();
@@ -44,7 +37,7 @@ public interface RetryPolicy {
      *
      * @return whether the status is retry
      */
-    boolean isRetry();
+    boolean isCalled();
 
     /**
      * Gets All retry instance

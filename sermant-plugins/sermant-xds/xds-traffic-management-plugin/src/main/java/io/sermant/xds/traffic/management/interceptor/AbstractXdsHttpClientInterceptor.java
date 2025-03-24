@@ -241,15 +241,16 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
             return Optional.empty();
         }
         removeCircuitBreakerInstance(scenarioInfo, serviceInstanceSet);
-        if (RetryContext.INSTANCE.isPolicyNeedRetry()) {
+        if (RetryContext.INSTANCE.isRetriedRequest()) {
             removeRetriedServiceInstance(serviceInstanceSet);
+        } else {
+            RetryContext.INSTANCE.getRetryPolicy().retryMark();
         }
         return Optional.ofNullable(chooseServiceInstanceByLoadBalancer(serviceInstanceSet, scenarioInfo));
     }
 
     private void removeRetriedServiceInstance(Set<ServiceInstance> serviceInstanceSet) {
         RetryPolicy retryPolicy = RetryContext.INSTANCE.getRetryPolicy();
-        retryPolicy.retryMark();
         Set<Object> retriedInstance = retryPolicy.getAllRetriedInstance();
         Set<ServiceInstance> allInstance = new HashSet<>(serviceInstanceSet);
         for (Object retryInstance : retriedInstance) {

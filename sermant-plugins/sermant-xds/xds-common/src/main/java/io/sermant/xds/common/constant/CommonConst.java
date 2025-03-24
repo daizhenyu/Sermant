@@ -35,11 +35,6 @@ public class CommonConst {
     public static final int INTERVAL_SERVER_ERROR = 500;
 
     /**
-     * empty string
-     */
-    public static final String EMPTY_STR = "";
-
-    /**
      * the connect for request address
      */
     public static final String CONNECT = ":";
