@@ -29,7 +29,7 @@ import io.sermant.xds.common.entity.HttpRequestEntity;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.flowcontrol.retry.AbstractRetry;
 import io.sermant.xds.common.utils.XdsRouterUtils;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -96,10 +96,10 @@ public class HttpUrlConnectionConnectInterceptor extends AbstractXdsHttpClientIn
 
         // Save the identifier for the executed connect method, and enhance the HttpURLConnection's getInputStream only
         // after the connect method has been executed.
-        XdsThreadLocalUtil.setConnectionStatus(true);
+        XdsTrafficManagementContext.setConnectionStatus(true);
 
         // Save the HttpURLConnection to facilitate retrieving the response status code during retries
-        XdsThreadLocalUtil.saveHttpUrlConnection(connection);
+        XdsTrafficManagementContext.saveHttpUrlConnection(connection);
 
         // Execute service invocation and retry logic
         executeWithRetryPolicy(context);
@@ -173,7 +173,7 @@ public class HttpUrlConnectionConnectInterceptor extends AbstractXdsHttpClientIn
         }
         HttpURLConnection connection = (HttpURLConnection) obj;
         ServiceInstance instance = serviceInstanceOptional.get();
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         scenarioInfo.setAddress(instance.getHost() + CommonConst.CONNECT + instance.getPort());
         try {
             URL url = connection.getURL();

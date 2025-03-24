@@ -28,7 +28,7 @@ import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.exception.InvokerWrapperException;
 import io.sermant.xds.common.flowcontrol.retry.AbstractRetry;
 import io.sermant.xds.common.utils.XdsRouterUtils;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -168,7 +168,7 @@ public class OkHttp3ClientInterceptor extends AbstractXdsHttpClientInterceptor {
             return;
         }
         ServiceInstance instance = serviceInstanceOptional.get();
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         scenarioInfo.setAddress(instance.getHost() + CommonConst.CONNECT + instance.getPort());
         ReflectUtils.setFieldValue(obj, REQUEST_FIELD_NAME, rebuildRequest(rawRequest.get(), instance));
     }

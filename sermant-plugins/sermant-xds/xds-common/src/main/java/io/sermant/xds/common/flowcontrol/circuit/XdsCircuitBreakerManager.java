@@ -19,7 +19,7 @@ package io.sermant.xds.common.flowcontrol.circuit;
 import io.sermant.core.service.xds.entity.XdsInstanceCircuitBreakers;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.xds.common.entity.FlowControlScenario;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 import java.util.Deque;
 import java.util.Map;
@@ -97,7 +97,7 @@ public class XdsCircuitBreakerManager {
             FlowControlScenario scenarioInfo) {
         XdsCircuitBreakerInfo circuitBreakerInfo = getCircuitBreakerInfo(scenarioInfo.getServiceName(),
                 scenarioInfo.getRouteName(), scenarioInfo.getAddress());
-        if (!XdsThreadLocalUtil.getSendByteFlag() && circuitBreakers.isSplitExternalLocalOriginErrors()
+        if (!XdsTrafficManagementContext.getSendByteFlag() && circuitBreakers.isSplitExternalLocalOriginErrors()
                 && shouldCircuitBreakerByFailure(circuitBreakerInfo.getLocalFailure(),
                 circuitBreakers.getConsecutiveLocalOriginFailure(), circuitBreakers.getInterval())) {
             openCircuitBreaker(circuitBreakerInfo, circuitBreakers.getInterval());
@@ -160,7 +160,7 @@ public class XdsCircuitBreakerManager {
             return;
         }
         long currentTime = System.currentTimeMillis();
-        if (!XdsThreadLocalUtil.getSendByteFlag()) {
+        if (!XdsTrafficManagementContext.getSendByteFlag()) {
             recordRequestTime(circuitBreakerInfo.getLocalFailure(), circuitBreakers.getConsecutiveLocalOriginFailure(),
                     currentTime);
         }

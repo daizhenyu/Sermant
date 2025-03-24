@@ -22,7 +22,7 @@ import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
 import io.sermant.xds.common.match.XdsRouteMatchManager;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import io.sermant.xds.service.traffic.management.constant.HandlerConstants;
 
 /**
@@ -38,14 +38,14 @@ public class XdsBusinessServerRequestHandler extends AbstractXdsChainHandler {
     public void onBefore(RequestEntity requestEntity, FlowControlScenario scenarioInfo) {
         FlowControlScenario matchedScenarioEntity = XdsRouteMatchManager.INSTANCE.getMatchedScenarioInfo(
                 requestEntity, serviceMeta.getService());
-        XdsThreadLocalUtil.setScenarioInfo(matchedScenarioEntity);
+        XdsTrafficManagementContext.setScenarioInfo(matchedScenarioEntity);
         super.onBefore(requestEntity, matchedScenarioEntity);
     }
 
     @Override
     public void onThrow(RequestEntity requestEntity, FlowControlScenario scenarioInfo, Throwable throwable) {
         if (scenarioInfo == null) {
-            super.onThrow(requestEntity, XdsThreadLocalUtil.getScenarioInfo(), throwable);
+            super.onThrow(requestEntity, XdsTrafficManagementContext.getScenarioInfo(), throwable);
             return;
         }
         super.onThrow(requestEntity, scenarioInfo, throwable);
@@ -54,7 +54,7 @@ public class XdsBusinessServerRequestHandler extends AbstractXdsChainHandler {
     @Override
     public void onAfter(RequestEntity requestEntity, FlowControlScenario scenarioInfo, Object result) {
         if (scenarioInfo == null) {
-            super.onAfter(requestEntity, XdsThreadLocalUtil.getScenarioInfo(), result);
+            super.onAfter(requestEntity, XdsTrafficManagementContext.getScenarioInfo(), result);
             return;
         }
         super.onAfter(requestEntity, scenarioInfo, result);

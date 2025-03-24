@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2024 Sermant Authors. All rights reserved.
+ * Copyright (C) 2025-2025 Sermant Authors. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,15 +14,19 @@
  *   limitations under the License.
  */
 
-package io.sermant.xds.common.utils;
+package io.sermant.xds.common.context;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import io.sermant.xds.common.entity.FlowControlScenario;
+
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashSet;
-
-import static org.junit.Assert.*;
 
 /**
  * XdsThreadLocalUtil Test
@@ -30,14 +34,14 @@ import static org.junit.Assert.*;
  * @author zhp
  * @since 2024-11-30
  */
-public class XdsThreadLocalUtilTest {
+public class XdsTrafficManagementContextTest {
     @Test
     public void testSetAndRemoveSendByteFlag() {
-        assertFalse(XdsThreadLocalUtil.getSendByteFlag());
-        XdsThreadLocalUtil.setSendByteFlag(true);
-        assertTrue(XdsThreadLocalUtil.getSendByteFlag());
-        XdsThreadLocalUtil.removeSendByteFlag();
-        assertFalse(XdsThreadLocalUtil.getSendByteFlag());
+        assertFalse(XdsTrafficManagementContext.getSendByteFlag());
+        XdsTrafficManagementContext.setSendByteFlag(true);
+        assertTrue(XdsTrafficManagementContext.getSendByteFlag());
+        XdsTrafficManagementContext.removeSendByteFlag();
+        assertFalse(XdsTrafficManagementContext.getSendByteFlag());
     }
 
     @Test
@@ -48,10 +52,10 @@ public class XdsThreadLocalUtilTest {
         flowControlScenario.setClusterName("clusterName");
         flowControlScenario.setRouteName("routeName");
         flowControlScenario.setAddress("address");
-        XdsThreadLocalUtil.setScenarioInfo(flowControlScenario);
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        XdsTrafficManagementContext.setScenarioInfo(flowControlScenario);
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         assertEquals(scenarioInfo, flowControlScenario);
-        XdsThreadLocalUtil.removeScenarioInfo();
-        assertNull(XdsThreadLocalUtil.getScenarioInfo());
+        XdsTrafficManagementContext.removeScenarioInfo();
+        assertNull(XdsTrafficManagementContext.getScenarioInfo());
     }
 }

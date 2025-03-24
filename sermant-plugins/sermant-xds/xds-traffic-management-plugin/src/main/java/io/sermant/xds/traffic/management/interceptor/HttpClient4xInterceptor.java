@@ -26,7 +26,7 @@ import io.sermant.xds.common.entity.HttpRequestEntity;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.flowcontrol.retry.AbstractRetry;
 import io.sermant.xds.common.utils.XdsRouterUtils;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import io.sermant.xds.traffic.management.response.ErrorCloseableHttpResponse;
 
 import org.apache.http.Header;
@@ -156,7 +156,7 @@ public class HttpClient4xInterceptor extends AbstractXdsHttpClientInterceptor {
             return;
         }
         ServiceInstance instance = serviceInstanceOptional.get();
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         scenarioInfo.setAddress(instance.getHost() + CommonConst.CONNECT + instance.getPort());
         final HttpRequestBase httpRequest = (HttpRequestBase) allArguments[1];
         try {

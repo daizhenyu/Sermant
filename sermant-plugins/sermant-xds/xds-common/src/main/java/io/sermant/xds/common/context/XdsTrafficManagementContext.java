@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 Sermant Authors. All rights reserved.
+ * Copyright (C) 2025-2025 Sermant Authors. All rights reserved.
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package io.sermant.xds.common.utils;
+package io.sermant.xds.common.context;
 
 import io.sermant.xds.common.entity.FlowControlScenario;
 
@@ -26,7 +26,7 @@ import java.net.HttpURLConnection;
  * @author zhp
  * @since 2024-11-30
  */
-public class XdsThreadLocalUtil {
+public class XdsTrafficManagementContext {
     private static final ThreadLocal<Boolean> SEND_BYTE_FLAG = new ThreadLocal<>();
 
     private static final ThreadLocal<FlowControlScenario> FLOW_CONTROL_SCENARIO_THREAD_LOCAL = new ThreadLocal<>();
@@ -35,7 +35,7 @@ public class XdsThreadLocalUtil {
 
     private static final ThreadLocal<Boolean> IS_CONNECTED = new ThreadLocal<>();
 
-    private XdsThreadLocalUtil() {
+    private XdsTrafficManagementContext() {
     }
 
     /**

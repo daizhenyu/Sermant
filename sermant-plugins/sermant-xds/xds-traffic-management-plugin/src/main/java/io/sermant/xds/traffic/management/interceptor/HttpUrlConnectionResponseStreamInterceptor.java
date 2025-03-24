@@ -30,7 +30,7 @@ import io.sermant.xds.common.flowcontrol.retry.RetryContext;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryCondition;
 import io.sermant.xds.common.flowcontrol.retry.condition.RetryConditionType;
 import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import sun.net.www.http.HttpClient;
 
 import java.io.Closeable;
@@ -65,7 +65,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
 
     @Override
     protected ExecuteContext doBefore(ExecuteContext context) throws Exception {
-        XdsThreadLocalUtil.removeConnectionStatus();
+        XdsTrafficManagementContext.removeConnectionStatus();
         executeWithRetryPolicy(context);
         return context;
     }
@@ -82,7 +82,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
 
     @Override
     protected boolean canInvoke(ExecuteContext context) {
-        return XdsThreadLocalUtil.isConnected() && XdsThreadLocalUtil.getScenarioInfo() != null;
+        return XdsTrafficManagementContext.isConnected() && XdsTrafficManagementContext.getScenarioInfo() != null;
     }
 
     @Override
@@ -197,7 +197,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
     public static class HttpUrlConnectionRetry extends AbstractRetry {
         @Override
         public Optional<String> getStatusCode(Object result) {
-            HttpURLConnection connection = XdsThreadLocalUtil.getHttpUrlConnection();
+            HttpURLConnection connection = XdsTrafficManagementContext.getHttpUrlConnection();
             if (connection == null) {
                 return Optional.empty();
             }
@@ -244,7 +244,7 @@ public class HttpUrlConnectionResponseStreamInterceptor extends AbstractXdsHttpC
 
         @Override
         public Optional<Set<String>> getHeaderNames(Object result) {
-            HttpURLConnection connection = XdsThreadLocalUtil.getHttpUrlConnection();
+            HttpURLConnection connection = XdsTrafficManagementContext.getHttpUrlConnection();
             if (connection == null) {
                 return Optional.empty();
             }
