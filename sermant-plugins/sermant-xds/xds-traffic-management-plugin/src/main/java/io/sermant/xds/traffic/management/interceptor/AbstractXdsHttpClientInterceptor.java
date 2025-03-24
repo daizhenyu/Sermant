@@ -108,6 +108,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
 
         // Create logical function for service invocation or retry
         final Supplier<Object> retryFunc = createRetryFunc(context);
+        RetryContext.INSTANCE.markRetry(retry);
         try {
             // first execution taking over the host logic
             result = retryFunc.get();
@@ -118,7 +119,6 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         }
         context.afterMethod(result, ex);
         try {
-            RetryContext.INSTANCE.markRetry(retry);
             final List<Retry> handlers = getRetryHandlers();
 
             // Determine whether retry is necessary
