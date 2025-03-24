@@ -79,11 +79,12 @@ public enum RetryContext {
      */
     public boolean isRetriedRequest() {
         final RetryPolicy retryPolicy = getRetryPolicy();
+
+        // The retry policy will be cached in the thread-local variable only after the first invocation is executed.
         if (retryPolicy == null) {
             return false;
         }
-
-        return retryPolicy.isCalled();
+        return true;
     }
 
     /**

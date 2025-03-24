@@ -28,18 +28,6 @@ import java.util.Set;
  */
 public interface RetryPolicy {
     /**
-     * retry mark
-     */
-    void retryMark();
-
-    /**
-     * whether the system is in retry state
-     *
-     * @return whether the status is retry
-     */
-    boolean isCalled();
-
-    /**
      * Gets All retry instance
      *
      * @return retry instance
@@ -74,5 +62,10 @@ public interface RetryPolicy {
      */
     long getMaxAttempts();
 
+    /**
+     * get retry policy name
+     *
+     * @return retry policy name
+     */
     String getRetryPolicyName();
 }

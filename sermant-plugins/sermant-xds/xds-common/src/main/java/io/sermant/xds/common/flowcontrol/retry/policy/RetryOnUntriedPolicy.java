@@ -33,8 +33,6 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
 
     private final Set<Object> retriedInstance;
 
-    private boolean isFirstRequest = true;
-
     /**
      * retry constructor
      *
@@ -43,16 +41,6 @@ public class RetryOnUntriedPolicy implements RetryPolicy {
     public RetryOnUntriedPolicy(XdsRetryPolicy retryPolicy) {
         this.retryPolicy = retryPolicy;
         retriedInstance = new HashSet<>();
-    }
-
-    @Override
-    public void retryMark() {
-        isFirstRequest = false;
-    }
-
-    @Override
-    public boolean isCalled() {
-        return !isFirstRequest;
     }
 
     @Override
