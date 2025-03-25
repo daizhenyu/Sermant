@@ -27,7 +27,7 @@ import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.HttpRequestEntity;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.entity.RequestEntity.RequestType;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -119,9 +119,9 @@ public class DispatcherServletInterceptor extends InterceptorSupporter {
         }
         HttpRequestEntity requestEntity = httpRequestEntity.get();
         getXdsHttpFlowControlService().onBefore(requestEntity, result);
-        context.setLocalFieldValue(CommonConst.SCENARIO_INFO, XdsThreadLocalUtil.getScenarioInfo());
+        context.setLocalFieldValue(CommonConst.SCENARIO_INFO, XdsTrafficManagementContext.getScenarioInfo());
         context.setLocalFieldValue(CommonConst.REQUEST_INFO, requestEntity);
-        XdsThreadLocalUtil.removeScenarioInfo();
+        XdsTrafficManagementContext.removeScenarioInfo();
         if (!result.isSkip()) {
             return context;
         }

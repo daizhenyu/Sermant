@@ -3,7 +3,9 @@ xds.traffic.management.config:
   enable: true
   # The specified response status codes that need to be retried. Retry will be performed when the response's status
   # code matches one of the specified codes.
+  # config example:
   x-sermant-retriable-status-codes:
   # The specified response header names that need to be retried. Retry will be performed when the response contains
   # the specified headers.
+  # config example:
   x-sermant-retriable-header-names:

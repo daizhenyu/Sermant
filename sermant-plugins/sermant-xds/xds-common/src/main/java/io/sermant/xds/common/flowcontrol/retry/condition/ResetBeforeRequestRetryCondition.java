@@ -17,7 +17,7 @@
 package io.sermant.xds.common.flowcontrol.retry.condition;
 
 import io.sermant.xds.common.flowcontrol.retry.Retry;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 /**
  * Retry condition check, determine if the current error is a connection reset error before the request, and trigger a
@@ -29,6 +29,6 @@ import io.sermant.xds.common.utils.XdsThreadLocalUtil;
 public class ResetBeforeRequestRetryCondition extends ResetRetryCondition {
     @Override
     public boolean isNeedRetry(Retry retry, Throwable ex, String statusCode, Object result) {
-        return XdsThreadLocalUtil.getSendByteFlag() && super.isNeedRetry(retry, ex, statusCode, result);
+        return XdsTrafficManagementContext.getSendByteFlag() && super.isNeedRetry(retry, ex, statusCode, result);
     }
 }

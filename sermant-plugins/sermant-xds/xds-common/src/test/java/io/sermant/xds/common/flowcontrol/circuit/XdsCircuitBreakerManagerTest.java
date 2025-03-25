@@ -18,7 +18,7 @@ package io.sermant.xds.common.flowcontrol.circuit;
 
 import io.sermant.core.service.xds.entity.XdsInstanceCircuitBreakers;
 import io.sermant.xds.common.entity.FlowControlScenario;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -77,7 +77,7 @@ public class XdsCircuitBreakerManagerTest {
         // Test the number of errors from the local source reached the threshold
         circuitBreakers.setSplitExternalLocalOriginErrors(true);
         circuitBreakers.setConsecutiveLocalOriginFailure(1);
-        XdsThreadLocalUtil.setConnectionStatus(false);
+        XdsTrafficManagementContext.setConnectionStatus(false);
         XdsCircuitBreakerManager.recordFailureRequest(scenarioInfo, ADDRESS, -1, circuitBreakers);
         XdsCircuitBreakerManager.setCircuitBeakerStatus(circuitBreakers, scenarioInfo);
         result = XdsCircuitBreakerManager.needsInstanceCircuitBreaker(scenarioInfo, ADDRESS);

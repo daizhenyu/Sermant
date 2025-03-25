@@ -18,7 +18,7 @@ package io.sermant.xds.traffic.management.interceptor;
 
 import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.core.plugin.agent.interceptor.Interceptor;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 /**
  * Enhance the request header sending method to include an indicator of whether the request byte stream has been sent
@@ -35,7 +35,7 @@ public class HttpRequestSendHeaderInterceptor implements Interceptor {
 
     @Override
     public ExecuteContext after(ExecuteContext context) throws Exception {
-        XdsThreadLocalUtil.setSendByteFlag(true);
+        XdsTrafficManagementContext.setSendByteFlag(true);
         return context;
     }
 

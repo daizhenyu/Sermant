@@ -25,6 +25,7 @@ import io.sermant.core.service.xds.entity.XdsRetryPolicy;
 import io.sermant.core.utils.CollectionUtils;
 import io.sermant.core.utils.StringUtils;
 import io.sermant.xds.common.constant.CommonConst;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 import io.sermant.xds.common.entity.FlowControlScenario;
 import io.sermant.xds.common.entity.RequestEntity;
 import io.sermant.xds.common.exception.InvokerWrapperException;
@@ -34,7 +35,6 @@ import io.sermant.xds.common.flowcontrol.retry.policy.RetryPolicy;
 import io.sermant.xds.common.handler.XdsTrafficManagementDataHandler;
 import io.sermant.xds.common.lb.XdsLoadBalancer;
 import io.sermant.xds.common.lb.XdsLoadBalancerFactory;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -81,7 +81,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
      * @return The result of whether circuit breaking is needed
      */
     public boolean isNeedCircuitBreak() {
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         if (scenarioInfo == null || StringUtils.isEmpty(scenarioInfo.getServiceName())
                 || StringUtils.isEmpty(scenarioInfo.getClusterName())) {
             return false;
@@ -148,7 +148,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
 
     @Override
     public ExecuteContext doAfter(ExecuteContext context) {
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         Object requestEntity = context.getLocalFieldValue(CommonConst.REQUEST_INFO);
         if (requestEntity instanceof RequestEntity) {
             getXdsHttpFlowControlService().onAfter((RequestEntity) requestEntity, context.getResult(), scenarioInfo);
@@ -156,29 +156,29 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
         if (context.getThrowableOut() == null) {
             decreaseActiveRequestsAndCountFailureRequests(context, scenarioInfo);
         }
-        XdsThreadLocalUtil.removeSendByteFlag();
-        XdsThreadLocalUtil.removeScenarioInfo();
+        XdsTrafficManagementContext.removeSendByteFlag();
+        XdsTrafficManagementContext.removeScenarioInfo();
         return context;
     }
 
     @Override
     public ExecuteContext doThrow(ExecuteContext context) {
-        XdsThreadLocalUtil.removeSendByteFlag();
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        XdsTrafficManagementContext.removeSendByteFlag();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         Object requestEntity = context.getLocalFieldValue(CommonConst.REQUEST_INFO);
         if (requestEntity instanceof RequestEntity) {
             getXdsHttpFlowControlService().onThrow((RequestEntity) requestEntity, context.getThrowable(), scenarioInfo);
         }
         if (context.getThrowableOut() != null) {
             decreaseActiveRequestsAndCountFailureRequests(context, scenarioInfo);
-            XdsThreadLocalUtil.removeSendByteFlag();
-            XdsThreadLocalUtil.removeScenarioInfo();
+            XdsTrafficManagementContext.removeSendByteFlag();
+            XdsTrafficManagementContext.removeScenarioInfo();
         }
         return context;
     }
 
     private void decreaseActiveRequestsAndCountFailureRequests(ExecuteContext context,
-                                                               FlowControlScenario scenarioInfo) {
+            FlowControlScenario scenarioInfo) {
         if (scenarioInfo == null || StringUtils.isEmpty(scenarioInfo.getServiceName())
                 || StringUtils.isEmpty(scenarioInfo.getClusterName())) {
             return;
@@ -222,7 +222,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
      * @return result
      */
     protected Optional<ServiceInstance> chooseServiceInstanceForXds() {
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         if (scenarioInfo == null || StringUtils.isEmpty(scenarioInfo.getServiceName())) {
             return Optional.empty();
         }
@@ -300,7 +300,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
     }
 
     private boolean hasReachedCircuitBreakerThreshold(List<ServiceInstance> circuitBreakerInstances,
-                                                      int maxCircuitBreakerInstances) {
+            int maxCircuitBreakerInstances) {
         return circuitBreakerInstances.size() >= maxCircuitBreakerInstances;
     }
 
@@ -318,7 +318,7 @@ public abstract class AbstractXdsHttpClientInterceptor extends InterceptorSuppor
      * @return Retry Handlers
      */
     protected List<Retry> getRetryHandlers() {
-        FlowControlScenario scenarioInfo = XdsThreadLocalUtil.getScenarioInfo();
+        FlowControlScenario scenarioInfo = XdsTrafficManagementContext.getScenarioInfo();
         if (scenarioInfo == null || StringUtils.isEmpty(scenarioInfo.getServiceName())
                 || StringUtils.isEmpty(scenarioInfo.getRouteName())) {
             return Collections.emptyList();

@@ -10,7 +10,7 @@ runs:
         sudo sed -i '/x-sermant-retriable-status-codes:/a\ \ \ - 502' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/xds/config/config.yaml
         sudo sed -i '/x-sermant-retriable-header-names:/a\ \ \ - needRetry' sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/xds/config/config.yaml
         cat sermant-agent-${{ env.sermantVersion }}/agent/config/plugins.yaml
-        cat sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/flowcontrol/config/config.yaml
+        cat sermant-agent-${{ env.sermantVersion }}/agent/pluginPackage/xds/config/config.yaml
         cp -r sermant-agent-*/agent sermant-integration-tests/xds-service-test/product/spring-client/
         cp -r sermant-agent-*/agent sermant-integration-tests/xds-service-test/product/spring-cloud-client/
         cp -r sermant-agent-*/agent sermant-integration-tests/xds-service-test/product/spring-server/

@@ -18,7 +18,7 @@ package io.sermant.xds.traffic.management.interceptor;
 
 import io.sermant.core.plugin.agent.entity.ExecuteContext;
 import io.sermant.xds.common.constant.CommonConst;
-import io.sermant.xds.common.utils.XdsThreadLocalUtil;
+import io.sermant.xds.common.context.XdsTrafficManagementContext;
 
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -48,8 +48,8 @@ public class HttpUrlConnectionDisconnectInterceptor extends AbstractXdsHttpClien
 
     @Override
     public ExecuteContext doAfter(ExecuteContext context) {
-        XdsThreadLocalUtil.removeConnectionStatus();
-        XdsThreadLocalUtil.removeHttpUrlConnection();
+        XdsTrafficManagementContext.removeConnectionStatus();
+        XdsTrafficManagementContext.removeHttpUrlConnection();
         super.doAfter(context);
         return context;
     }
@@ -57,8 +57,8 @@ public class HttpUrlConnectionDisconnectInterceptor extends AbstractXdsHttpClien
     @Override
     public ExecuteContext doThrow(ExecuteContext context) {
         if (context.getThrowableOut() != null) {
-            XdsThreadLocalUtil.removeConnectionStatus();
-            XdsThreadLocalUtil.removeHttpUrlConnection();
+            XdsTrafficManagementContext.removeConnectionStatus();
+            XdsTrafficManagementContext.removeHttpUrlConnection();
         }
         super.doThrow(context);
         return context;
